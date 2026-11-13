@@ -123,6 +123,25 @@ cmp: "ஒரு 22K பவுனின் உலக விலை மதிப்
   var t = function (k, v) { var s = I[lang][k] !== undefined ? I[lang][k] : I.en[k]; if (v) Object.keys(v).forEach(function (n) { s = s.split('{' + n + '}').join(v[n]); }); return s; };
   var rs = function (v) { return 'Rs ' + Math.round(v).toLocaleString('en-US'); };
   function say(kind, text) { var s = $('status'); s.hidden = !text; s.className = 'msg ' + (kind || ''); s.textContent = text || ''; }
+  /* Shows the real Firebase error next to the friendly message, so a setup problem can be found quickly. */
+  function why(e) {
+    var m = '';
+    if (e && e.j && e.j.error) m = e.j.error.message || '';
+    else if (e && e.body && e.body.error) m = (e.body.error.status || '') + ': ' + (e.body.error.message || '');
+    else if (e && e.status) m = 'HTTP ' + e.status;
+    else if (e && e.auth) m = 'session expired';
+    else if (e && e.message) m = e.message;
+    if (!m) return '';
+    var h = '';
+    if (/OPERATION_NOT_ALLOWED/.test(m)) h = ' Fix: turn on Email/Password in Firebase, Authentication, Sign-in method.';
+    else if (/API key not valid|API_KEY_INVALID/i.test(m)) h = ' Fix: check FIREBASE_API_KEY in config.js.';
+    else if (/referer|referrer/i.test(m)) h = ' Fix: add this website to the API key allowed referrers in Google Cloud, Credentials.';
+    else if (/has not been used|SERVICE_DISABLED|is disabled/i.test(m)) h = ' Fix: enable the Identity Toolkit API and the Cloud Firestore API in Google Cloud.';
+    else if (/PERMISSION_DENIED|insufficient permissions/i.test(m)) h = ' Fix: publish the Firestore security rules.';
+    else if (/NOT_FOUND|database.*(does not exist|not found)/i.test(m)) h = ' Fix: create the Firestore database (Native mode, name "(default)").';
+    else if (/Failed to fetch|NetworkError|Load failed/i.test(m)) h = ' Fix: check your internet connection, and open this page from https or localhost, not from a file.';
+    return ' [' + m + ']' + h;
+  }
 
   function labels() {
     document.documentElement.lang = lang;
@@ -169,7 +188,7 @@ cmp: "ஒரு 22K பவுனின் உலக விலை மதிப்
       labels(); if (!shop.approved) { show('wait'); return; }
       show('price');
       if (shop.sell_22k_sovereign) { $('p-sell').value = shop.sell_22k_sovereign; $('p-buy').value = shop.buy_22k_sovereign || ''; $('p-g24').value = shop.sell_24k_gram || ''; if (shop.updated_at) $('last').textContent = t('last', { t: new Date(shop.updated_at).toLocaleString() }); cmp(); }
-    }).catch(function (e) { if (e && (e.auth || e.status === 401)) { saveSess(null); show('auth'); } else say('err', t('err_gen')); });
+    }).catch(function (e) { if (e && (e.auth || e.status === 401)) { saveSess(null); show('auth'); } else { saveSess(null); show('auth'); say('err', t('err_gen') + why(e)); } });
   }
 
   /* ---- world-price value, to catch typing mistakes ---- */
@@ -185,13 +204,13 @@ cmp: "ஒரு 22K பவுனின் உலக விலை மதிப்
   function creds() { return { email: $('email').value.trim(), password: $('pass').value }; }
   function authCall(path, body) { return fetch('https://identitytoolkit.googleapis.com/v1/' + path + '?key=' + encodeURIComponent(FKEY), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(Object.assign({ returnSecureToken: true }, body)) }).then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); }); }
   $('v-auth').addEventListener('submit', function (e) { e.preventDefault(); var c = creds(); if (!c.email || c.password.length < 8) { say('err', t('err_pass')); return; }
-    say('', ''); authCall('accounts:signInWithPassword', c).then(function (r) { if (r.ok && r.j.idToken) { saveSess(fromToken(r.j)); route(); } else say('err', t('err_auth')); }).catch(function () { say('err', t('err_gen')); }); });
+    say('', ''); authCall('accounts:signInWithPassword', c).then(function (r) { if (r.ok && r.j.idToken) { saveSess(fromToken(r.j)); route(); } else { var m = r.j && r.j.error && r.j.error.message || ''; say('err', (/INVALID_LOGIN_CREDENTIALS|INVALID_PASSWORD|EMAIL_NOT_FOUND/.test(m) ? t('err_auth') : t('err_gen')) + why(r)); } }).catch(function (er) { say('err', t('err_gen') + why(er)); }); });
   $('b-up').addEventListener('click', function () { var c = creds(); if (!c.email || c.password.length < 8) { say('err', t('err_pass')); return; }
-    authCall('accounts:signUp', c).then(function (r) { if (r.ok && r.j.idToken) { saveSess(fromToken(r.j)); say('', ''); route(); } else say('err', r.j && r.j.error && r.j.error.message === 'EMAIL_EXISTS' ? t('err_auth') : t('err_gen')); }).catch(function () { say('err', t('err_gen')); }); });
+    authCall('accounts:signUp', c).then(function (r) { if (r.ok && r.j.idToken) { saveSess(fromToken(r.j)); say('', ''); route(); } else say('err', (r.j && r.j.error && r.j.error.message === 'EMAIL_EXISTS' ? t('err_auth') : t('err_gen')) + why(r)); }).catch(function (er) { say('err', t('err_gen') + why(er)); }); });
   $('v-reg').addEventListener('submit', function (e) { e.preventDefault();
     var f = { name: S($('r-name').value.trim()), city: S($('r-city').value.trim()), phone: S($('r-phone').value.trim()), approved: { booleanValue: false }, created_at: { timestampValue: new Date().toISOString() } };
     fsCall('POST', '/shops?documentId=' + encodeURIComponent(sess.user.id), { fields: f })
-      .then(function (doc) { shop = fromDoc(doc); say('ok', t('reg_done')); labels(); show('wait'); }).catch(function () { say('err', t('err_gen')); }); });
+      .then(function (doc) { shop = fromDoc(doc); say('ok', t('reg_done')); labels(); show('wait'); }).catch(function (er) { say('err', t('err_gen') + why(er)); }); });
   $('p-sell').addEventListener('input', cmp);
   $('v-price').addEventListener('submit', function (e) { e.preventDefault();
     var sell = parseFloat($('p-sell').value), buy = parseFloat($('p-buy').value), g24 = parseFloat($('p-g24').value), d = off();
@@ -202,7 +221,7 @@ cmp: "ஒரு 22K பவுனின் உலக விலை மதிப்
     /* one atomic write: the server stamps the time, and the rules check that stamp */
     fsCall('POST', ':commit', { writes: [{ update: { name: DOCS() + '/shops/' + sess.user.id, fields: f }, updateMask: { fieldPaths: ['sell_22k_sovereign', 'buy_22k_sovereign', 'sell_24k_gram'] }, updateTransforms: [{ fieldPath: 'updated_at', setToServerValue: 'REQUEST_TIME' }], currentDocument: { exists: true } }] })
       .then(function (r) { say('ok', t('done')); $('last').textContent = t('last', { t: new Date(r && r.commitTime || Date.now()).toLocaleString() }); })
-      .catch(function (er) { say('err', er && er.status === 403 ? t('err_save') : t('err_gen')); }); });
+      .catch(function (er) { say('err', (er && er.status === 403 ? t('err_save') : t('err_gen')) + why(er)); }); });
   $('b-out').addEventListener('click', function () { saveSess(null); shop = null; say('', ''); show('auth'); });
   document.querySelector('.langs').addEventListener('click', function (e) { var b = e.target.closest ? e.target.closest('button[data-lang]') : null; if (!b) return; lang = b.getAttribute('data-lang'); try { localStorage.setItem('gollk-lang', lang); } catch (x) {} labels(); });
 
