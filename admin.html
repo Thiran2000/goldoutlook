@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Admin - Gold Outlook LK</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root { --bg:#f2f4f2; --surface:#fff; --fg:#19201c; --muted:#5c6862; --line:#d7ddd8; --accent:#9a6a12; --accent-soft:rgba(154,106,18,.16); --up:#1d7a5a; --down:#b4412f; --warn:#8a5a00; --font-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif; --font-num:"IBM Plex Mono",ui-monospace,Menlo,monospace; color-scheme: light; }
+@media (prefers-color-scheme: dark) { :root { --bg:#111513; --surface:#181d1a; --fg:#e8ece9; --muted:#98a39c; --line:#2b332e; --accent:#d8a23d; --accent-soft:rgba(216,162,61,.22); --up:#4cc19a; --down:#e07a68; --warn:#e2b04a; color-scheme: dark; } }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 16px; line-height: 1.6; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.wrap { max-width: 720px; margin: 0 auto; padding-block: 16px 56px; display: flex; flex-direction: column; gap: 18px; }
+.bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+.bar a { color: var(--muted); }
+h1 { font-size: 22px; margin: 0; letter-spacing: -0.01em; }
+h2 { font-size: 18px; margin: 0; }
+.lead, .note { color: var(--muted); font-size: 14px; margin: 0; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+.field { display: flex; flex-direction: column; gap: 4px; }
+.field label { font-size: 13px; color: var(--muted); }
+input[type=email], input[type=password] { font: inherit; font-size: 16px; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 10px; width: 100%; }
+input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button { font: inherit; font-size: 15px; color: var(--fg); background: var(--surface); border: 1px solid var(--line); border-radius: 4px; padding: 8px 14px; cursor: pointer; }
+button:hover { border-color: var(--accent); }
+button:disabled { opacity: .5; cursor: wait; }
+button.main { border-color: var(--accent); background: var(--accent-soft); font-weight: 600; }
+button.danger { border-color: var(--down); color: var(--down); }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.msg { font-size: 14px; border-radius: 6px; padding: 10px 12px; border: 1px solid var(--line); overflow-wrap: anywhere; }
+.msg.err { border-color: var(--down); color: var(--down); }
+.msg.ok { border-color: var(--up); color: var(--up); }
+.tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.tile { border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; }
+.tile .v { font-family: var(--font-num); font-size: 26px; font-weight: 500; line-height: 1.2; }
+.tile .k { font-size: 13px; color: var(--muted); }
+.tile.pend .v { color: var(--warn); }
+.tile.appr .v { color: var(--up); }
+.shop { border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; }
+.shop .top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
+.shop b { font-weight: 600; overflow-wrap: anywhere; }
+.shop .meta { font-size: 13px; color: var(--muted); overflow-wrap: anywhere; }
+.shop .num { font-family: var(--font-num); font-size: 14px; }
+.badge { font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); }
+.badge.pend { color: var(--warn); border-color: var(--warn); }
+.badge.appr { color: var(--up); border-color: var(--up); }
+.badge.stale { color: var(--muted); }
+.list { display: flex; flex-direction: column; gap: 10px; }
+code { font-family: var(--font-num); font-size: 13px; background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 1px 6px; overflow-wrap: anywhere; user-select: all; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="bar"><a href="index.html">Back to the site</a><button type="button" id="b-out" hidden>Sign out</button></div>
+  <div><h1>Shop approvals</h1><p class="lead" style="margin-top:6px">Owner page. Approve jewellers after checking they are real shops. Only admins can use this page.</p></div>
+  <div id="status" class="msg" hidden role="status"></div>
+
+  <section id="v-off" class="panel" hidden><p style="margin:0">The portal is not connected yet. Add the database settings in config.js.</p></section>
+
+  <form id="v-auth" class="panel" hidden>
+    <div class="field"><label for="email">Email</label><input id="email" type="email" autocomplete="email" required></div>
+    <div class="field"><label for="pass">Password</label><input id="pass" type="password" autocomplete="current-password" minlength="8" required></div>
+    <div class="row"><button type="submit" class="main">Sign in</button></div>
+  </form>
+
+  <section id="v-noadmin" class="panel" hidden>
+    <h2>This account is not an admin yet</h2>
+    <p class="note">In the Firebase console, open Firestore Database, Data, and choose Start collection. Collection ID: <code>admins</code>. Document ID: paste the code below. Add any field, for example <code>admin</code> set to <code>true</code>, then Save. Then reload this page.</p>
+    <p class="note">Your user ID:</p>
+    <p style="margin:0"><code id="uid"></code></p>
+  </section>
+
+  <section id="v-list" hidden style="display:flex;flex-direction:column;gap:18px">
+    <div class="tiles">
+      <div class="tile pend"><div class="v" id="n-pend">0</div><div class="k">Pending approval</div></div>
+      <div class="tile appr"><div class="v" id="n-appr">0</div><div class="k">Approved</div></div>
+    </div>
+    <div class="row"><button type="button" id="b-ref">Refresh</button><span class="note" id="loaded"></span></div>
+    <div class="panel"><h2>Pending</h2><div class="list" id="l-pend"></div></div>
+    <div class="panel"><h2>Approved</h2><div class="list" id="l-appr"></div></div>
+  </section>
+</div>
+
+<script src="config.js"></script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var C = window.GOLD_CONFIG || {}, FKEY = C.FIREBASE_API_KEY, PID = C.FIREBASE_PROJECT_ID, sess = null, shops = [];
+  var FS = 'https://firestore.googleapis.com/v1/projects/' + encodeURIComponent(PID || '') + '/databases/(default)/documents';
+  var rs = function (v) { return 'Rs ' + Math.round(v).toLocaleString('en-US'); };
+  var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+  function say(kind, text) { var s = $('status'); s.hidden = !text; s.className = 'msg ' + (kind || ''); s.textContent = text || ''; }
+  function why(e) {
+    var m = '';
+    if (e && e.j && e.j.error) m = e.j.error.message || '';
+    else if (e && e.body && e.body.error) m = (e.body.error.status || '') + ': ' + (e.body.error.message || '');
+    else if (e && e.status) m = 'HTTP ' + e.status;
+    else if (e && e.message) m = e.message;
+    return m ? ' [' + m + ']' : '';
+  }
+  function show(v) { ['off', 'auth', 'noadmin', 'list'].forEach(function (n) { $('v-' + n).hidden = n !== v; }); $('b-out').hidden = !(sess && v !== 'off' && v !== 'auth'); }
+
+  /* Same sign-in session as shop.html, so signing in on either page works for both. */
+  function saveSess(s) { sess = s; try { if (s) localStorage.setItem('gollk-shop-session', JSON.stringify(s)); else localStorage.removeItem('gollk-shop-session'); } catch (e) {} }
+  function fromToken(j) { return { access_token: j.idToken, refresh_token: j.refreshToken, expires_at: Math.floor(Date.now() / 1000) + (parseInt(j.expiresIn, 10) || 3600), user: { id: j.localId, email: j.email } }; }
+  function token() {
+    if (!sess) return Promise.resolve(null);
+    if (sess.expires_at * 1000 - Date.now() > 60000) return Promise.resolve(sess.access_token);
+    return fetch('https://securetoken.googleapis.com/v1/token?key=' + encodeURIComponent(FKEY), { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'grant_type=refresh_token&refresh_token=' + encodeURIComponent(sess.refresh_token) })
+      .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
+      .then(function (j) { saveSess({ access_token: j.id_token, refresh_token: j.refresh_token, expires_at: Math.floor(Date.now() / 1000) + (parseInt(j.expires_in, 10) || 3600), user: sess.user }); return sess.access_token; })
+      .catch(function () { saveSess(null); return null; });
+  }
+  function fsCall(method, path, body) {
+    return token().then(function (tk) {
+      if (!tk) return Promise.reject({ auth: true });
+      return fetch(FS + path, { method: method, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + tk }, body: body ? JSON.stringify(body) : undefined })
+        .then(function (r) { return r.text().then(function (x) { var j = null; try { j = x ? JSON.parse(x) : null; } catch (e) {} if (!r.ok) return Promise.reject({ status: r.status, body: j }); return j; }); });
+    });
+  }
+  function gv(f, k) { var v = f && f[k]; if (!v) return null; return v.stringValue !== undefined ? v.stringValue : v.integerValue !== undefined ? Number(v.integerValue) : v.doubleValue !== undefined ? Number(v.doubleValue) : v.booleanValue !== undefined ? v.booleanValue : v.timestampValue !== undefined ? v.timestampValue : null; }
+
+  function ago(d) { var m = Math.max(0, Math.round((Date.now() - d.getTime()) / 60000)); return m < 60 ? m + ' min ago' : m < 2880 ? Math.floor(m / 60) + ' h ago' : Math.floor(m / 1440) + ' days ago'; }
+  function card(s) {
+    var made = s.created ? new Date(s.created) : null, upd = s.updated ? new Date(s.updated) : null, price = '';
+    if (s.approved) {
+      if (s.sell > 0 && upd && !isNaN(upd.getTime())) {
+        var fresh = Date.now() - upd.getTime() < 24 * 3600000;
+        price = '<div class="meta"><span class="num">' + rs(s.sell) + '</span> for 22K sovereign, posted ' + ago(upd) + ' <span class="badge ' + (fresh ? 'appr' : 'stale') + '">' + (fresh ? 'shown on site' : 'hidden, older than 24 h') + '</span></div>';
+      } else price = '<div class="meta">No price posted yet</div>';
+    }
+    return '<div class="shop"><div class="top"><div><b>' + esc(s.name) + '</b><div class="meta">' + esc(s.city) + ' &middot; ' + esc(s.phone) + '</div></div>' +
+      '<span class="badge ' + (s.approved ? 'appr' : 'pend') + '">' + (s.approved ? 'Approved' : 'Pending') + '</span></div>' + price +
+      '<div class="meta">' + (made && !isNaN(made.getTime()) ? 'Registered ' + esc(made.toLocaleString()) + ' (' + ago(made) + ')' : '') + ' &middot; ID <code>' + esc(s.id) + '</code></div>' +
+      '<div class="row">' + (s.approved ? '<button type="button" class="danger" data-act="revoke" data-id="' + esc(s.id) + '">Remove approval</button>' : '<button type="button" class="main" data-act="approve" data-id="' + esc(s.id) + '">Approve</button>') + '</div></div>';
+  }
+  function render() {
+    var pend = shops.filter(function (s) { return !s.approved; }).sort(function (a, b) { return (b.created || '') < (a.created || '') ? -1 : 1; });
+    var appr = shops.filter(function (s) { return s.approved; }).sort(function (a, b) { return String(a.name).toLowerCase() < String(b.name).toLowerCase() ? -1 : 1; });
+    $('n-pend').textContent = pend.length; $('n-appr').textContent = appr.length;
+    $('l-pend').innerHTML = pend.length ? pend.map(card).join('') : '<p class="note">No shops waiting for approval.</p>';
+    $('l-appr').innerHTML = appr.length ? appr.map(card).join('') : '<p class="note">No approved shops yet.</p>';
+    $('loaded').textContent = 'Updated ' + new Date().toLocaleTimeString();
+  }
+
+  function load() {
+    $('b-ref').disabled = true;
+    return fsCall('POST', ':runQuery', { structuredQuery: { from: [{ collectionId: 'shops' }], limit: 500 } }).then(function (rows) {
+      shops = [];
+      (Array.isArray(rows) ? rows : []).forEach(function (x) {
+        var d = x && x.document; if (!d || !d.fields) return; var f = d.fields;
+        shops.push({ id: d.name.split('/').pop(), name: gv(f, 'name'), city: gv(f, 'city'), phone: gv(f, 'phone'), approved: gv(f, 'approved') === true, sell: gv(f, 'sell_22k_sovereign'), updated: gv(f, 'updated_at'), created: gv(f, 'created_at') });
+      });
+      show('list'); render();
+    }).catch(function (e) {
+      if (e && (e.auth || e.status === 401)) { saveSess(null); show('auth'); return; }
+      if (e && e.status === 403) { $('uid').textContent = sess.user.id; show('noadmin'); return; }
+      say('err', 'Could not load shops.' + why(e));
+    }).then(function () { $('b-ref').disabled = false; });
+  }
+  function setApproved(id, val, btn) {
+    btn.disabled = true; say('', '');
+    fsCall('PATCH', '/shops/' + encodeURIComponent(id) + '?updateMask.fieldPaths=approved&currentDocument.exists=true', { fields: { approved: { booleanValue: val } } })
+      .then(function () { say('ok', val ? 'Approved. The shop can now post prices.' : 'Approval removed. The shop is hidden from the public board.'); return load(); })
+      .catch(function (e) { btn.disabled = false; say('err', 'Could not save.' + why(e)); });
+  }
+
+  $('v-auth').addEventListener('submit', function (e) {
+    e.preventDefault(); say('', '');
+    fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' + encodeURIComponent(FKEY), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: $('email').value.trim(), password: $('pass').value, returnSecureToken: true }) })
+      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+      .then(function (r) { if (r.ok && r.j.idToken) { saveSess(fromToken(r.j)); load(); } else say('err', 'Could not sign in. Check your email and password.' + why(r)); })
+      .catch(function (er) { say('err', 'Something went wrong.' + why(er)); });
+  });
+  $('b-ref').addEventListener('click', function () { say('', ''); load(); });
+  $('b-out').addEventListener('click', function () { saveSess(null); shops = []; say('', ''); show('auth'); });
+  $('v-list').addEventListener('click', function (e) {
+    var b = e.target.closest ? e.target.closest('button[data-act]') : null; if (!b) return;
+    var id = b.getAttribute('data-id'), act = b.getAttribute('data-act'), s = shops.filter(function (x) { return x.id === id; })[0];
+    if (act === 'approve') setApproved(id, true, b);
+    else if (act === 'revoke' && window.confirm('Remove approval for ' + (s ? s.name : 'this shop') + '? Its prices will be hidden from the site.')) setApproved(id, false, b);
+  });
+
+  if (!FKEY || !PID) { show('off'); return; }
+  try { sess = JSON.parse(localStorage.getItem('gollk-shop-session') || 'null'); } catch (e) { sess = null; }
+  if (sess) load(); else show('auth');
+})();
+</script>
+</body>
+</html>
