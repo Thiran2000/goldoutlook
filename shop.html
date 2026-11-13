@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Jeweller Portal - Gold Outlook LK</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+Sinhala:wght@400;500;600&family=Noto+Sans+Tamil:wght@400;500;600&display=swap">
+<style>
+:root { --bg:#f2f4f2; --surface:#fff; --fg:#19201c; --muted:#5c6862; --line:#d7ddd8; --accent:#9a6a12; --accent-soft:rgba(154,106,18,.16); --up:#1d7a5a; --down:#b4412f; --warn:#8a5a00; --font-body:"IBM Plex Sans","Noto Sans Sinhala","Noto Sans Tamil",system-ui,-apple-system,"Segoe UI",sans-serif; --font-num:"IBM Plex Mono",ui-monospace,Menlo,monospace; color-scheme: light; }
+@media (prefers-color-scheme: dark) { :root { --bg:#111513; --surface:#181d1a; --fg:#e8ece9; --muted:#98a39c; --line:#2b332e; --accent:#d8a23d; --accent-soft:rgba(216,162,61,.22); --up:#4cc19a; --down:#e07a68; --warn:#e2b04a; color-scheme: dark; } }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 16px; line-height: 1.6; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.wrap { max-width: 560px; margin: 0 auto; padding-block: 16px 56px; display: flex; flex-direction: column; gap: 18px; }
+.bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+.bar a { color: var(--muted); }
+.langs { display: flex; gap: 6px; }
+h1 { font-size: 22px; margin: 0; letter-spacing: -0.01em; }
+h2 { font-size: 18px; margin: 0 0 6px; }
+.lead, .note { color: var(--muted); font-size: 14px; margin: 0; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+.field { display: flex; flex-direction: column; gap: 4px; }
+.field label { font-size: 13px; color: var(--muted); }
+input[type=text], input[type=email], input[type=password], input[type=number] { font: inherit; font-size: 16px; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 10px; width: 100%; }
+input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button { font: inherit; font-size: 15px; color: var(--fg); background: var(--surface); border: 1px solid var(--line); border-radius: 4px; padding: 10px 14px; cursor: pointer; }
+button:hover { border-color: var(--accent); }
+button.main { border-color: var(--accent); background: var(--accent-soft); font-weight: 600; }
+.langs button { padding: 6px 10px; min-width: 44px; font-size: 14px; }
+.langs button[aria-pressed=true] { border-color: var(--accent); background: var(--accent-soft); font-weight: 600; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; }
+.msg { font-size: 14px; border-radius: 6px; padding: 10px 12px; border: 1px solid var(--line); }
+.msg.err { border-color: var(--down); color: var(--down); }
+.msg.ok { border-color: var(--up); color: var(--up); }
+.msg.warn { border-color: var(--warn); color: var(--fg); }
+.cmp { font-size: 14px; color: var(--muted); }
+.cmp b { font-family: var(--font-num); font-weight: 500; color: var(--fg); }
+.check { display: flex; gap: 8px; align-items: flex-start; font-size: 14px; }
+.check input { margin-top: 5px; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="bar">
+    <a href="index.html" id="back"></a>
+    <div class="langs" role="group" aria-label="Language">
+      <button type="button" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" data-lang="si" aria-pressed="false">සිං</button>
+      <button type="button" data-lang="ta" aria-pressed="false">தமி</button>
+    </div>
+  </div>
+  <div><h1 id="ttl"></h1><p class="lead" id="lead" style="margin-top:6px"></p></div>
+  <div id="status" class="msg" hidden role="status"></div>
+
+  <section id="v-off" class="panel" hidden><p id="off-t" style="margin:0"></p></section>
+
+  <form id="v-auth" class="panel" hidden>
+    <div class="field"><label for="email" id="l-email"></label><input id="email" type="email" autocomplete="email" required></div>
+    <div class="field"><label for="pass" id="l-pass"></label><input id="pass" type="password" autocomplete="current-password" minlength="8"></div>
+    <div class="row"><button type="submit" class="main" id="b-in"></button><button type="button" id="b-up"></button></div>
+  </form>
+
+  <form id="v-reg" class="panel" hidden>
+    <h2 id="reg-t"></h2>
+    <div class="field"><label for="r-name" id="l-name"></label><input id="r-name" type="text" maxlength="80" required></div>
+    <div class="field"><label for="r-city" id="l-city"></label><input id="r-city" type="text" maxlength="60" required></div>
+    <div class="field"><label for="r-phone" id="l-phone"></label><input id="r-phone" type="text" inputmode="tel" maxlength="30" required></div>
+    <div class="row"><button type="submit" class="main" id="b-reg"></button></div>
+  </form>
+
+  <section id="v-wait" class="panel" hidden><p id="wait-t" style="margin:0"></p><div id="shopline" class="note"></div></section>
+
+  <form id="v-price" class="panel" hidden>
+    <h2 id="pr-t"></h2><div id="shopline2" class="note"></div>
+    <div class="field"><label for="p-sell" id="l-sell"></label><input id="p-sell" type="number" inputmode="numeric" min="50000" max="2000000" step="500" required></div>
+    <div class="field"><label for="p-buy" id="l-buy"></label><input id="p-buy" type="number" inputmode="numeric" min="50000" max="2000000" step="500"></div>
+    <div class="field"><label for="p-g24" id="l-g24"></label><input id="p-g24" type="number" inputmode="numeric" min="5000" max="300000" step="50"></div>
+    <div class="cmp" id="cmp"></div>
+    <label class="check" id="sure-row" hidden><input type="checkbox" id="sure"><span id="sure-t"></span></label>
+    <div class="row"><button type="submit" class="main" id="b-post"></button></div>
+    <div class="note" id="last"></div>
+  </form>
+
+  <div class="row"><button type="button" id="b-out" hidden></button></div>
+</div>
+
+<script src="config.js"></script>
+<script>
+var I = {
+en: { back: "Back to the site", ttl: "Jeweller portal", lead: "Approved jewellers can post today's prices here. Your shop name, city, phone and prices are shown publicly on the site. Prices older than 24 hours are hidden, so post again each day.",
+off: "The portal is not connected yet. The site owner must add the database settings in config.js.",
+email: "Email", pass: "Password (8 or more characters)", signin: "Sign in", signup: "Create account", link: "Email me a sign-in link", out: "Sign out",
+check_email: "Check your email to confirm your account, then sign in.", link_sent: "Sign-in link sent. Open it on this device.",
+err_auth: "Could not sign in. Check your email and password.", err_gen: "Something went wrong. Please try again.", err_save: "Could not save. Wait a minute and try again. Only approved shops can post prices.", err_range: "The price is outside the allowed range.", err_buy: "The buying price must be lower than the selling price.", err_pass: "Enter an email and a password of 8 or more characters.",
+reg_t: "Tell us about your shop", name: "Shop name", city: "City", phone: "Phone (shown publicly)", reg: "Send for approval",
+wait: "Your shop is waiting for approval. We approve it after checking that it is a real jewellery shop. You can post prices once it is approved.",
+pr_t: "Post today's prices", sell: "Selling price for one 22K sovereign (Rs)", buy: "Price you pay to buy back one 22K sovereign (Rs, optional)", g24: "Selling price for 24K per gram (Rs, optional)", post: "Post prices", done: "Posted. Customers can see these prices for the next 24 hours.", last: "Last posted: {t}",
+cmp: "World-price value of one 22K sovereign is {v}. Your price is {p}% {d}.", above: "above", below: "below", sure: "This is more than 25% away from the world-price value. I have checked it and it is correct.", reg_done: "Sent. We will review your shop.", shop: "{n}, {c}" },
+si: { back: "වෙබ් අඩවියට ආපසු", ttl: "ස්වර්ණාභරණ වෙළෙන්දන්ගේ කවුළුව", lead: "අනුමත ස්වර්ණාභරණ වෙළෙන්දන්ට අද මිල මෙහි පළ කළ හැක. ඔබේ වෙළඳසැලේ නම, නගරය, දුරකථනය සහ මිල අඩවියේ ප්‍රසිද්ධියේ පෙන්වයි. පැය 24කට වඩා පැරණි මිල සඟවන නිසා සෑම දිනකම නැවත පළ කරන්න.",
+off: "කවුළුව තවම සම්බන්ධ කර නැත. අඩවි හිමිකරු config.js හි දත්ත සමුදා සැකසුම් එක් කළ යුතුය.",
+email: "ඊමේල්", pass: "මුරපදය (අක්ෂර 8ක් හෝ වැඩි)", signin: "ඇතුල් වන්න", signup: "ගිණුමක් සාදන්න", link: "ඇතුල් වීමේ සබැඳියක් ඊමේල් කරන්න", out: "ඉවත් වන්න",
+check_email: "ඔබේ ගිණුම තහවුරු කිරීමට ඊමේල් පරීක්ෂා කර, පසුව ඇතුල් වන්න.", link_sent: "ඇතුල් වීමේ සබැඳිය යවා ඇත. එය මෙම උපාංගයේ විවෘත කරන්න.",
+err_auth: "ඇතුල් විය නොහැකි විය. ඊමේල් සහ මුරපදය පරීක්ෂා කරන්න.", err_gen: "යම් දෙයක් වැරදුණා. නැවත උත්සාහ කරන්න.", err_save: "සුරැකිය නොහැකි විය. විනාඩියක් රැඳී නැවත උත්සාහ කරන්න. මිල පළ කළ හැක්කේ අනුමත වෙළඳසැල්වලට පමණි.", err_range: "මිල අවසර ලත් පරාසයෙන් පිටත ය.", err_buy: "ගන්නා මිල විකුණන මිලට වඩා අඩු විය යුතුය.", err_pass: "ඊමේල් එකක් සහ අක්ෂර 8ක් හෝ වැඩි මුරපදයක් ඇතුල් කරන්න.",
+reg_t: "ඔබේ වෙළඳසැල ගැන කියන්න", name: "වෙළඳසැලේ නම", city: "නගරය", phone: "දුරකථනය (ප්‍රසිද්ධියේ පෙන්වයි)", reg: "අනුමැතිය සඳහා යවන්න",
+wait: "ඔබේ වෙළඳසැල අනුමැතිය බලා සිටී. එය සැබෑ ස්වර්ණාභරණ වෙළඳසැලක්දැයි පරීක්ෂා කර අපි අනුමත කරමු. අනුමත වූ පසු ඔබට මිල පළ කළ හැක.",
+pr_t: "අද මිල පළ කරන්න", sell: "22K පවුමක විකුණුම් මිල (රු.)", buy: "22K පවුමක් නැවත ගැනීමට ඔබ ගෙවන මිල (රු., අත්‍යවශ්‍ය නොවේ)", g24: "24K ග්‍රෑම් එකක විකුණුම් මිල (රු., අත්‍යවශ්‍ය නොවේ)", post: "මිල පළ කරන්න", done: "පළ කළා. පාරිභෝගිකයන්ට ඉදිරි පැය 24 තුළ මෙම මිල දැකිය හැක.", last: "අවසාන වරට පළ කළේ: {t}",
+cmp: "22K පවුමක ලෝක මිල අගය {v}. ඔබේ මිල {p}% ක් {d}.", above: "ඉහළින්", below: "පහළින්", sure: "මෙය ලෝක මිල අගයෙන් 25%කට වඩා වෙනස්ය. මම එය පරීක්ෂා කළා, එය නිවැරදියි.", reg_done: "යැවුවා. අපි ඔබේ වෙළඳසැල සමාලෝචනය කරමු.", shop: "{n}, {c}" },
+ta: { back: "தளத்திற்குத் திரும்பு", ttl: "நகைக்கடை போர்ட்டல்", lead: "அங்கீகரிக்கப்பட்ட நகைக்கடைகள் இன்றைய விலைகளை இங்கே பதிவிடலாம். உங்கள் கடை பெயர், நகரம், தொலைபேசி, விலைகள் தளத்தில் பொதுவாகக் காட்டப்படும். 24 மணி நேரத்துக்கு மேற்பட்ட விலைகள் மறைக்கப்படும், எனவே தினமும் மீண்டும் பதிவிடுங்கள்.",
+off: "போர்ட்டல் இன்னும் இணைக்கப்படவில்லை. தள உரிமையாளர் config.js இல் தரவுத்தள அமைப்புகளைச் சேர்க்க வேண்டும்.",
+email: "மின்னஞ்சல்", pass: "கடவுச்சொல் (8 அல்லது அதற்கு மேற்பட்ட எழுத்துகள்)", signin: "உள்நுழை", signup: "கணக்கை உருவாக்கு", link: "உள்நுழைவு இணைப்பை மின்னஞ்சல் செய்", out: "வெளியேறு",
+check_email: "உங்கள் கணக்கை உறுதிப்படுத்த மின்னஞ்சலைப் பாருங்கள், பிறகு உள்நுழையுங்கள்.", link_sent: "உள்நுழைவு இணைப்பு அனுப்பப்பட்டது. இந்தச் சாதனத்தில் திறக்கவும்.",
+err_auth: "உள்நுழைய முடியவில்லை. மின்னஞ்சலையும் கடவுச்சொல்லையும் சரிபாருங்கள்.", err_gen: "ஏதோ தவறு நடந்தது. மீண்டும் முயலவும்.", err_save: "சேமிக்க முடியவில்லை. ஒரு நிமிடம் காத்திருந்து மீண்டும் முயலுங்கள். அங்கீகரிக்கப்பட்ட கடைகள் மட்டுமே விலை பதிவிட முடியும்.", err_range: "விலை அனுமதிக்கப்பட்ட வரம்புக்கு வெளியே உள்ளது.", err_buy: "வாங்கும் விலை விற்கும் விலையை விடக் குறைவாக இருக்க வேண்டும்.", err_pass: "மின்னஞ்சலையும் 8 அல்லது அதற்கு மேற்பட்ட எழுத்துகள் கொண்ட கடவுச்சொல்லையும் உள்ளிடுங்கள்.",
+reg_t: "உங்கள் கடையைப் பற்றிச் சொல்லுங்கள்", name: "கடை பெயர்", city: "நகரம்", phone: "தொலைபேசி (பொதுவாகக் காட்டப்படும்)", reg: "அங்கீகாரத்திற்கு அனுப்பு",
+wait: "உங்கள் கடை அங்கீகாரத்துக்காகக் காத்திருக்கிறது. இது உண்மையான நகைக்கடை என்று சரிபார்த்த பிறகு அங்கீகரிப்போம். அங்கீகரிக்கப்பட்டதும் நீங்கள் விலைகளைப் பதிவிடலாம்.",
+pr_t: "இன்றைய விலைகளைப் பதிவிடுங்கள்", sell: "ஒரு 22K பவுனுக்கான விற்பனை விலை (ரூ)", buy: "ஒரு 22K பவுனை திரும்ப வாங்க நீங்கள் தரும் விலை (ரூ, விருப்பம்)", g24: "24K ஒரு கிராம் விற்பனை விலை (ரூ, விருப்பம்)", post: "விலைகளைப் பதிவிடு", done: "பதிவிடப்பட்டது. வாடிக்கையாளர்கள் அடுத்த 24 மணி நேரம் இந்த விலைகளைப் பார்க்கலாம்.", last: "கடைசியாகப் பதிவிட்டது: {t}",
+cmp: "ஒரு 22K பவுனின் உலக விலை மதிப்பு {v}. உங்கள் விலை {p}% {d}.", above: "அதிகம்", below: "குறைவு", sure: "இது உலக விலை மதிப்பிலிருந்து 25% க்கும் மேல் வேறுபடுகிறது. நான் சரிபார்த்தேன், இது சரியானது.", reg_done: "அனுப்பப்பட்டது. உங்கள் கடையை மதிப்பாய்வு செய்வோம்.", shop: "{n}, {c}" }
+};
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var C = window.GOLD_CONFIG || {}, FKEY = C.FIREBASE_API_KEY, PID = C.FIREBASE_PROJECT_ID, lang = 'en', sess = null, shop = null, fair = 0, view = '';
+  try { var sv = localStorage.getItem('gollk-lang'); if (sv && I[sv]) lang = sv; else { var nl = (navigator.language || '').slice(0, 2); if (I[nl]) lang = nl; } } catch (e) {}
+  var t = function (k, v) { var s = I[lang][k] !== undefined ? I[lang][k] : I.en[k]; if (v) Object.keys(v).forEach(function (n) { s = s.split('{' + n + '}').join(v[n]); }); return s; };
+  var rs = function (v) { return 'Rs ' + Math.round(v).toLocaleString('en-US'); };
+  function say(kind, text) { var s = $('status'); s.hidden = !text; s.className = 'msg ' + (kind || ''); s.textContent = text || ''; }
+
+  function labels() {
+    document.documentElement.lang = lang;
+    var map = { back: 'back', ttl: 'ttl', lead: 'lead', 'off-t': 'off', 'l-email': 'email', 'l-pass': 'pass', 'b-in': 'signin', 'b-up': 'signup', 'b-out': 'out', 'reg-t': 'reg_t', 'l-name': 'name', 'l-city': 'city', 'l-phone': 'phone', 'b-reg': 'reg', 'wait-t': 'wait', 'pr-t': 'pr_t', 'l-sell': 'sell', 'l-buy': 'buy', 'l-g24': 'g24', 'b-post': 'post', 'sure-t': 'sure' };
+    Object.keys(map).forEach(function (id) { $(id).textContent = t(map[id]); });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-lang]'), function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-lang') === lang ? 'true' : 'false'); });
+    if (shop) { var line = t('shop', { n: shop.name, c: shop.city }); $('shopline').textContent = line; $('shopline2').textContent = line; }
+    cmp();
+  }
+  function show(v) { view = v; ['off', 'auth', 'reg', 'wait', 'price'].forEach(function (n) { $('v-' + n).hidden = n !== v; }); $('b-out').hidden = !(sess && v !== 'off' && v !== 'auth'); }
+
+  /* ---- Firebase over plain fetch (no library): Auth REST + Firestore REST ---- */
+  var DOCS = function () { return 'projects/' + PID + '/databases/(default)/documents'; };
+  var FS = 'https://firestore.googleapis.com/v1/' + (PID ? DOCS() : '');
+  var S = function (v) { return { stringValue: String(v) }; }, N = function (v) { return { integerValue: String(Math.round(v)) }; };
+  function saveSess(s) { sess = s; try { if (s) localStorage.setItem('gollk-shop-session', JSON.stringify(s)); else localStorage.removeItem('gollk-shop-session'); } catch (e) {} }
+  function fromToken(j) { return { access_token: j.idToken, refresh_token: j.refreshToken, expires_at: Math.floor(Date.now() / 1000) + (parseInt(j.expiresIn, 10) || 3600), user: { id: j.localId, email: j.email } }; }
+  function token() {
+    if (!sess) return Promise.resolve(null);
+    if (sess.expires_at * 1000 - Date.now() > 60000) return Promise.resolve(sess.access_token);
+    return fetch('https://securetoken.googleapis.com/v1/token?key=' + encodeURIComponent(FKEY), { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'grant_type=refresh_token&refresh_token=' + encodeURIComponent(sess.refresh_token) })
+      .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
+      .then(function (j) { saveSess({ access_token: j.id_token, refresh_token: j.refresh_token, expires_at: Math.floor(Date.now() / 1000) + (parseInt(j.expires_in, 10) || 3600), user: sess.user }); return sess.access_token; })
+      .catch(function () { saveSess(null); return null; });
+  }
+  function fsCall(method, path, body) {
+    return token().then(function (tk) {
+      if (!tk) return Promise.reject({ auth: true });
+      return fetch(FS + path, { method: method, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + tk }, body: body ? JSON.stringify(body) : undefined })
+        .then(function (r) { return r.text().then(function (x) { var j = null; try { j = x ? JSON.parse(x) : null; } catch (e) {} if (!r.ok) return Promise.reject({ status: r.status, body: j }); return j; }); });
+    });
+  }
+  function fromDoc(d) {
+    if (!d || !d.fields) return null;
+    var f = d.fields, g = function (k) { var v = f[k]; return !v ? null : v.stringValue !== undefined ? v.stringValue : v.integerValue !== undefined ? Number(v.integerValue) : v.booleanValue !== undefined ? v.booleanValue : v.timestampValue !== undefined ? v.timestampValue : null; };
+    return { name: g('name'), city: g('city'), phone: g('phone'), approved: g('approved') === true, sell_22k_sovereign: g('sell_22k_sovereign'), buy_22k_sovereign: g('buy_22k_sovereign'), sell_24k_gram: g('sell_24k_gram'), updated_at: g('updated_at') };
+  }
+
+  function getShop() { return fsCall('GET', '/shops/' + encodeURIComponent(sess.user.id)).then(fromDoc, function (e) { if (e && e.status === 404) return null; return Promise.reject(e); }); }
+  function route() {
+    if (!sess) { show('auth'); return; }
+    getShop().then(function (s) {
+      shop = s; if (!shop) { show('reg'); return; }
+      labels(); if (!shop.approved) { show('wait'); return; }
+      show('price');
+      if (shop.sell_22k_sovereign) { $('p-sell').value = shop.sell_22k_sovereign; $('p-buy').value = shop.buy_22k_sovereign || ''; $('p-g24').value = shop.sell_24k_gram || ''; if (shop.updated_at) $('last').textContent = t('last', { t: new Date(shop.updated_at).toLocaleString() }); cmp(); }
+    }).catch(function (e) { if (e && (e.auth || e.status === 401)) { saveSess(null); show('auth'); } else say('err', t('err_gen')); });
+  }
+
+  /* ---- world-price value, to catch typing mistakes ---- */
+  function loadFair() { fetch('data/latest.json', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : Promise.reject(); }).then(function (j) { var s = parseFloat(j.gold_usd_oz), f = parseFloat(j.usdlkr); if (s > 0 && f > 0) { fair = s / 31.1035 * f * 8 * 22 / 24; cmp(); } }).catch(function () {}); }
+  function off() { var v = parseFloat($('p-sell').value); return fair > 0 && v > 0 ? (v / fair - 1) * 100 : null; }
+  function cmp() {
+    var d = off(); if (d === null) { $('cmp').textContent = ''; $('sure-row').hidden = true; return; }
+    $('cmp').innerHTML = t('cmp', { v: '<b>' + rs(fair) + '</b>', p: '<b>' + Math.abs(d).toFixed(1) + '</b>', d: t(d >= 0 ? 'above' : 'below') });
+    $('sure-row').hidden = Math.abs(d) <= 25;
+  }
+
+  /* ---- events ---- */
+  function creds() { return { email: $('email').value.trim(), password: $('pass').value }; }
+  function authCall(path, body) { return fetch('https://identitytoolkit.googleapis.com/v1/' + path + '?key=' + encodeURIComponent(FKEY), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(Object.assign({ returnSecureToken: true }, body)) }).then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); }); }
+  $('v-auth').addEventListener('submit', function (e) { e.preventDefault(); var c = creds(); if (!c.email || c.password.length < 8) { say('err', t('err_pass')); return; }
+    say('', ''); authCall('accounts:signInWithPassword', c).then(function (r) { if (r.ok && r.j.idToken) { saveSess(fromToken(r.j)); route(); } else say('err', t('err_auth')); }).catch(function () { say('err', t('err_gen')); }); });
+  $('b-up').addEventListener('click', function () { var c = creds(); if (!c.email || c.password.length < 8) { say('err', t('err_pass')); return; }
+    authCall('accounts:signUp', c).then(function (r) { if (r.ok && r.j.idToken) { saveSess(fromToken(r.j)); say('', ''); route(); } else say('err', r.j && r.j.error && r.j.error.message === 'EMAIL_EXISTS' ? t('err_auth') : t('err_gen')); }).catch(function () { say('err', t('err_gen')); }); });
+  $('v-reg').addEventListener('submit', function (e) { e.preventDefault();
+    var f = { name: S($('r-name').value.trim()), city: S($('r-city').value.trim()), phone: S($('r-phone').value.trim()), approved: { booleanValue: false }, created_at: { timestampValue: new Date().toISOString() } };
+    fsCall('POST', '/shops?documentId=' + encodeURIComponent(sess.user.id), { fields: f })
+      .then(function (doc) { shop = fromDoc(doc); say('ok', t('reg_done')); labels(); show('wait'); }).catch(function () { say('err', t('err_gen')); }); });
+  $('p-sell').addEventListener('input', cmp);
+  $('v-price').addEventListener('submit', function (e) { e.preventDefault();
+    var sell = parseFloat($('p-sell').value), buy = parseFloat($('p-buy').value), g24 = parseFloat($('p-g24').value), d = off();
+    if (!(sell >= 50000 && sell <= 2000000) || (g24 && !(g24 >= 5000 && g24 <= 300000))) { say('err', t('err_range')); return; }
+    if (buy && !(buy >= 50000 && buy < sell)) { say('err', t('err_buy')); return; }
+    if (d !== null && Math.abs(d) > 25 && !$('sure').checked) { cmp(); $('sure-row').hidden = false; say('err', t('sure')); return; }
+    var f = { sell_22k_sovereign: N(sell) }; if (buy) f.buy_22k_sovereign = N(buy); if (g24) f.sell_24k_gram = N(g24);
+    /* one atomic write: the server stamps the time, and the rules check that stamp */
+    fsCall('POST', ':commit', { writes: [{ update: { name: DOCS() + '/shops/' + sess.user.id, fields: f }, updateMask: { fieldPaths: ['sell_22k_sovereign', 'buy_22k_sovereign', 'sell_24k_gram'] }, updateTransforms: [{ fieldPath: 'updated_at', setToServerValue: 'REQUEST_TIME' }], currentDocument: { exists: true } }] })
+      .then(function (r) { say('ok', t('done')); $('last').textContent = t('last', { t: new Date(r && r.commitTime || Date.now()).toLocaleString() }); })
+      .catch(function (er) { say('err', er && er.status === 403 ? t('err_save') : t('err_gen')); }); });
+  $('b-out').addEventListener('click', function () { saveSess(null); shop = null; say('', ''); show('auth'); });
+  document.querySelector('.langs').addEventListener('click', function (e) { var b = e.target.closest ? e.target.closest('button[data-lang]') : null; if (!b) return; lang = b.getAttribute('data-lang'); try { localStorage.setItem('gollk-lang', lang); } catch (x) {} labels(); });
+
+  /* ---- start ---- */
+  labels();
+  if (!FKEY || !PID) { show('off'); return; }
+  loadFair();
+  try { sess = JSON.parse(localStorage.getItem('gollk-shop-session') || 'null'); } catch (e) { sess = null; }
+  route();
+})();
+</script>
+</body>
+</html>

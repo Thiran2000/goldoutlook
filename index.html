@@ -1,0 +1,741 @@
+<title>Gold Outlook LK</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+Sinhala:wght@400;500;600&family=Noto+Sans+Tamil:wght@400;500;600&display=swap">
+<style>
+/* Layout: slim top bar (name, section links, language) then one column: live price, weight lookup, forecast, buying guide, alerts, learn, footer. */
+:root {
+  --bg: #f2f4f2;
+  --surface: #ffffff;
+  --fg: #19201c;
+  --muted: #5c6862;
+  --line: #d7ddd8;
+  --accent: #9a6a12;
+  --accent-soft: rgba(154, 106, 18, 0.16);
+  --accent-softer: rgba(154, 106, 18, 0.08);
+  --up: #1d7a5a;
+  --down: #b4412f;
+  --warn: #8a5a00;
+  --font-body: "IBM Plex Sans", "Noto Sans Sinhala", "Noto Sans Tamil", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-num: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111513; --surface: #181d1a; --fg: #e8ece9; --muted: #98a39c; --line: #2b332e;
+    --accent: #d8a23d; --accent-soft: rgba(216, 162, 61, 0.22); --accent-softer: rgba(216, 162, 61, 0.10);
+    --up: #4cc19a; --down: #e07a68; --warn: #e2b04a; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111513; --surface: #181d1a; --fg: #e8ece9; --muted: #98a39c; --line: #2b332e;
+  --accent: #d8a23d; --accent-soft: rgba(216, 162, 61, 0.22); --accent-softer: rgba(216, 162, 61, 0.10);
+  --up: #4cc19a; --down: #e07a68; --warn: #e2b04a; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .dot { animation: none !important; } }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 16px; line-height: 1.6; }
+.wrap { max-width: 940px; margin: 0 auto; padding-block: 0 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; gap: 20px; }
+.bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 20px; padding-block: 14px; border-bottom: 1px solid var(--line); }
+.brand { font-weight: 600; font-size: 18px; letter-spacing: -0.01em; }
+.nav { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px; }
+.nav a { color: var(--muted); text-decoration: none; padding: 4px 0; }
+.nav a:hover { color: var(--fg); text-decoration: underline; }
+.langs { display: flex; gap: 6px; }
+.langs button { min-width: 44px; }
+.langs button[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-softer); font-weight: 600; }
+h1 { font-size: 15px; font-weight: 500; color: var(--muted); margin: 0; }
+h2 { font-size: 20px; font-weight: 600; margin: 0 0 4px; letter-spacing: -0.01em; text-wrap: balance; }
+h3 { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 0 0 10px; }
+.lead { color: var(--muted); font-size: 14px; margin: 0 0 14px; max-width: 70ch; }
+section { scroll-margin-top: 12px; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 18px; min-width: 0; }
+.hero { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 680px) { .hero { grid-template-columns: minmax(0, 1fr); } }
+.big { font-family: var(--font-num); font-size: clamp(30px, 8vw, 46px); font-weight: 500; letter-spacing: -0.03em; line-height: 1.1; margin: 4px 0 6px; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.klabel { font-size: 13px; color: var(--muted); }
+.status { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; font-size: 13px; color: var(--muted); }
+.dot { width: 9px; height: 9px; border-radius: 50%; background: var(--muted); display: inline-block; }
+.dot.live { background: var(--up); animation: pulse 1.6s ease-in-out infinite; }
+.dot.late { background: var(--warn); }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+.stat { display: flex; flex-direction: column; gap: 14px; }
+.stat div { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; border-bottom: 1px solid var(--line); padding-bottom: 8px; }
+.stat div:last-child { border-bottom: 0; padding-bottom: 0; }
+.stat b { font-family: var(--font-num); font-weight: 500; white-space: nowrap; font-variant-numeric: tabular-nums; text-align: right; overflow-wrap: anywhere; }
+.chg { font-family: var(--font-num); font-size: 12px; margin-left: 6px; }
+.chg.up { color: var(--up); } .chg.down { color: var(--down); }
+.note { font-size: 13px; color: var(--muted); margin: 12px 0 0; max-width: 75ch; }
+.banner { border: 1px solid var(--warn); color: var(--fg); background: var(--accent-softer); border-radius: 6px; padding: 10px 14px; font-size: 14px; }
+.controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px 16px; }
+.field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.field label { font-size: 13px; color: var(--muted); }
+select, input[type="number"], input[type="text"] { font: inherit; font-family: var(--font-num); font-size: 15px; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 9px 10px; width: 100%; min-width: 0; }
+select:focus-visible, input:focus-visible, button:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button { font: inherit; font-size: 14px; color: var(--fg); background: var(--surface); border: 1px solid var(--line); border-radius: 4px; padding: 8px 12px; cursor: pointer; }
+button:hover { border-color: var(--accent); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.chip { font-family: var(--font-num); font-size: 12px; padding: 6px 10px; }
+.out { font-family: var(--font-num); font-size: 26px; font-weight: 500; letter-spacing: -0.02em; margin: 16px 0 2px; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-bottom: 16px; }
+.tile .dd { font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+.tile .dr { font-family: var(--font-num); font-size: 15px; margin-top: 6px; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.tile { border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; min-width: 0; }
+.tile .v { font-family: var(--font-num); font-size: 20px; font-weight: 500; letter-spacing: -0.02em; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.tile .k { font-size: 13px; color: var(--muted); }
+.sentence { font-size: 17px; line-height: 1.55; margin: 0 0 16px; max-width: 62ch; }
+.sentence b { font-family: var(--font-num); font-weight: 500; white-space: nowrap; }
+.pill { display: inline-block; font-size: 12px; font-weight: 600; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg); }
+.pill.up { color: var(--up); border-color: var(--up); } .pill.down { color: var(--down); border-color: var(--down); }
+.chartbox, .tablewrap { width: 100%; overflow-x: auto; }
+svg { display: block; width: 100%; height: auto; min-width: 520px; }
+svg text { font-family: var(--font-num); font-size: 11px; fill: var(--muted); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--muted); margin-top: 8px; }
+.legend i { display: inline-block; width: 18px; height: 8px; margin-inline-end: 6px; vertical-align: middle; border-radius: 1px; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { text-align: left; padding: 8px 10px 8px 0; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+th { font-size: 13px; font-weight: 600; color: var(--muted); }
+td.num, th.num { text-align: right; font-family: var(--font-num); padding-right: 0; padding-left: 10px; }
+.tips { margin: 0 0 16px; padding-inline-start: 20px; display: flex; flex-direction: column; gap: 8px; max-width: 70ch; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
+.row .field { flex: 1 1 150px; }
+.result { margin: 14px 0 0; font-size: 16px; max-width: 70ch; }
+.result b { font-family: var(--font-num); font-weight: 500; white-space: nowrap; }
+.alist { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.alist li { display: flex; justify-content: space-between; align-items: center; gap: 12px; border: 1px solid var(--line); border-radius: 6px; padding: 8px 12px; font-size: 14px; }
+details { border-bottom: 1px solid var(--line); padding: 12px 0; }
+details:last-child { border-bottom: 0; }
+summary { cursor: pointer; font-weight: 500; font-size: 16px; }
+details p { margin: 8px 0 0; color: var(--muted); max-width: 70ch; }
+.fine { font-size: 13px; color: var(--muted); max-width: 80ch; margin: 0; }
+.src { font-size: 12px; color: var(--muted); margin-top: 8px; }
+.flag { color: var(--warn); font-size: 12px; }
+.exnote { font-size: 13px; color: var(--warn); margin: 0 0 10px; }
+.joinlink { color: var(--accent); font-weight: 500; }
+.botbtn { position: fixed; z-index: 20; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); padding: 10px 18px; border-radius: 999px; border: 1px solid var(--accent); background: var(--surface); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15); font-weight: 500; }
+.bot { position: fixed; z-index: 21; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(70px + env(safe-area-inset-bottom, 0px)); width: min(400px, calc(100vw - 32px)); max-height: min(600px, calc(100vh - 100px)); display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 10px 34px rgba(0, 0, 0, 0.22); overflow: hidden; }
+.bothead { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+.msgs { overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; flex: 1 1 auto; min-height: 140px; }
+.m { max-width: 92%; padding: 8px 12px; border-radius: 8px; font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; }
+.m.me { align-self: flex-end; background: var(--accent-soft); }
+.m.bot { align-self: flex-start; background: var(--bg); border: 1px solid var(--line); }
+.botform { display: flex; gap: 8px; padding: 10px 12px; border-top: 1px solid var(--line); }
+.botform input { flex: 1 1 auto; font-family: var(--font-body); }
+.botchips { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 12px 10px; }
+.botchips button { font-size: 12px; padding: 5px 9px; }
+</style>
+
+<div class="wrap">
+  <div class="bar">
+    <span class="brand">Gold Outlook LK</span>
+    <nav class="nav" aria-label="Sections">
+      <a href="#price" data-i="nav_price"></a><a href="#lookup" data-i="nav_lookup"></a><a href="#forecast" data-i="nav_forecast"></a><a href="#shops" data-i="nav_shops"></a><a href="#buy" data-i="nav_buy"></a><a href="#alerts" data-i="nav_alerts"></a><a href="#learn" data-i="nav_learn"></a>
+    </nav>
+    <div class="langs" role="group" aria-label="Language">
+      <button type="button" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" data-lang="si" aria-pressed="false">සිං</button>
+      <button type="button" data-lang="ta" aria-pressed="false">தமி</button>
+    </div>
+  </div>
+
+  <div id="alert-banner" class="banner" role="status" hidden></div>
+
+  <section id="price" aria-labelledby="h-price">
+    <h1 data-i="tag"></h1>
+    <div class="panel hero" style="margin-top:10px">
+      <div>
+        <h2 id="h-price" data-i="p_title"></h2>
+        <div class="klabel" data-i="p_sov"></div>
+        <div class="big" id="p-sov">-</div>
+        <div class="status"><span class="dot" id="dot"></span><span id="p-status"></span><span id="p-age"></span></div>
+        <p class="note" data-i="p_note"></p>
+      </div>
+      <div class="stat">
+        <div><span data-i="p_g24"></span><b id="p-g24">-</b></div>
+        <div><span data-i="p_g22"></span><b id="p-g22">-</b></div>
+        <div><span data-i="p_world"></span><b><span id="p-world">-</span><span class="chg" id="p-chg"></span></b></div>
+        <div><span data-i="p_fx"></span><b id="p-fx">-</b></div>
+        <div id="p-dealer-row" hidden><span id="p-dealer-lab"></span><b id="p-dealer">-</b></div>
+      </div>
+    </div>
+    <p class="src" id="p-src"></p>
+  </section>
+
+  <section id="days" class="panel" aria-labelledby="h-days">
+    <h2 id="h-days" data-i="d_title"></h2>
+    <p class="lead" data-i="d_lead"></p>
+    <div class="tiles" id="days-grid" style="margin-bottom:0"></div>
+    <p class="note" data-i="d_note"></p>
+  </section>
+
+  <section id="lookup" class="panel" aria-labelledby="h-lk">
+    <h2 id="h-lk" data-i="lk_title"></h2>
+    <p class="lead" data-i="lk_lead"></p>
+    <div class="controls">
+      <div class="field"><label for="q" data-i="lk_q"></label><input id="q" type="text" autocomplete="off" spellcheck="false" value="1 pound" data-ip="lk_ph"></div>
+      <div class="field"><label for="karat" data-i="lk_karat"></label>
+        <select id="karat"><option value="24">24K</option><option value="22" selected>22K</option><option value="21">21K</option><option value="18">18K</option></select></div>
+      <div class="field"><label for="cur" data-i="lk_cur"></label>
+        <select id="cur"><option value="LKR" selected data-i="cur_lkr"></option><option value="USD" data-i="cur_usd"></option></select></div>
+    </div>
+    <div class="chips" id="chips">
+      <button type="button" class="chip" data-q="1 gram" data-i="c_g"></button><button type="button" class="chip" data-q="1 sovereign" data-i="c_sov"></button><button type="button" class="chip" data-q="1 oz" data-i="c_oz"></button><button type="button" class="chip" data-q="1 pound" data-i="c_lb"></button><button type="button" class="chip" data-q="1 kg" data-i="c_kg"></button><button type="button" class="chip" data-q="1 tola" data-i="c_tola"></button>
+    </div>
+    <div class="out" id="lk-out">-</div>
+    <p class="note" id="lk-sub" style="margin:0 0 14px"></p>
+    <div class="tablewrap"><table><thead><tr><th data-i="lk_unit"></th><th class="num" data-i="lk_grams"></th><th class="num" id="lk-ph"></th></tr></thead><tbody id="lk-rows"></tbody></table></div>
+  </section>
+
+  <section id="forecast" class="panel" aria-labelledby="h-fc">
+    <h2 id="h-fc" data-i="fc_title"></h2>
+    <p class="lead" data-i="fc_lead"></p>
+    <div class="controls" style="margin-bottom:16px">
+      <div class="field"><label for="horizon" data-i="fc_h"></label>
+        <select id="horizon"><option value="1" data-i="h1"></option><option value="5" data-i="h5"></option><option value="21" selected data-i="h21"></option><option value="63" data-i="h63"></option></select></div>
+    </div>
+    <p class="sentence" id="fc-sentence"></p>
+    <div class="tiles">
+      <div class="tile"><div class="k" data-i="fc_now"></div><div class="v" id="t-last">-</div></div>
+      <div class="tile"><div class="k" data-i="fc_mid"></div><div class="v" id="t-med">-</div></div>
+      <div class="tile"><div class="k" data-i="fc_rng"></div><div class="v" id="t-rng" style="font-size:17px">-</div></div>
+      <div class="tile"><div class="k" data-i="fc_up"></div><div class="v" id="t-up">-</div><span class="pill" id="t-pill"></span></div>
+    </div>
+    <div class="chartbox"><svg id="chart" viewBox="0 0 720 320" role="img" aria-label="Chart"></svg></div>
+    <div class="legend">
+      <span><i style="background:var(--fg)"></i><span data-i="lg_past"></span></span>
+      <span><i style="background:var(--accent)"></i><span data-i="lg_mid"></span></span>
+      <span><i style="background:var(--accent-soft)"></i><span data-i="lg_50"></span></span>
+      <span><i style="background:var(--accent-softer);border:1px solid var(--accent-soft)"></i><span data-i="lg_90"></span></span>
+    </div>
+    <h3 style="margin-top:22px" data-i="bt_title"></h3>
+    <div class="tablewrap"><table><thead><tr><th data-i="bt_method"></th><th class="num" data-i="bt_miss"></th></tr></thead><tbody id="bt-body"></tbody></table></div>
+    <p class="note" id="bt-verdict"></p>
+  </section>
+
+  <section id="shops" class="panel" aria-labelledby="h-sh">
+    <h2 id="h-sh" data-i="sh_title"></h2>
+    <p class="lead" data-i="sh_lead"></p>
+    <p class="exnote" id="sh-ex" data-i="sh_ex" hidden></p>
+    <p class="lead" id="sh-empty" data-i="sh_none" hidden></p>
+    <div class="tablewrap" id="sh-wrap"><table>
+      <thead><tr><th data-i="sh_shop"></th><th data-i="sh_city"></th><th class="num" data-i="sh_price"></th><th class="num" data-i="sh_vs"></th><th class="num" data-i="sh_buy"></th><th class="num" data-i="sh_upd"></th></tr></thead>
+      <tbody id="sh-body"></tbody>
+    </table></div>
+    <p class="note" data-i="sh_note"></p>
+    <p class="note"><a class="joinlink" id="sh-join" href="shop.html" data-i="sh_join"></a></p>
+  </section>
+
+  <section id="buy" class="panel" aria-labelledby="h-buy">
+    <h2 id="h-buy" data-i="buy_title"></h2>
+    <p class="lead" data-i="buy_lead"></p>
+    <ol class="tips" id="tips"></ol>
+    <h3 data-i="shop_title"></h3>
+    <div class="row">
+      <div class="field"><label for="shop" data-i="shop_in"></label><input id="shop" type="number" inputmode="decimal" min="0" step="500" placeholder="e.g. 330000"></div>
+    </div>
+    <p class="result" id="shop-out"></p>
+  </section>
+
+  <section id="alerts" class="panel" aria-labelledby="h-al">
+    <h2 id="h-al" data-i="al_title"></h2>
+    <p class="lead" data-i="al_lead"></p>
+    <div class="row">
+      <div class="field"><label for="al-dir" data-i="al_dir"></label>
+        <select id="al-dir"><option value="below" data-i="al_below"></option><option value="above" data-i="al_above"></option></select></div>
+      <div class="field"><label for="al-val" data-i="al_val"></label><input id="al-val" type="number" inputmode="decimal" min="0" step="1000"></div>
+      <button type="button" id="al-add" data-i="al_add"></button>
+    </div>
+    <ul class="alist" id="al-list"></ul>
+  </section>
+
+  <section id="learn" class="panel" aria-labelledby="h-ln">
+    <h2 id="h-ln" data-i="ln_title"></h2>
+    <p class="lead" data-i="ln_lead"></p>
+    <div id="faq"></div>
+  </section>
+
+  <p class="fine" data-i="foot"></p>
+</div>
+
+<button type="button" class="botbtn" id="bot-open" aria-expanded="false" aria-controls="bot" data-i="bot_open"></button>
+<div class="bot" id="bot" role="dialog" aria-labelledby="bot-title" hidden>
+  <div class="bothead"><b id="bot-title" data-i="bot_title"></b><button type="button" id="bot-close" aria-label="Close">×</button></div>
+  <div class="msgs" id="msgs" aria-live="polite"></div>
+  <div class="botchips" id="bot-chips"></div>
+  <form class="botform" id="bot-form" autocomplete="off"><input id="bot-in" type="text" maxlength="200" data-ip="bot_ph" aria-label="Question"><button type="submit" data-i="bot_send"></button></form>
+</div>
+
+<script src="config.js"></script>
+<script>
+/* ---------- model ---------- */
+var KG = 31.1035, LAMBDA = 0.94;
+function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function gauss(rnd) { var u = 0, v = 0; while (u === 0) u = rnd(); while (v === 0) v = rnd(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+function erf(x) { var s = x < 0 ? -1 : 1; x = Math.abs(x); var t = 1 / (1 + 0.3275911 * x); var y = 1 - (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-x * x); return s * y; }
+function cdf(x) { return 0.5 * (1 + erf(x / Math.SQRT2)); }
+function sampleSeries(n) {
+  var rnd = mulberry32(7), g = [1], f = [1], i;
+  for (i = 1; i < n; i++) { g.push(g[i - 1] * Math.exp(0.0003 + 0.0115 * gauss(rnd))); f.push(f[i - 1] * Math.exp(0.0002 + 0.0030 * gauss(rnd))); }
+  var gl = g[n - 1], fl = f[n - 1]; for (i = 0; i < n; i++) { g[i] /= gl; f[i] /= fl; }
+  var dates = [], d = new Date(Date.UTC(2026, 10, 11));
+  while (dates.length < n) { var wd = d.getUTCDay(); if (wd !== 0 && wd !== 6) dates.push(d.toISOString().slice(0, 10)); d = new Date(d.getTime() - 86400000); }
+  dates.reverse();
+  return { dates: dates, gold: g, fx: f };
+}
+function toSov(gold, fx, karat) { return gold / KG * fx * 8 * karat / 24; }
+function prep(S) {
+  var n = S.length, r = [0], P = [0], v = [], j;
+  for (j = 1; j < n; j++) { r.push(Math.log(S[j] / S[j - 1])); P.push(P[j - 1] + r[j]); }
+  var init = 0, m = Math.min(30, n - 1); for (j = 1; j <= m; j++) init += r[j] * r[j]; init /= Math.max(1, m);
+  for (j = 0; j < n; j++) v.push(j <= m ? init : LAMBDA * v[j - 1] + (1 - LAMBDA) * r[j] * r[j]);
+  return { r: r, P: P, v: v };
+}
+function trailMean(P, t, w) { var a = Math.max(0, t - w); return t - a > 0 ? (P[t] - P[a]) / (t - a) : 0; }
+var Z = { q05: -1.6449, q25: -0.6745, q75: 0.6745, q95: 1.6449 };
+function forecast(S, h) {
+  var p = prep(S), t = S.length - 1, sig = Math.sqrt(p.v[t]), mu = 0.25 * trailMean(p.P, t, 120);
+  var last = S[t], sh = sig * Math.sqrt(h), median = last * Math.exp(mu * h);
+  return { last: last, mu: mu, sigma: sig, median: median, q05: median * Math.exp(Z.q05 * sh), q25: median * Math.exp(Z.q25 * sh), q75: median * Math.exp(Z.q75 * sh), q95: median * Math.exp(Z.q95 * sh), pUp: cdf(mu * h / sh) };
+}
+function bandAt(fc, k) { var sk = fc.sigma * Math.sqrt(k), m = fc.last * Math.exp(fc.mu * k); return { m: m, q05: m * Math.exp(Z.q05 * sk), q25: m * Math.exp(Z.q25 * sk), q75: m * Math.exp(Z.q75 * sk), q95: m * Math.exp(Z.q95 * sk) }; }
+function backtest(S, H) {
+  var p = prep(S), n = S.length, start = Math.max(60, n - 300 - H), c = 0, hit = 0, e = { naive: 0, model: 0, trend: 0 };
+  for (var t = start; t <= n - 1 - H; t++) {
+    var a = S[t + H], last = S[t], sh = Math.sqrt(p.v[t]) * Math.sqrt(H);
+    var pm = last * Math.exp(0.25 * trailMean(p.P, t, 120) * H), pt = last * Math.exp(trailMean(p.P, t, 20) * H);
+    e.naive += Math.abs(a - last) / a; e.model += Math.abs(a - pm) / a; e.trend += Math.abs(a - pt) / a;
+    if (Math.abs(Math.log(a / pm)) <= 1.6449 * sh) hit++; c++;
+  }
+  return c ? { n: c, naive: e.naive / c, model: e.model / c, trend: e.trend / c, coverage: hit / c } : null;
+}
+function parseCsv(text) {
+  var lines = text.replace(/\r/g, '').split('\n').filter(function (l) { return l.trim(); });
+  if (lines.length < 62) throw new Error('short');
+  var head = lines[0].split(',').map(function (s) { return s.trim().toLowerCase(); }), rows = [];
+  var di = head.indexOf('date'), gi = head.indexOf('gold_usd'), fi = head.indexOf('usdlkr');
+  if (di < 0 || gi < 0 || fi < 0) throw new Error('cols');
+  lines.slice(1).forEach(function (l) { var c = l.split(','), g = parseFloat(c[gi]), f = parseFloat(c[fi]); if (!isNaN(Date.parse(c[di])) && g > 0 && f > 0) rows.push({ d: c[di].slice(0, 10), g: g, f: f }); });
+  rows.sort(function (a, b) { return a.d < b.d ? -1 : a.d > b.d ? 1 : 0; });
+  if (rows.length < 60) throw new Error('short');
+  return { dates: rows.map(function (r) { return r.d; }), gold: rows.map(function (r) { return r.g; }), fx: rows.map(function (r) { return r.f; }) };
+}
+var G_UNITS = { g: 1, gm: 1, gram: 1, grams: 1, kg: 1000, kilo: 1000, kilos: 1000, kilogram: 1000, kilograms: 1000, oz: 31.1035, ounce: 31.1035, ounces: 31.1035, lb: 453.59237, lbs: 453.59237, pound: 453.59237, pounds: 453.59237, sovereign: 8, sovereigns: 8, sov: 8, pawn: 8, tola: 11.6638, tolas: 11.6638, 'ග්‍රෑම්': 1, 'පවුම': 8, 'පවුම්': 8, 'கிராம்': 1, 'பவுன்': 8 };
+function parseWeight(q) {
+  var s = String(q || '').toLowerCase().replace(/,/g, '').trim(); if (!s) return null;
+  var troy = /troy/.test(s); s = s.replace(/troy/g, '').trim();
+  var m = s.match(/^(\d*\.?\d+)?\s*([^\d\s.]+)?$/); if (!m) return null;
+  var n = m[1] === undefined ? 1 : parseFloat(m[1]), u = m[2] || 'g';
+  if (!Object.prototype.hasOwnProperty.call(G_UNITS, u) || !(n > 0)) return null;
+  var per = G_UNITS[u]; if (troy && per === 453.59237) per = 373.2417;
+  return { n: n, unit: u, grams: n * per };
+}
+function goldValueUsd(grams, karat, spot) { return grams * karat / 24 / KG * spot; }
+</script>
+
+<script>
+/* ---------- words (EN, Sinhala, Tamil). Have a native speaker review SI and TA before launch. ---------- */
+var I = {
+en: {
+nav_price: "Price now", nav_lookup: "By weight", nav_forecast: "Forecast", nav_buy: "Buying guide", nav_alerts: "Alerts", nav_learn: "Learn",
+d_title: "Today, tomorrow and the day after", d_lead: "The 22K sovereign at the world-price value. Tomorrow and the day after show a likely range, not a promise.", d_today: "Today", d_tom: "Tomorrow", d_dat: "Day after tomorrow", d_now: "Price now", d_range: "9 in 10 range", d_mid: "Middle guess",
+d_note: "One day's move is usually small next to a shop's margin. Whether the price goes up or down is close to a coin flip.",
+tag: "Gold prices for Sri Lanka, in plain language",
+p_title: "Gold price now", p_sov: "22K sovereign (8 g), worked out from the world price", p_note: "This is the value of the gold at the world price and today's dollar rate. Shops in Sri Lanka usually charge more because of the dealer's margin and making charges. Use the buying guide below to check your shop.",
+p_g24: "24K, per gram", p_g22: "22K, per gram", p_world: "World price, per ounce", p_fx: "US dollar in rupees", p_dealer: "Colombo dealer price, 22K sovereign",
+st_live: "Live", st_late: "Delayed", st_ex: "Example data", age: "updated {s} ago", age_ex: "not real prices",
+src_live: "Sources: {g} for gold, {f} for the exchange rate. Checked every minute.", src_ex: "This page is showing made-up example prices. The live site reads a data file that refreshes every few minutes.",
+lk_title: "Price by weight", lk_lead: "Type any amount to see its value at the world price. Examples: 5 pounds, 10 g, 2 sovereign, 1 oz, 3 tola.", lk_q: "Amount", lk_ph: "5 pounds, 10 g, 2 sovereign", lk_karat: "Purity", lk_cur: "Show in", cur_lkr: "Sri Lankan rupees", cur_usd: "US dollars",
+c_g: "1 gram", c_sov: "1 sovereign", c_oz: "1 ounce", c_lb: "1 pound", c_kg: "1 kilogram", c_tola: "1 tola",
+lk_unit: "Unit", lk_grams: "Grams", lk_hint: "Try \"5 pounds\", \"10 g\", \"2 sovereign\", \"1 oz\", \"3 tola\" or \"2 kg\".", lk_res: "{n} {u} is {g} g of {k}K gold, about {o} at today's rate. Shop prices add a margin.",
+u_g: "1 gram", u_sov: "1 sovereign (8 g)", u_oz: "1 troy ounce", u_lb: "1 pound", u_kg: "1 kilogram", u_tola: "1 tola", lk_col: "Price ({k}K, {c})",
+fc_title: "Where could the price go?", fc_lead: "Nobody can say if gold will rise or fall. What can be measured is how far the price usually moves. So this page shows a range, not one number.", fc_h: "Look ahead", h1: "1 day", h5: "1 week", h21: "1 month", h63: "3 months",
+fc_sentence: "In {h}, the 22K sovereign is likely to cost between {lo} and {hi}, about 9 times out of 10. The middle guess is {mid}. Whether it goes up or down is close to a coin flip.",
+fc_now: "22K sovereign now", fc_mid: "Middle guess", fc_rng: "9 in 10 range", fc_up: "Chance it is higher", lean_up: "Slight upward lean", lean_down: "Slight downward lean", lean_flat: "No clear direction",
+lg_past: "Past prices", lg_mid: "Middle guess", lg_50: "Half of outcomes", lg_90: "9 in 10 outcomes",
+bt_title: "How good is this forecast? A test on past prices, 5 days ahead", bt_method: "Method", bt_miss: "Average miss", bt_naive: "Assume no change", bt_model: "This forecast", bt_trend: "Follow the last 4 weeks",
+bt_v: "Over {n} past days, this forecast was {cmp} assuming no change. The 9 in 10 range held the real price {c}% of the time.", bt_better: "a little more accurate than", bt_same: "no more accurate than", bt_ex: " This test uses made-up example data.",
+buy_title: "Best time to buy: what actually helps", buy_lead: "No website can name the best day to buy. These habits protect you whatever the price does.",
+tips: ["Spread your buying. Buy a little each month instead of everything on one day. You get an average price and avoid buying at a peak.", "Set a price alert below and buy when it drops to your level.", "Watch the dollar. When the rupee weakens, the rupee price of gold rises even if the world price does not move.", "Compare at least three shops. Ask for the gold value and the making charge separately.", "Do not borrow money to buy gold. Prices can stay low for years."],
+shop_title: "Check your jeweller's price", shop_in: "Shop price for one 22K sovereign (Rs)",
+shop_hi: "World-price value is {v}. This shop charges {d} more, which is {p}%. The extra covers the dealer's margin and making charges.", shop_lo: "World-price value is {v}. This shop charges {d} less, which is {p}% below. Check the purity and the weight on the bill.",
+al_title: "Price alerts", al_lead: "Pick a price for the 22K sovereign. This page tells you when it is reached. Alerts work while the page is open in your browser. They do not send SMS or email.",
+al_dir: "Tell me when it is", al_below: "below", al_above: "above", al_val: "Price (Rs)", al_add: "Add alert", al_rm: "Remove", al_none: "No alerts yet.", al_item: "22K sovereign {d} {v}", al_hit: "Alert: the 22K sovereign is now {p}, which is {d} your price of {v}.",
+ln_title: "Learn about gold", ln_lead: "Short answers to the questions buyers ask most.",
+learn: [
+["What do 24K and 22K mean?", "Karat shows how much of the metal is pure gold. 24K is pure gold, about 99.9%. 22K has 22 parts gold in 24, about 91.7%, mixed with other metals so jewellery stays strong. 18K has 18 parts in 24, which is 75%."],
+["What is a sovereign (pawn, pavun)?", "In Sri Lanka a sovereign is 8 grams. A 22K sovereign holds about 7.3 grams of pure gold."],
+["Why does the price change every day?", "Two things mostly: the world price in US dollars and the dollar to rupee rate. If the rupee weakens, the price in rupees goes up even when the world price stays flat."],
+["What are making charges?", "A fee for crafting the jewellery, added on top of the gold value. It differs by shop and design. Ask for the gold value and the making charge written separately on the bill."],
+["How do I avoid fake or low-purity gold?", "Buy from a jeweller you can find again. Ask for a bill that states the karat and weight. Ask how the purity was checked. If a price is far below others, ask why."],
+["Is now a good time to buy?", "Nobody knows. Use the range above to see how far the price can move, spread your buying over several months, and only use money you will not need soon."],
+["What do I get if I sell?", "Shops usually pay less than their selling price and may deduct making charges. Ask about the buy-back rule before you buy."]
+],
+nav_shops: "Shop prices", p_dealer_med: "Median of {n} shops, 22K sovereign",
+sh_title: "Shop prices today", sh_lead: "Prices posted by jewellers we have approved. Each price shows when it was posted and how far it is from the world-price value. Prices older than 24 hours are hidden.",
+sh_shop: "Shop", sh_city: "City", sh_price: "22K sovereign", sh_vs: "Vs world price", sh_buy: "Shop buys at", sh_upd: "Posted",
+sh_none: "No approved shop prices yet. Jewellers can join below.", sh_ex: "Example shops, not real prices.", sh_join: "Are you a jeweller? Add your prices", sh_flag: "Check this price",
+sh_note: "A shop price far from the world-price value can be a typing mistake. Always check purity, weight and making charges on the bill.",
+bot_open: "Ask a question", bot_title: "Gold helper", bot_hi: "Hello! I can answer questions about today's price, the price of any weight, shop prices, the forecast range and how gold buying works. I cannot tell you if gold will rise or fall.", bot_ph: "Type your question", bot_send: "Send",
+bot_chips: ["Price of 5 pounds", "What is a sovereign?", "Cheapest shops", "Will the price go up?"],
+bot_fallback: "I did not understand that. Try asking about today's price, the price of a weight like \"5 pounds\", shop prices, the forecast, making charges or how to spot fake gold.",
+bot_price: "Right now a 22K sovereign is worth {sov} at the world price. 24K is {g24} per gram. The world price is {w} per ounce and the dollar is Rs {fx}. {age}. Shops usually charge more.",
+bot_weight: "{n} {u} of {k}K gold is about {v} at the world price, which is {g} g. Shops add a margin.",
+bot_fc: "Nobody can tell if gold will rise or fall, and I will not guess. In {h}, the 22K sovereign is likely to cost between {lo} and {hi}, about 9 times out of 10, with a middle guess of {mid}. Spreading your buying over months and setting a price alert helps more than timing.",
+bot_shops: "Lowest 22K sovereign prices from approved shops: {list}. Check purity and making charges on the bill.", bot_noshops: "There are no approved shop prices yet. Jewellers can join from the Shop prices section.",
+bot_alert: "Open the Price alerts section, choose below or above, type a price and press Add. It works while this page is open.", bot_exn: " (example data)",
+foot: "Not financial advice. Prices are worked out from public sources and may differ from your jeweller. The forecast shows how far gold usually moves, not what it will do. Sinhala and Tamil text should be checked by a native speaker."
+},
+si: {
+nav_price: "දැන් මිල", nav_lookup: "බර අනුව", nav_forecast: "අනාවැකිය", nav_buy: "මිලදී ගැනීමේ උපදෙස්", nav_alerts: "ඇඟවීම්", nav_learn: "ඉගෙන ගන්න",
+d_title: "අද, හෙට සහ අනිද්දා", d_lead: "ලෝක මිල අගයට 22K පවුම. හෙට සහ අනිද්දා පෙන්වන්නේ පොරොන්දුවක් නොව ඉඩ ඇති පරාසයකි.", d_today: "අද", d_tom: "හෙට", d_dat: "අනිද්දා", d_now: "දැන් මිල", d_range: "10න් 9ක පරාසය", d_mid: "මැද අනුමානය",
+d_note: "එක් දිනක චලනය සාමාන්‍යයෙන් වෙළඳසැල් ලාභයට වඩා කුඩාය. මිල ඉහළ යයිද පහළ යයිද යන්න කාසියක් උඩ දැමීමක් හා ආසන්නයි.",
+tag: "ශ්‍රී ලංකාවේ රන් මිල, සරල භාෂාවෙන්",
+p_title: "රන් මිල දැන්", p_sov: "22K පවුම (8 g), ලෝක මිලෙන් ගණනය කළ අගය", p_note: "මෙය ලෝක මිලට සහ අද ඩොලර් අගයට රන් වල වටිනාකමයි. ශ්‍රී ලංකාවේ වෙළඳසැල් සාමාන්‍යයෙන් වැඩි මිලක් අය කරයි (වෙළෙන්දාගේ ලාභය සහ රන් වැඩ කුලිය නිසා). ඔබේ වෙළඳසැල පරීක්ෂා කිරීමට පහත උපදෙස් කොටස භාවිත කරන්න.",
+p_g24: "24K, ග්‍රෑම් එකක්", p_g22: "22K, ග්‍රෑම් එකක්", p_world: "ලෝක මිල, අවුන්සයක්", p_fx: "ඩොලරය රුපියල්වලින්", p_dealer: "කොළඹ වෙළෙන්දාගේ මිල, 22K පවුම",
+st_live: "සජීවී", st_late: "ප්‍රමාදයි", st_ex: "උදාහරණ දත්ත", age: "තත්පර {s} කට පෙර යාවත්කාලීන කළා", age_ex: "සැබෑ මිල නොවේ",
+src_live: "මූලාශ්‍ර: රන් සඳහා {g}, විනිමය අනුපාතය සඳහා {f}. විනාඩියකට වරක් පරීක්ෂා කරයි.", src_ex: "මෙම පිටුව පෙන්වන්නේ ව්‍යාජ උදාහරණ මිලයි. සජීවී අඩවිය විනාඩි කිහිපයකට වරක් යාවත්කාලීන වන දත්ත ගොනුවක් කියවයි.",
+lk_title: "බර අනුව මිල", lk_lead: "ඕනෑම ප්‍රමාණයක් ටයිප් කර ලෝක මිලට එහි වටිනාකම බලන්න. උදා: 5 pounds, 10 g, 2 sovereign, 1 oz, 3 tola.", lk_q: "ප්‍රමාණය", lk_ph: "5 pounds, 10 g, 2 sovereign", lk_karat: "පිරිසිදුකම", lk_cur: "පෙන්වන්න", cur_lkr: "ශ්‍රී ලංකා රුපියල්", cur_usd: "ඇමරිකානු ඩොලර්",
+c_g: "ග්‍රෑම් 1", c_sov: "පවුම 1", c_oz: "අවුන්ස 1", c_lb: "රාත්තල 1", c_kg: "කිලෝග්‍රෑම් 1", c_tola: "තෝලා 1",
+lk_unit: "ඒකකය", lk_grams: "ග්‍රෑම්", lk_hint: "\"5 pounds\", \"10 g\", \"2 sovereign\", \"1 oz\", \"3 tola\" හෝ \"2 kg\" උත්සාහ කරන්න.", lk_res: "{n} {u} යනු {k}K රන් ග්‍රෑම් {g} කි. අද අනුපාතයට ආසන්න වශයෙන් {o}. වෙළඳසැල් මිලට ලාභයක් එකතු වේ.",
+u_g: "ග්‍රෑම් 1", u_sov: "පවුම 1 (8 g)", u_oz: "ට්‍රෝයි අවුන්ස 1", u_lb: "රාත්තල 1", u_kg: "කිලෝග්‍රෑම් 1", u_tola: "තෝලා 1", lk_col: "මිල ({k}K, {c})",
+fc_title: "මිල කොතැනට යා හැකිද?", fc_lead: "රන් මිල ඉහළ යයිද පහළ යයිද කියා කිසිවෙකුට කිව නොහැක. මැනිය හැක්කේ මිල සාමාන්‍යයෙන් කොපමණ වෙනස් වේද යන්නයි. ඒ නිසා මෙහි පෙන්වන්නේ එක් අගයක් නොව පරාසයකි.", fc_h: "ඉදිරියට බලන්න", h1: "දවස 1", h5: "සති 1", h21: "මාස 1", h63: "මාස 3",
+fc_sentence: "{h}ක් තුළ 22K පවුමේ මිල {lo} සහ {hi} අතර වීමට ඉඩ ඇත (වාර 10කින් 9ක්). මැද අනුමානය {mid}. ඉහළ යයිද පහළ යයිද යන්න කාසියක් උඩ දැමීමක් හා ආසන්නයි.",
+fc_now: "22K පවුම දැන්", fc_mid: "මැද අනුමානය", fc_rng: "10න් 9ක පරාසය", fc_up: "ඉහළ යාමේ ඉඩ", lean_up: "සුළු ඉහළ නැඹුරුවක්", lean_down: "සුළු පහළ නැඹුරුවක්", lean_flat: "පැහැදිලි දිශාවක් නැත",
+lg_past: "පැරණි මිල", lg_mid: "මැද අනුමානය", lg_50: "ප්‍රතිඵලවලින් භාගයක්", lg_90: "ප්‍රතිඵලවලින් 10න් 9ක්",
+bt_title: "මෙම අනාවැකිය කොතරම් හොඳද? පැරණි මිල මත පරීක්ෂණයක්, දින 5ක් ඉදිරියට", bt_method: "ක්‍රමය", bt_miss: "සාමාන්‍ය වැරදීම", bt_naive: "වෙනසක් නැතැයි උපකල්පනය", bt_model: "මෙම අනාවැකිය", bt_trend: "පසුගිය සති 4 අනුගමනය",
+bt_v: "පසුගිය දින {n}ක් තුළ, මෙම අනාවැකිය {cmp} වෙනසක් නැතැයි උපකල්පනය කිරීමට වඩා. 10න් 9ක පරාසය සැබෑ මිල {c}%ක් අල්ලා ගත්තා.", bt_better: "ටිකක් වඩා නිවැරදියි", bt_same: "වඩා නිවැරදි නැත", bt_ex: " මෙම පරීක්ෂණය ව්‍යාජ උදාහරණ දත්ත භාවිත කරයි.",
+buy_title: "මිලදී ගැනීමට හොඳම වේලාව: සැබැවින්ම උපකාරී වන දේ", buy_lead: "හොඳම දවස කිව හැකි වෙබ් අඩවියක් නැත. මිල කෙසේ වුවත් මෙම පුරුදු ඔබව ආරක්ෂා කරයි.",
+tips: ["මිලදී ගැනීම බෙදා හරින්න. එක් දවසක සියල්ල නොව සෑම මාසයකම ටිකක් ගන්න. එවිට සාමාන්‍ය මිලක් ලැබෙන අතර උච්චතම මිලට ගැනීම වළක්වා ගත හැක.", "පහත ඇඟවීමක් සකසා මිල ඔබේ මට්ටමට පැමිණි විට ගන්න.", "ඩොලරය බලන්න. රුපියල දුර්වල වූ විට ලෝක මිල නොවෙනස් වුවත් රුපියල් මිල ඉහළ යයි.", "අවම වශයෙන් වෙළඳසැල් තුනක් සසඳන්න. රන් වටිනාකම සහ වැඩ කුලිය වෙන වෙනම ඉල්ලන්න.", "රන් ගැනීමට ණය නොගන්න. මිල වසර ගණනාවක් පහළ තිබිය හැක."],
+shop_title: "ඔබේ ස්වර්ණාභරණ වෙළෙන්දාගේ මිල පරීක්ෂා කරන්න", shop_in: "22K පවුමක් සඳහා වෙළඳසැල් මිල (රු.)",
+shop_hi: "ලෝක මිල අනුව වටිනාකම {v}. මෙම වෙළඳසැල {d}ක් වැඩියෙන් අය කරයි, එනම් {p}%ක්. අමතර මුදලින් වෙළෙන්දාගේ ලාභය සහ රන් වැඩ කුලිය ආවරණය වේ.", shop_lo: "ලෝක මිල අනුව වටිනාකම {v}. මෙම වෙළඳසැල {d}ක් අඩුවෙන් අය කරයි, එනම් {p}%ක් අඩුයි. බිල්පතේ පිරිසිදුකම සහ බර පරීක්ෂා කරන්න.",
+al_title: "මිල ඇඟවීම්", al_lead: "22K පවුම සඳහා මිලක් තෝරන්න. එය ළඟා වූ විට මෙම පිටුව ඔබට දන්වයි. ඇඟවීම් ක්‍රියා කරන්නේ ඔබේ බ්‍රවුසරයේ පිටුව විවෘතව තිබෙන විට පමණි. SMS හෝ ඊමේල් නොයවයි.",
+al_dir: "මිල මෙසේ වූ විට දන්වන්න", al_below: "පහළට", al_above: "ඉහළට", al_val: "මිල (රු.)", al_add: "ඇඟවීම එක් කරන්න", al_rm: "ඉවත් කරන්න", al_none: "තවම ඇඟවීම් නැත.", al_item: "22K පවුම {v} {d}", al_hit: "ඇඟවීම: 22K පවුම දැන් {p} වන අතර එය ඔබේ මිල {v} ට වඩා {d}.",
+ln_title: "රන් ගැන ඉගෙන ගන්න", ln_lead: "ගැනුම්කරුවන් වැඩිපුරම අසන ප්‍රශ්නවලට කෙටි පිළිතුරු.",
+learn: [
+["24K සහ 22K යනු කුමක්ද?", "කැරට් මගින් ලෝහයේ පිරිසිදු රන් ප්‍රමාණය පෙන්වයි. 24K යනු පිරිසිදු රන්, ආසන්න වශයෙන් 99.9%. 22K හි කොටස් 24න් 22ක් රන් (91.7%), ආභරණ ශක්තිමත්ව තබා ගැනීමට වෙනත් ලෝහ මිශ්‍ර කර ඇත. 18K හි 24න් 18ක් (75%)."],
+["පවුමක් (සොවරන්) යනු කුමක්ද?", "ශ්‍රී ලංකාවේ පවුමක් යනු ග්‍රෑම් 8කි. 22K පවුමක පිරිසිදු රන් ග්‍රෑම් 7.3ක් පමණ ඇත."],
+["මිල සෑම දිනකම වෙනස් වන්නේ ඇයි?", "ප්‍රධාන කරුණු දෙකකි: ඇමරිකානු ඩොලර්වලින් ලෝක මිල සහ ඩොලර්-රුපියල් අනුපාතය. රුපියල දුර්වල වූවොත් ලෝක මිල නොවෙනස් වුවත් රුපියල් මිල ඉහළ යයි."],
+["රන් වැඩ කුලිය යනු කුමක්ද?", "ආභරණය සෑදීම සඳහා රන් වටිනාකමට අමතරව අය කරන ගාස්තුවකි. එය වෙළඳසැල සහ නිර්මාණය අනුව වෙනස් වේ. බිල්පතේ රන් වටිනාකම සහ වැඩ කුලිය වෙන වෙනම ලියන්න කියා ඉල්ලන්න."],
+["ව්‍යාජ හෝ අඩු පිරිසිදුකමක් ඇති රන් වළක්වා ගන්නේ කෙසේද?", "ඔබට නැවත සොයා ගත හැකි වෙළෙන්දෙකුගෙන් ගන්න. කැරට් සහ බර සඳහන් බිල්පතක් ඉල්ලන්න. පිරිසිදුකම පරීක්ෂා කළේ කෙසේදැයි අසන්න. මිල අන් අයට වඩා බෙහෙවින් අඩු නම් ඒ ඇයිදැයි අසන්න."],
+["දැන් මිලදී ගැනීමට හොඳ වේලාවක්ද?", "කිසිවෙකු නොදනී. මිල කොතරම් වෙනස් විය හැකිදැයි බැලීමට ඉහත පරාසය භාවිත කරන්න, මාස කිහිපයක් තුළ බෙදා ගන්න, ඉක්මනින් අවශ්‍ය නොවන මුදලින් පමණක් ගන්න."],
+["විකුණුවොත් මට කුමක් ලැබෙයිද?", "වෙළඳසැල් සාමාන්‍යයෙන් තමන්ගේ විකුණුම් මිලට වඩා අඩුවෙන් ගෙවයි, වැඩ කුලිය කපා ගත හැක. මිලදී ගැනීමට පෙර නැවත මිලට ගන්නා නීතිය ගැන අසන්න."]
+],
+nav_shops: "වෙළඳසැල් මිල", p_dealer_med: "වෙළඳසැල් {n}ක මධ්‍යස්ථ මිල, 22K පවුම",
+sh_title: "අද වෙළඳසැල් මිල", sh_lead: "අප අනුමත කළ ස්වර්ණාභරණ වෙළෙන්දන් පළ කළ මිල ගණන්. සෑම මිලක්ම පළ කළ වේලාව සහ ලෝක මිල අගයෙන් කොපමණ දුරස්ථදැයි පෙන්වයි. පැය 24කට වඩා පැරණි මිල සඟවා ඇත.",
+sh_shop: "වෙළඳසැල", sh_city: "නගරය", sh_price: "22K පවුම", sh_vs: "ලෝක මිලට සාපේක්ෂව", sh_buy: "වෙළඳසැල ගන්නා මිල", sh_upd: "පළ කළේ",
+sh_none: "තවම අනුමත වෙළඳසැල් මිල නැත. ස්වර්ණාභරණ වෙළෙන්දන්ට පහතින් එක් විය හැක.", sh_ex: "උදාහරණ වෙළඳසැල්, සැබෑ මිල නොවේ.", sh_join: "ඔබ ස්වර්ණාභරණ වෙළෙන්දෙක්ද? ඔබේ මිල එක් කරන්න", sh_flag: "මෙම මිල පරීක්ෂා කරන්න",
+sh_note: "ලෝක මිල අගයෙන් බොහෝ දුරින් පිහිටි වෙළඳසැල් මිලක් ටයිප් කිරීමේ වැරැද්දක් විය හැක. බිල්පතේ පිරිසිදුකම, බර සහ වැඩ කුලිය සැම විටම පරීක්ෂා කරන්න.",
+bot_open: "ප්‍රශ්නයක් අසන්න", bot_title: "රන් සහායක", bot_hi: "ආයුබෝවන්! අද මිල, ඕනෑම බරක මිල, වෙළඳසැල් මිල, අනාවැකි පරාසය සහ රන් මිලදී ගැනීම ගැන ප්‍රශ්නවලට මට පිළිතුරු දිය හැක. රන් මිල ඉහළ යයිද පහළ යයිද කියා මට කිව නොහැක.", bot_ph: "ඔබේ ප්‍රශ්නය ටයිප් කරන්න", bot_send: "යවන්න",
+bot_chips: ["5 පවුම් මිල", "පවුමක් යනු කුමක්ද?", "අඩුම මිල වෙළඳසැල්", "මිල ඉහළ යයිද?"],
+bot_fallback: "මට එය තේරුණේ නැහැ. අද මිල, \"5 පවුම්\" වැනි බරක මිල, වෙළඳසැල් මිල, අනාවැකිය, රන් වැඩ කුලිය හෝ ව්‍යාජ රන් හඳුනාගැනීම ගැන අසන්න.",
+bot_price: "දැන් ලෝක මිලට අනුව 22K පවුමක වටිනාකම {sov}. 24K ග්‍රෑම් එකක් {g24}. ලෝක මිල අවුන්සයකට {w} වන අතර ඩොලරය රු. {fx}. {age}. වෙළඳසැල් සාමාන්‍යයෙන් වැඩියෙන් අය කරයි.",
+bot_weight: "{k}K රන් {n} {u} ක් (ග්‍රෑම් {g}) ලෝක මිලට ආසන්න වශයෙන් {v}. වෙළඳසැල් ලාභයක් එකතු කරයි.",
+bot_fc: "රන් මිල ඉහළ යයිද පහළ යයිද කියා කිසිවෙකුට කිව නොහැක, මමත් අනුමාන නොකරමි. {h} තුළ 22K පවුමේ මිල {lo} සහ {hi} අතර වීමට ඉඩ ඇත (වාර 10කින් 9ක්), මැද අනුමානය {mid}. වේලාව අනුමාන කිරීමට වඩා මාස ගණනක් තුළ බෙදා ගැනීම සහ මිල ඇඟවීමක් සැකසීම වැඩි උපකාරයකි.",
+bot_shops: "අනුමත වෙළඳසැල්වල අඩුම 22K පවුම් මිල: {list}. බිල්පතේ පිරිසිදුකම සහ වැඩ කුලිය පරීක්ෂා කරන්න.", bot_noshops: "තවම අනුමත වෙළඳසැල් මිල නැත. ස්වර්ණාභරණ වෙළෙන්දන්ට වෙළඳසැල් මිල කොටසෙන් එක් විය හැක.",
+bot_alert: "මිල ඇඟවීම් කොටස විවෘත කර, පහළට හෝ ඉහළට තෝරා, මිලක් ටයිප් කර එක් කරන්න. මෙම පිටුව විවෘතව තිබෙන විට එය ක්‍රියා කරයි.", bot_exn: " (උදාහරණ දත්ත)",
+foot: "මෙය මූල්‍ය උපදෙස් නොවේ. මිල ගණනය කරන්නේ පොදු මූලාශ්‍රවලිනි, ඔබේ වෙළෙන්දාගේ මිලට වඩා වෙනස් විය හැක. අනාවැකිය පෙන්වන්නේ රන් සාමාන්‍යයෙන් කොපමණ චලනය වේද යන්නයි, එය කුමක් කරයිද යන්න නොවේ. සිංහල සහ දෙමළ පාඨ ස්වදේශීය කථිකයෙකු විසින් පරීක්ෂා කළ යුතුය."
+},
+ta: {
+nav_price: "இப்போதைய விலை", nav_lookup: "எடை வாரியாக", nav_forecast: "கணிப்பு", nav_buy: "வாங்கும் வழிகாட்டி", nav_alerts: "எச்சரிக்கைகள்", nav_learn: "கற்றுக்கொள்ள",
+d_title: "இன்று, நாளை, நாளை மறுநாள்", d_lead: "உலக விலை மதிப்பில் 22K பவுன். நாளையும் நாளை மறுநாளும் காட்டுவது உறுதிமொழி அல்ல, சாத்தியமான வரம்பு.", d_today: "இன்று", d_tom: "நாளை", d_dat: "நாளை மறுநாள்", d_now: "இப்போதைய விலை", d_range: "10 இல் 9 வரம்பு", d_mid: "நடுத்தர கணிப்பு",
+d_note: "ஒரு நாளின் மாற்றம் பொதுவாக கடையின் லாபத்தை விடச் சிறியது. ஏறுமா இறங்குமா என்பது கிட்டத்தட்ட சுண்டிவிடும் நாணயம் போன்றது.",
+tag: "இலங்கையின் தங்க விலை, எளிய மொழியில்",
+p_title: "தங்க விலை இப்போது", p_sov: "22K பவுன் (8 g), உலக விலையிலிருந்து கணக்கிடப்பட்டது", p_note: "இது உலக விலை மற்றும் இன்றைய டாலர் மதிப்பில் தங்கத்தின் மதிப்பு. இலங்கையில் கடைகள் பொதுவாக அதிகம் வசூலிக்கும் (வியாபாரி லாபம், செய்கூலி காரணமாக). உங்கள் கடையைச் சரிபார்க்க கீழே உள்ள வாங்கும் வழிகாட்டியைப் பயன்படுத்துங்கள்.",
+p_g24: "24K, ஒரு கிராம்", p_g22: "22K, ஒரு கிராம்", p_world: "உலக விலை, ஒரு அவுன்ஸ்", p_fx: "ரூபாயில் அமெரிக்க டாலர்", p_dealer: "கொழும்பு வியாபாரி விலை, 22K பவுன்",
+st_live: "நேரலை", st_late: "தாமதம்", st_ex: "எடுத்துக்காட்டு தரவு", age: "{s} முன் புதுப்பிக்கப்பட்டது", age_ex: "உண்மையான விலை அல்ல",
+src_live: "மூலங்கள்: தங்கத்திற்கு {g}, மாற்று விகிதத்திற்கு {f}. ஒவ்வொரு நிமிடமும் சரிபார்க்கப்படும்.", src_ex: "இந்தப் பக்கம் கற்பனையான எடுத்துக்காட்டு விலைகளைக் காட்டுகிறது. நேரலைத் தளம் சில நிமிடங்களுக்கு ஒருமுறை புதுப்பிக்கப்படும் தரவுக் கோப்பைப் படிக்கிறது.",
+lk_title: "எடை வாரியாக விலை", lk_lead: "எந்த அளவையும் தட்டச்சு செய்து உலக விலையில் அதன் மதிப்பைப் பாருங்கள். எ.கா: 5 pounds, 10 g, 2 sovereign, 1 oz, 3 tola.", lk_q: "அளவு", lk_ph: "5 pounds, 10 g, 2 sovereign", lk_karat: "தூய்மை", lk_cur: "இதில் காட்டு", cur_lkr: "இலங்கை ரூபாய்", cur_usd: "அமெரிக்க டாலர்",
+c_g: "1 கிராம்", c_sov: "1 பவுன்", c_oz: "1 அவுன்ஸ்", c_lb: "1 இறாத்தல்", c_kg: "1 கிலோ", c_tola: "1 தோலா",
+lk_unit: "அலகு", lk_grams: "கிராம்", lk_hint: "\"5 pounds\", \"10 g\", \"2 sovereign\", \"1 oz\", \"3 tola\" அல்லது \"2 kg\" முயற்சிக்கவும்.", lk_res: "{n} {u} என்பது {k}K தங்கம் {g} கிராம். இன்றைய விகிதத்தில் சுமார் {o}. கடை விலையில் லாபம் சேரும்.",
+u_g: "1 கிராம்", u_sov: "1 பவுன் (8 g)", u_oz: "1 ட்ராய் அவுன்ஸ்", u_lb: "1 இறாத்தல்", u_kg: "1 கிலோ", u_tola: "1 தோலா", lk_col: "விலை ({k}K, {c})",
+fc_title: "விலை எங்கே போகலாம்?", fc_lead: "தங்கம் ஏறுமா இறங்குமா என்று யாராலும் சொல்ல முடியாது. அளக்கக்கூடியது விலை பொதுவாக எவ்வளவு மாறுகிறது என்பதே. அதனால் இங்கே ஒரு எண் அல்ல, ஒரு வரம்பு காட்டப்படுகிறது.", fc_h: "முன்னோக்கிப் பார்க்க", h1: "1 நாள்", h5: "1 வாரம்", h21: "1 மாதம்", h63: "3 மாதங்கள்",
+fc_sentence: "{h} இல் 22K பவுன் விலை {lo} முதல் {hi} வரை இருக்க வாய்ப்பு உள்ளது (10 இல் 9 முறை). நடுத்தர கணிப்பு {mid}. ஏறுமா இறங்குமா என்பது கிட்டத்தட்ட சுண்டிவிடும் நாணயம் போன்றது.",
+fc_now: "22K பவுன் இப்போது", fc_mid: "நடுத்தர கணிப்பு", fc_rng: "10 இல் 9 வரம்பு", fc_up: "உயர வாய்ப்பு", lean_up: "சிறிய ஏற்றச் சாய்வு", lean_down: "சிறிய இறக்கச் சாய்வு", lean_flat: "தெளிவான திசை இல்லை",
+lg_past: "கடந்த விலைகள்", lg_mid: "நடுத்தர கணிப்பு", lg_50: "பாதி முடிவுகள்", lg_90: "10 இல் 9 முடிவுகள்",
+bt_title: "இந்தக் கணிப்பு எவ்வளவு நல்லது? கடந்த விலைகளில் சோதனை, 5 நாட்கள் முன்னோக்கி", bt_method: "முறை", bt_miss: "சராசரி தவறு", bt_naive: "மாற்றம் இல்லை என்று கொள்ளுதல்", bt_model: "இந்தக் கணிப்பு", bt_trend: "கடந்த 4 வாரங்களைப் பின்பற்றுதல்",
+bt_v: "கடந்த {n} நாட்களில், இந்தக் கணிப்பு மாற்றம் இல்லை என்று கொள்வதை விட {cmp}. 10 இல் 9 வரம்பு உண்மையான விலையை {c}% நேரம் உள்ளடக்கியது.", bt_better: "சற்று துல்லியமாக இருந்தது", bt_same: "அதிகத் துல்லியமாக இல்லை", bt_ex: " இந்தச் சோதனை கற்பனையான எடுத்துக்காட்டு தரவைப் பயன்படுத்துகிறது.",
+buy_title: "வாங்க சிறந்த நேரம்: உண்மையில் உதவுவது", buy_lead: "சிறந்த நாளைச் சொல்லக்கூடிய இணையதளம் இல்லை. விலை எப்படி இருந்தாலும் இந்தப் பழக்கங்கள் உங்களைப் பாதுகாக்கும்.",
+tips: ["வாங்குவதைப் பிரித்துக் கொள்ளுங்கள். ஒரே நாளில் எல்லாவற்றையும் அல்ல, ஒவ்வொரு மாதமும் கொஞ்சம் வாங்குங்கள். சராசரி விலை கிடைக்கும், உச்ச விலையில் வாங்குவது தவிர்க்கப்படும்.", "கீழே எச்சரிக்கை அமைத்து, விலை உங்கள் நிலைக்கு வரும்போது வாங்குங்கள்.", "டாலரைக் கவனியுங்கள். ரூபாய் பலவீனமடைந்தால் உலக விலை மாறாவிட்டாலும் ரூபாயில் தங்க விலை உயரும்.", "குறைந்தது மூன்று கடைகளை ஒப்பிடுங்கள். தங்க மதிப்பையும் செய்கூலியையும் தனித்தனியாகக் கேளுங்கள்.", "தங்கம் வாங்க கடன் வாங்காதீர்கள். விலை பல ஆண்டுகள் குறைவாகவே இருக்கலாம்."],
+shop_title: "உங்கள் நகைக்கடை விலையைச் சரிபாருங்கள்", shop_in: "ஒரு 22K பவுனுக்கான கடை விலை (ரூ)",
+shop_hi: "உலக விலை மதிப்பு {v}. இந்தக் கடை {d} அதிகம் வசூலிக்கிறது, அதாவது {p}%. கூடுதல் தொகை வியாபாரி லாபத்தையும் செய்கூலியையும் உள்ளடக்கும்.", shop_lo: "உலக விலை மதிப்பு {v}. இந்தக் கடை {d} குறைவாக வசூலிக்கிறது, அதாவது {p}% குறைவு. பில்லில் தூய்மையையும் எடையையும் சரிபாருங்கள்.",
+al_title: "விலை எச்சரிக்கைகள்", al_lead: "22K பவுனுக்கு ஒரு விலையைத் தேர்ந்தெடுங்கள். அந்த விலை வரும்போது இந்தப் பக்கம் சொல்லும். உங்கள் உலாவியில் பக்கம் திறந்திருக்கும்போது மட்டுமே எச்சரிக்கைகள் வேலை செய்யும். SMS அல்லது மின்னஞ்சல் அனுப்பப்படாது.",
+al_dir: "விலை இவ்வாறு ஆனால் சொல்லு", al_below: "கீழே", al_above: "மேலே", al_val: "விலை (ரூ)", al_add: "எச்சரிக்கை சேர்", al_rm: "நீக்கு", al_none: "இன்னும் எச்சரிக்கைகள் இல்லை.", al_item: "22K பவுன் {v} {d}", al_hit: "எச்சரிக்கை: 22K பவுன் இப்போது {p}, இது உங்கள் விலை {v} ஐ விட {d} உள்ளது.",
+ln_title: "தங்கம் பற்றி அறிந்துகொள்ளுங்கள்", ln_lead: "வாங்குபவர்கள் அதிகம் கேட்கும் கேள்விகளுக்கு சுருக்கமான பதில்கள்.",
+learn: [
+["24K, 22K என்றால் என்ன?", "கேரட் என்பது உலோகத்தில் எவ்வளவு தூய தங்கம் உள்ளது என்பதைக் காட்டும். 24K என்பது தூய தங்கம், சுமார் 99.9%. 22K இல் 24 பங்கில் 22 பங்கு தங்கம் (91.7%), நகை உறுதியாக இருக்க மற்ற உலோகங்கள் கலக்கப்படும். 18K இல் 24 இல் 18 பங்கு (75%)."],
+["பவுன் (சவரன்) என்றால் என்ன?", "இலங்கையில் ஒரு பவுன் என்பது 8 கிராம். ஒரு 22K பவுனில் சுமார் 7.3 கிராம் தூய தங்கம் உள்ளது."],
+["விலை ஏன் தினமும் மாறுகிறது?", "முக்கியமாக இரண்டு காரணங்கள்: அமெரிக்க டாலரில் உலக விலை, டாலர்-ரூபாய் விகிதம். ரூபாய் பலவீனமடைந்தால் உலக விலை மாறாவிட்டாலும் ரூபாயில் விலை உயரும்."],
+["செய்கூலி என்றால் என்ன?", "நகையைச் செய்வதற்கான கட்டணம், தங்க மதிப்புக்கு மேல் சேர்க்கப்படும். கடை மற்றும் வடிவமைப்பைப் பொறுத்து மாறும். பில்லில் தங்க மதிப்பும் செய்கூலியும் தனித்தனியாக எழுதச் சொல்லுங்கள்."],
+["போலி அல்லது தூய்மை குறைந்த தங்கத்தை எப்படித் தவிர்ப்பது?", "மீண்டும் தேடிப் போகக்கூடிய நகைக்கடையில் வாங்குங்கள். கேரட்டும் எடையும் குறிப்பிட்ட பில் கேளுங்கள். தூய்மை எப்படிச் சோதிக்கப்பட்டது என்று கேளுங்கள். விலை மற்றவர்களை விட மிகக் குறைவாக இருந்தால் ஏன் என்று கேளுங்கள்."],
+["இப்போது வாங்க நல்ல நேரமா?", "யாருக்கும் தெரியாது. விலை எவ்வளவு மாறலாம் என்பதற்கு மேலுள்ள வரம்பைப் பயன்படுத்துங்கள், பல மாதங்களில் பிரித்து வாங்குங்கள், விரைவில் தேவைப்படாத பணத்தை மட்டும் பயன்படுத்துங்கள்."],
+["விற்றால் எனக்கு என்ன கிடைக்கும்?", "கடைகள் பொதுவாக தங்கள் விற்பனை விலையை விடக் குறைவாகவே கொடுக்கும், செய்கூலியையும் கழிக்கலாம். வாங்குவதற்கு முன் திரும்ப வாங்கும் விதியைப் பற்றிக் கேளுங்கள்."]
+],
+nav_shops: "கடை விலைகள்", p_dealer_med: "{n} கடைகளின் நடுநிலை விலை, 22K பவுன்",
+sh_title: "இன்றைய கடை விலைகள்", sh_lead: "நாங்கள் அங்கீகரித்த நகைக்கடைகள் பதிவிட்ட விலைகள். ஒவ்வொரு விலையும் எப்போது பதிவிடப்பட்டது, உலக விலை மதிப்பிலிருந்து எவ்வளவு வேறுபடுகிறது என்பதைக் காட்டும். 24 மணி நேரத்துக்கு மேற்பட்ட விலைகள் மறைக்கப்படும்.",
+sh_shop: "கடை", sh_city: "நகரம்", sh_price: "22K பவுன்", sh_vs: "உலக விலையுடன் ஒப்பிடு", sh_buy: "கடை வாங்கும் விலை", sh_upd: "பதிவிட்டது",
+sh_none: "இன்னும் அங்கீகரிக்கப்பட்ட கடை விலைகள் இல்லை. நகைக்கடைகள் கீழே இணையலாம்.", sh_ex: "எடுத்துக்காட்டு கடைகள், உண்மையான விலை அல்ல.", sh_join: "நீங்கள் நகைக்கடை உரிமையாளரா? உங்கள் விலைகளைச் சேர்க்கவும்", sh_flag: "இந்த விலையைச் சரிபாருங்கள்",
+sh_note: "உலக விலை மதிப்பிலிருந்து மிகவும் வேறுபட்ட கடை விலை தட்டச்சுப் பிழையாக இருக்கலாம். பில்லில் தூய்மை, எடை, செய்கூலியை எப்போதும் சரிபாருங்கள்.",
+bot_open: "கேள்வி கேளுங்கள்", bot_title: "தங்க உதவியாளர்", bot_hi: "வணக்கம்! இன்றைய விலை, எந்த எடையின் விலை, கடை விலைகள், கணிப்பு வரம்பு, தங்கம் வாங்குவது பற்றிய கேள்விகளுக்கு நான் பதில் சொல்வேன். தங்கம் ஏறுமா இறங்குமா என்று என்னால் சொல்ல முடியாது.", bot_ph: "உங்கள் கேள்வியை தட்டச்சு செய்யுங்கள்", bot_send: "அனுப்பு",
+bot_chips: ["5 பவுன் விலை", "பவுன் என்றால் என்ன?", "குறைந்த விலை கடைகள்", "விலை ஏறுமா?"],
+bot_fallback: "எனக்குப் புரியவில்லை. இன்றைய விலை, \"5 பவுன்\" போன்ற எடையின் விலை, கடை விலைகள், கணிப்பு, செய்கூலி அல்லது போலித் தங்கத்தை அடையாளம் காண்பது பற்றிக் கேளுங்கள்.",
+bot_price: "இப்போது உலக விலைப்படி 22K பவுனின் மதிப்பு {sov}. 24K ஒரு கிராம் {g24}. உலக விலை ஒரு அவுன்ஸ் {w}, டாலர் ரூ {fx}. {age}. கடைகள் பொதுவாக அதிகம் வசூலிக்கும்.",
+bot_weight: "{k}K தங்கம் {n} {u} ({g} கிராம்) உலக விலையில் சுமார் {v}. கடைகள் லாபம் சேர்க்கும்.",
+bot_fc: "தங்கம் ஏறுமா இறங்குமா என்று யாராலும் சொல்ல முடியாது, நானும் ஊகிக்க மாட்டேன். {h} இல் 22K பவுன் விலை {lo} முதல் {hi} வரை இருக்க வாய்ப்பு உள்ளது (10 இல் 9 முறை), நடுத்தர கணிப்பு {mid}. நேரத்தைக் கணிப்பதை விட பல மாதங்களில் பிரித்து வாங்குவதும் விலை எச்சரிக்கை அமைப்பதும் அதிகம் உதவும்.",
+bot_shops: "அங்கீகரிக்கப்பட்ட கடைகளின் குறைந்த 22K பவுன் விலைகள்: {list}. பில்லில் தூய்மையையும் செய்கூலியையும் சரிபாருங்கள்.", bot_noshops: "இன்னும் அங்கீகரிக்கப்பட்ட கடை விலைகள் இல்லை. நகைக்கடைகள் கடை விலைகள் பகுதியிலிருந்து இணையலாம்.",
+bot_alert: "விலை எச்சரிக்கைகள் பகுதியைத் திறந்து, கீழே அல்லது மேலே என்பதைத் தேர்ந்து, விலையைத் தட்டச்சு செய்து சேர் என்பதை அழுத்துங்கள். இந்தப் பக்கம் திறந்திருக்கும்போது இது வேலை செய்யும்.", bot_exn: " (எடுத்துக்காட்டு தரவு)",
+foot: "இது நிதி ஆலோசனை அல்ல. விலைகள் பொது மூலங்களிலிருந்து கணக்கிடப்படுகின்றன, உங்கள் நகைக்கடை விலையிலிருந்து மாறுபடலாம். கணிப்பு தங்கம் பொதுவாக எவ்வளவு நகரும் என்பதைக் காட்டுகிறது, அது என்ன செய்யும் என்பதை அல்ல. சிங்கள மற்றும் தமிழ் உரையைத் தாய்மொழிப் பேசுபவர் சரிபார்க்க வேண்டும்."
+}
+};
+</script>
+
+<script>
+/* ---------- page ---------- */
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var lang = 'en';
+  try { var sv = localStorage.getItem('gollk-lang'); if (sv && I[sv]) lang = sv; else { var nl = (navigator.language || '').slice(0, 2); if (I[nl]) lang = nl; } } catch (e) {}
+  var t = function (k, v) { var s = (I[lang][k] !== undefined ? I[lang][k] : I.en[k]) || ''; if (v) Object.keys(v).forEach(function (n) { s = s.split('{' + n + '}').join(v[n]); }); return s; };
+  var nf = function (v, d) { return v.toLocaleString('en-US', { maximumFractionDigits: d, minimumFractionDigits: d }); };
+  var rs = function (v) { return 'Rs ' + nf(v, 0); };
+
+  var SAMPLE = sampleSeries(420);
+  var live = { example: true, hist: { dates: SAMPLE.dates, gold: SAMPLE.gold.map(function (g) { return g * 4200; }), fx: SAMPLE.fx.map(function (f) { return f * 336; }) }, spot: 4200, fx: 336, updated: new Date(), prevSpot: null, dealer: null, srcGold: '', srcFx: '' };
+  var alerts = []; try { alerts = JSON.parse(localStorage.getItem('gollk-alerts') || '[]'); if (!Array.isArray(alerts)) alerts = []; } catch (e) { alerts = []; }
+  var saveAlerts = function () { try { localStorage.setItem('gollk-alerts', JSON.stringify(alerts)); } catch (e) {} };
+  var lastFair = 0;
+
+  function series() {
+    var h = live.hist, g = h.gold.slice(), f = h.fx.slice(), d = h.dates.slice(), today = new Date().toISOString().slice(0, 10);
+    if (!live.example && !live.histExample) { if (d[d.length - 1] === today) { g[g.length - 1] = live.spot; f[f.length - 1] = live.fx; } else { g.push(live.spot); f.push(live.fx); d.push(today); } }
+    return { gold: g, fx: f, dates: d, S: g.map(function (x, i) { return toSov(x, f[i], 22); }) };
+  }
+
+  function applyText() {
+    document.documentElement.lang = lang;
+    Array.prototype.forEach.call(document.querySelectorAll('[data-i]'), function (el) { el.textContent = t(el.getAttribute('data-i')); });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-ip]'), function (el) { el.setAttribute('placeholder', t(el.getAttribute('data-ip'))); });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-lang]'), function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-lang') === lang ? 'true' : 'false'); });
+    $('tips').innerHTML = (I[lang].tips || I.en.tips).map(function (x) { return '<li>' + x + '</li>'; }).join('');
+    $('faq').innerHTML = (I[lang].learn || I.en.learn).map(function (qa) { return '<details><summary>' + qa[0] + '</summary><p>' + qa[1] + '</p></details>'; }).join('');
+    $('chart').setAttribute('aria-label', t('fc_title'));
+  }
+
+  function renderPrice() {
+    var fair22g = toSov(live.spot, live.fx, 22) / 8, sov = fair22g * 8; lastFair = sov;
+    $('p-sov').textContent = rs(sov);
+    $('p-g24').textContent = rs(toSov(live.spot, live.fx, 24) / 8);
+    $('p-g22').textContent = rs(fair22g);
+    $('p-world').textContent = '$' + nf(live.spot, 2);
+    var c = $('p-chg'); if (live.prevSpot && live.prevSpot !== live.spot) { var up = live.spot > live.prevSpot; c.textContent = (up ? '▲ ' : '▼ ') + nf(Math.abs(live.spot - live.prevSpot), 2); c.className = 'chg ' + (up ? 'up' : 'down'); } else { c.textContent = ''; }
+    $('p-fx').textContent = nf(live.fx, 2);
+    var dl = live.shopMedian || live.dealer; $('p-dealer-row').hidden = !dl;
+    if (dl) { $('p-dealer').textContent = rs(dl); $('p-dealer-lab').textContent = live.shopMedian ? t('p_dealer_med', { n: live.shopN }) : t('p_dealer'); }
+    $('p-src').textContent = live.example ? t('src_ex') : t('src_live', { g: live.srcGold || 'gold feed', f: live.srcFx || 'FX feed' });
+    tick();
+  }
+  function tick() {
+    var dot = $('dot'), st = $('p-status'), age = $('p-age');
+    if (live.example) { dot.className = 'dot'; st.textContent = t('st_ex'); age.textContent = t('age_ex'); return; }
+    var s = Math.max(0, Math.round((Date.now() - live.updated.getTime()) / 1000));
+    var txt = s < 60 ? s + 's' : s < 3600 ? Math.floor(s / 60) + 'm ' + (s % 60) + 's' : Math.floor(s / 3600) + 'h ' + Math.floor(s % 3600 / 60) + 'm';
+    var fresh = s < 15 * 60; dot.className = 'dot ' + (fresh ? 'live' : 'late'); st.textContent = fresh ? t('st_live') : t('st_late'); age.textContent = t('age', { s: txt });
+  }
+
+  function renderLookup() {
+    var karat = parseInt($('karat').value, 10), cur = $('cur').value, rate = cur === 'LKR' ? live.fx : 1;
+    var money = function (v) { return cur === 'LKR' ? rs(v) : '$' + nf(v, v < 100 ? 2 : 0); };
+    var other = function (v) { return cur === 'LKR' ? '$' + nf(v / live.fx, v / live.fx < 100 ? 2 : 0) : rs(v * live.fx); };
+    $('lk-ph').textContent = t('lk_col', { k: karat, c: cur });
+    var units = [['u_g', 1], ['u_sov', 8], ['u_oz', 31.1035], ['u_lb', 453.59237], ['u_kg', 1000], ['u_tola', 11.6638]];
+    $('lk-rows').innerHTML = units.map(function (u) { return '<tr><td>' + t(u[0]) + '</td><td class="num">' + nf(u[1], u[1] % 1 ? 2 : 0) + '</td><td class="num">' + money(goldValueUsd(u[1], karat, live.spot) * rate) + '</td></tr>'; }).join('');
+    var w = parseWeight($('q').value), out = $('lk-out'), sub = $('lk-sub');
+    if (!w) { out.textContent = '-'; sub.textContent = t('lk_hint'); return; }
+    var val = goldValueUsd(w.grams, karat, live.spot) * rate;
+    out.textContent = money(val);
+    sub.textContent = t('lk_res', { n: w.n, u: w.unit, g: nf(w.grams, w.grams < 100 ? 2 : 1), k: karat, o: other(val) });
+  }
+
+  function chart(S, fc, h, dates) {
+    var W = 720, H = 320, L = 66, R = 14, T = 12, B = 30, hist = Math.min(90, S.length), hs = S.slice(S.length - hist), bands = [], k, lo = Infinity, hi = -Infinity, i;
+    for (k = 1; k <= h; k++) bands.push(bandAt(fc, k));
+    hs.forEach(function (v) { lo = Math.min(lo, v); hi = Math.max(hi, v); });
+    bands.forEach(function (b) { lo = Math.min(lo, b.q05); hi = Math.max(hi, b.q95); });
+    var pad = (hi - lo) * 0.06; lo -= pad; hi += pad;
+    var total = hist - 1 + h, x = function (j) { return L + (W - L - R) * j / total; }, y = function (v) { return T + (H - T - B) * (1 - (v - lo) / (hi - lo)); }, s = '';
+    for (i = 0; i <= 4; i++) { var tv = lo + (hi - lo) * i / 4, ty = y(tv); s += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + ty + '" y2="' + ty + '" stroke="var(--line)" stroke-width="1"/><text x="' + (L - 8) + '" y="' + (ty + 4) + '" text-anchor="end">' + nf(tv / 1000, 0) + 'k</text>'; }
+    var x0 = x(hist - 1);
+    function poly(a, b) { var up = [x0 + ',' + y(fc.last)], dn = [x0 + ',' + y(fc.last)]; bands.forEach(function (bd, j) { up.push(x(hist + j) + ',' + y(bd[b])); dn.push(x(hist + j) + ',' + y(bd[a])); }); return up.concat(dn.reverse()).join(' '); }
+    s += '<polygon points="' + poly('q05', 'q95') + '" fill="var(--accent-softer)" stroke="var(--accent-soft)" stroke-width="1"/><polygon points="' + poly('q25', 'q75') + '" fill="var(--accent-soft)" stroke="none"/>';
+    s += '<line x1="' + x0 + '" x2="' + x0 + '" y1="' + T + '" y2="' + (H - B) + '" stroke="var(--line)" stroke-dasharray="3 3"/>';
+    s += '<polyline fill="none" stroke="var(--fg)" stroke-width="1.6" points="' + hs.map(function (v, j) { return x(j) + ',' + y(v); }).join(' ') + '"/>';
+    s += '<polyline fill="none" stroke="var(--accent)" stroke-width="2" stroke-dasharray="5 3" points="' + [x0 + ',' + y(fc.last)].concat(bands.map(function (b, j) { return x(hist + j) + ',' + y(b.m); })).join(' ') + '"/>';
+    s += '<circle cx="' + x0 + '" cy="' + y(fc.last) + '" r="3.5" fill="var(--fg)"/>';
+    s += '<text x="' + L + '" y="' + (H - 8) + '" text-anchor="start">' + dates[dates.length - hist] + '</text><text x="' + (W - R) + '" y="' + (H - 8) + '" text-anchor="end">+' + h + 'd</text>';
+    $('chart').innerHTML = s;
+  }
+
+  function renderForecast() {
+    var h = parseInt($('horizon').value, 10), sr = series(), fc = forecast(sr.S, h), hl = t('h' + h);
+    $('fc-sentence').innerHTML = t('fc_sentence', { h: hl, lo: '<b>' + rs(fc.q05) + '</b>', hi: '<b>' + rs(fc.q95) + '</b>', mid: '<b>' + rs(fc.median) + '</b>' });
+    $('t-last').textContent = rs(fc.last); $('t-med').textContent = rs(fc.median); $('t-rng').textContent = rs(fc.q05) + ' - ' + rs(fc.q95);
+    $('t-up').textContent = nf(fc.pUp * 100, 0) + '%';
+    var pill = $('t-pill'); pill.className = 'pill ' + (fc.pUp > 0.55 ? 'up' : fc.pUp < 0.45 ? 'down' : ''); pill.textContent = fc.pUp > 0.55 ? t('lean_up') : fc.pUp < 0.45 ? t('lean_down') : t('lean_flat');
+    chart(sr.S, fc, h, sr.dates);
+    var bt = backtest(sr.S, 5), body = $('bt-body');
+    if (!bt) { body.innerHTML = ''; $('bt-verdict').textContent = ''; return; }
+    body.innerHTML = [['bt_naive', bt.naive], ['bt_model', bt.model], ['bt_trend', bt.trend]].map(function (r) { return '<tr><td>' + t(r[0]) + '</td><td class="num">' + nf(r[1] * 100, 2) + '%</td></tr>'; }).join('');
+    $('bt-verdict').textContent = t('bt_v', { n: bt.n, cmp: bt.model < bt.naive * 0.98 ? t('bt_better') : t('bt_same'), c: nf(bt.coverage * 100, 0) }) + (live.example || live.histExample ? t('bt_ex') : '');
+  }
+
+  function renderShop() {
+    var v = parseFloat($('shop').value), out = $('shop-out');
+    if (!(v > 0)) { out.textContent = ''; return; }
+    var d = v - lastFair, p = Math.abs(d) / lastFair * 100;
+    out.innerHTML = t(d >= 0 ? 'shop_hi' : 'shop_lo', { v: '<b>' + rs(lastFair) + '</b>', d: '<b>' + rs(Math.abs(d)) + '</b>', p: nf(p, 1) });
+  }
+
+  function renderAlerts() {
+    var ul = $('al-list');
+    ul.innerHTML = alerts.length ? alerts.map(function (a, i) { return '<li><span>' + t('al_item', { d: t(a.dir === 'below' ? 'al_below' : 'al_above'), v: rs(a.val) }) + '</span><button type="button" data-rm="' + i + '">' + t('al_rm') + '</button></li>'; }).join('') : '<li>' + t('al_none') + '</li>';
+    var hit = alerts.filter(function (a) { return a.dir === 'below' ? lastFair <= a.val : lastFair >= a.val; }), b = $('alert-banner');
+    if (hit.length && lastFair > 0) { b.hidden = false; b.textContent = hit.map(function (a) { return t('al_hit', { p: rs(lastFair), d: t(a.dir === 'below' ? 'al_below' : 'al_above'), v: rs(a.val) }); }).join('  '); } else b.hidden = true;
+  }
+
+  function renderDays() {
+    var sr = series(), fc = forecast(sr.S, 1), grid = $('days-grid'); grid.textContent = '';
+    var loc = lang === 'si' ? 'si-LK' : lang === 'ta' ? 'ta-LK' : 'en-GB';
+    var dateOf = function (n) { var d = new Date(Date.now() + n * 86400000); try { return d.toLocaleDateString(loc, { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'Asia/Colombo' }); } catch (e) { return d.toDateString(); } };
+    [['d_today', 0], ['d_tom', 1], ['d_dat', 2]].forEach(function (x) {
+      var tile = document.createElement('div'), mk = function (cls, text) { var e = document.createElement('div'); e.className = cls; e.textContent = text; tile.appendChild(e); };
+      tile.className = 'tile'; mk('k', t(x[0])); mk('dd', dateOf(x[1]));
+      if (x[1] === 0) { mk('k', t('d_now')); mk('v', rs(fc.last)); }
+      else { var b = bandAt(fc, x[1]); mk('k', t('d_range')); mk('v', rs(b.q05) + ' - ' + rs(b.q95)); mk('dr', t('d_mid') + ': ' + rs(b.m)); tile.lastChild.previousSibling.style.fontSize = '17px'; }
+      grid.appendChild(tile);
+    });
+  }
+
+  function renderAll() { renderPrice(); renderDays(); renderLookup(); renderForecast(); renderShops(); renderShop(); renderAlerts(); renderBot(); }
+
+  ['q', 'karat', 'cur'].forEach(function (id) { $(id).addEventListener('input', renderLookup); });
+  $('horizon').addEventListener('input', renderForecast); $('shop').addEventListener('input', renderShop);
+  $('chips').addEventListener('click', function (e) { var b = e.target.closest ? e.target.closest('button[data-q]') : null; if (b) { $('q').value = b.getAttribute('data-q'); renderLookup(); } });
+  document.querySelector('.langs').addEventListener('click', function (e) { var b = e.target.closest ? e.target.closest('button[data-lang]') : null; if (!b) return; lang = b.getAttribute('data-lang'); try { localStorage.setItem('gollk-lang', lang); } catch (x) {} applyText(); renderAll(); });
+  $('al-add').addEventListener('click', function () { var v = parseFloat($('al-val').value); if (!(v > 0) || alerts.length >= 10) return; alerts.push({ dir: $('al-dir').value, val: v }); saveAlerts(); $('al-val').value = ''; renderAlerts(); });
+  $('al-list').addEventListener('click', function (e) { var b = e.target.closest ? e.target.closest('button[data-rm]') : null; if (!b) return; alerts.splice(parseInt(b.getAttribute('data-rm'), 10), 1); saveAlerts(); renderAlerts(); });
+
+  /* Data: data/latest.json (every few minutes) and data/prices.csv (daily history). Without them the page shows example data. */
+  function loadLatest() {
+    fetch('data/latest.json', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : Promise.reject(); }).then(function (j) {
+      var spot = parseFloat(j.gold_usd_oz), fx = parseFloat(j.usdlkr), up = new Date(j.updated);
+      if (!(spot > 0 && fx > 0) || isNaN(up.getTime())) return;
+      if (!live.example && live.spot !== spot) live.prevSpot = live.spot;
+      live.spot = spot; live.fx = fx; live.updated = up; live.dealer = parseFloat(j.dealer_22k_sovereign_lkr) > 0 ? parseFloat(j.dealer_22k_sovereign_lkr) : null; live.srcGold = j.source_gold || ''; live.srcFx = j.source_fx || '';
+      if (live.example) {
+        live.example = false; live.histExample = true;
+        live.hist = { dates: SAMPLE.dates, gold: SAMPLE.gold.map(function (g) { return g * spot; }), fx: SAMPLE.fx.map(function (f) { return f * fx; }) };
+        fetch('data/prices.csv', { cache: 'no-store' }).then(function (r) { return r.ok ? r.text() : Promise.reject(); }).then(function (tx) { live.hist = parseCsv(tx); live.histExample = false; renderAll(); }).catch(function () {});
+      }
+      renderAll();
+    }).catch(function () {});
+  }
+
+  /* ---------- shop price board ---------- */
+  var CFG = window.GOLD_CONFIG || {};
+  var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+  function agoShort(d) { var m = Math.max(0, Math.round((Date.now() - d.getTime()) / 60000)); return m < 60 ? m + ' min' : Math.floor(m / 60) + ' h'; }
+  function median(a) { var s = a.slice().sort(function (x, y) { return x - y; }), n = s.length; return n ? (n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2) : 0; }
+  function shopRows() {
+    if (live.example) {
+      var f = lastFair || 340000, r = function (x) { return Math.round(x / 500) * 500; };
+      return [{ name: 'Example Jewellers A', city: 'Colombo', sell: r(f * 1.04), buy: r(f * 0.96), at: new Date(Date.now() - 25 * 60000) },
+              { name: 'Example Jewellers B', city: 'Kandy', sell: r(f * 1.07), buy: r(f * 0.95), at: new Date(Date.now() - 3 * 3600000) },
+              { name: 'Example Jewellers C', city: 'Galle', sell: r(f * 1.12), buy: null, at: new Date(Date.now() - 6 * 3600000) }];
+    }
+    return live.shops || [];
+  }
+  function renderShops() {
+    var rows = shopRows().slice().sort(function (a, b) { return a.sell - b.sell; }), fair = lastFair || 1;
+    $('sh-ex').hidden = !live.example; $('sh-empty').hidden = rows.length > 0; $('sh-wrap').hidden = !rows.length;
+    $('sh-body').innerHTML = rows.map(function (r) {
+      var d = (r.sell / fair - 1) * 100, off = Math.abs(d) > 25;
+      return '<tr><td>' + esc(r.name) + (r.phone ? '<br><span class="src">' + esc(r.phone) + '</span>' : '') + '</td><td>' + esc(r.city) + '</td><td class="num">' + rs(r.sell) + '</td><td class="num">' + (d >= 0 ? '+' : '') + nf(d, 1) + '%' + (off ? '<br><span class="flag">' + t('sh_flag') + '</span>' : '') + '</td><td class="num">' + (r.buy ? rs(r.buy) : '-') + '</td><td class="num">' + agoShort(r.at) + '</td></tr>';
+    }).join('');
+  }
+  function loadShops() {
+    if (!CFG.FIREBASE_PROJECT_ID) return;
+    /* Firestore REST: ask only for shops with approved == true. The security rules allow no other public read. */
+    var fv = function (f, k) { var v = f && f[k]; if (!v) return null; return v.stringValue !== undefined ? v.stringValue : v.integerValue !== undefined ? Number(v.integerValue) : v.doubleValue !== undefined ? Number(v.doubleValue) : v.timestampValue !== undefined ? v.timestampValue : null; };
+    fetch('https://firestore.googleapis.com/v1/projects/' + encodeURIComponent(CFG.FIREBASE_PROJECT_ID) + '/databases/(default)/documents:runQuery', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ structuredQuery: { from: [{ collectionId: 'shops' }], where: { fieldFilter: { field: { fieldPath: 'approved' }, op: 'EQUAL', value: { booleanValue: true } } }, limit: 300 } })
+    })
+      .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
+      .then(function (rows) {
+        var out = [];
+        (Array.isArray(rows) ? rows : []).forEach(function (x) {
+          var f = x && x.document && x.document.fields; if (!f) return;
+          var s = fv(f, 'sell_22k_sovereign'), b = fv(f, 'buy_22k_sovereign'), at = new Date(fv(f, 'updated_at'));
+          if (s > 0 && !isNaN(at.getTime()) && Date.now() - at.getTime() < 24 * 3600000) out.push({ name: String(fv(f, 'name') || '').slice(0, 80), city: String(fv(f, 'city') || '').slice(0, 60), phone: String(fv(f, 'phone') || '').slice(0, 30), sell: s, buy: b > 0 ? b : null, at: at });
+        });
+        live.shops = out; live.shopN = out.length; live.shopMedian = out.length >= 3 ? median(out.map(function (r) { return r.sell; })) : null; renderAll();
+      }).catch(function () {});
+  }
+
+  /* ---------- answer bot: no AI and no guessing. It only reads this page's own prices and texts. ---------- */
+  var KW = [
+    ['fc', ['predict', 'forecast', 'future', 'tomorrow', 'next week', 'next month', 'go up', 'go down', 'going up', 'going down', 'rise or fall', 'will it rise', 'will it fall', 'best time', 'when to buy', 'should i buy', 'good time', 'buy now', 'අනාවැකි', 'ඉහළ යයිද', 'පහළ යයිද', 'හොඳ වේලාව', 'මිලදී ගන්නේ කවදා', 'கணிப்பு', 'ஏறுமா', 'இறங்குமா', 'நல்ல நேரம்', 'எப்போது வாங்க']],
+    ['karat', ['karat', 'carat', 'purity', 'කැරට්', 'පිරිසිදු', 'கேரட்', 'தூய்மை']],
+    ['sov', ['what is a sovereign', 'what is sovereign', 'sovereign mean', 'pavun', 'පවුමක් යනු', 'පවුම යනු', 'பவுன் என்றால்']],
+    ['why', ['why', 'changes', 'change every', 'fluctuat', 'ඇයි', 'වෙනස් වන්නේ', 'ஏன்', 'மாறுகிறது']],
+    ['making', ['making charge', 'making cost', 'wastage', 'labour', 'labor', 'වැඩ කුලිය', 'செய்கூலி']],
+    ['fake', ['fake', 'fraud', 'genuine', 'hallmark', 'authentic', 'real gold', 'ව්‍යාජ', 'போலி']],
+    ['sell', ['sell back', 'selling', 'if i sell', 'buy back', 'buyback', 'resale', 'විකුණ', 'විකිණ', 'விற்ற', 'விற்க']],
+    ['shops', ['shop', 'jeweller', 'jeweler', 'dealer', 'cheapest', 'where to buy', 'වෙළඳසැල', 'ජුවලරි', 'කඩ', 'கடை', 'நகைக்கடை']],
+    ['alert', ['alert', 'notify', 'notification', 'ඇඟවී', 'எச்சரிக்கை']],
+    ['price', ['price', 'rate', 'cost', 'how much', 'today', 'sovereign', 'gram', 'මිල', 'පවුම', 'விலை', 'பவுன்']]
+  ];
+  var LEARN_IDX = { karat: 0, sov: 1, why: 2, making: 3, fake: 4, sell: 6 };
+  function ageStr() {
+    if (live.example) return t('age_ex');
+    var s = Math.max(0, Math.round((Date.now() - live.updated.getTime()) / 1000));
+    return t('age', { s: s < 60 ? s + 's' : s < 3600 ? Math.floor(s / 60) + 'm' : Math.floor(s / 3600) + 'h' });
+  }
+  function botAnswer(raw) {
+    var text = String(raw || '').toLowerCase().trim().slice(0, 200), ex = live.example ? t('bot_exn') : '';
+    if (!text) return '';
+    var tt = text.replace(/,/g, ''), kar = 22, km = tt.match(/(18|21|22|24)\s*k/); if (km) kar = parseInt(km[1], 10);
+    var re = /(\d*\.?\d+)\s*([^\d\s.,?!]+)/g, m, w = null;
+    while ((m = re.exec(tt))) { var cand = parseWeight(m[1] + ' ' + m[2]); if (cand) { w = cand; break; } }
+    if (w) { var v = goldValueUsd(w.grams, kar, live.spot) * live.fx; return t('bot_weight', { n: w.n, u: w.unit, k: kar, g: nf(w.grams, w.grams < 100 ? 2 : 1), v: rs(v) }) + ex; }
+    var best = null, bestN = 0;
+    KW.forEach(function (e) { var n = 0; e[1].forEach(function (k) { if (tt.indexOf(k) > -1) n++; }); if (n > bestN) { best = e[0]; bestN = n; } });
+    if (!best && (tt === 'hi' || tt.indexOf('hello') === 0 || tt.indexOf('hey') === 0 || tt.indexOf('ආයුබෝවන්') > -1 || tt.indexOf('வணக்கம்') > -1)) return t('bot_hi');
+    if (!best) return t('bot_fallback');
+    if (LEARN_IDX[best] !== undefined) { var qa = (I[lang].learn || I.en.learn)[LEARN_IDX[best]]; return qa[0] + '\n' + qa[1]; }
+    if (best === 'fc') { var sr = series(), fc = forecast(sr.S, 21); return t('bot_fc', { h: t('h21'), lo: rs(fc.q05), hi: rs(fc.q95), mid: rs(fc.median) }) + ex; }
+    if (best === 'shops') {
+      var rows = shopRows().slice().sort(function (a, b) { return a.sell - b.sell; }).slice(0, 3);
+      return (rows.length ? t('bot_shops', { list: rows.map(function (r) { return r.name + ' (' + r.city + ') ' + rs(r.sell); }).join('; ') }) : t('bot_noshops')) + (rows.length ? ex : '');
+    }
+    if (best === 'alert') return t('bot_alert');
+    return t('bot_price', { sov: rs(lastFair), g24: rs(toSov(live.spot, live.fx, 24) / 8), w: '$' + nf(live.spot, 2), fx: nf(live.fx, 2), age: ageStr() }) + ex;
+  }
+  function addMsg(who, text) { var d = document.createElement('div'); d.className = 'm ' + who; d.textContent = text; $('msgs').appendChild(d); $('msgs').scrollTop = $('msgs').scrollHeight; }
+  function ask(q) { q = String(q || '').trim(); if (!q) return; addMsg('me', q); addMsg('bot', botAnswer(q)); }
+  function renderBot() {
+    $('bot-chips').innerHTML = (I[lang].bot_chips || I.en.bot_chips).map(function (c) { return '<button type="button" data-ask="' + esc(c) + '">' + esc(c) + '</button>'; }).join('');
+  }
+  $('bot-open').addEventListener('click', function () {
+    var box = $('bot'), open = box.hidden; box.hidden = !open; $('bot-open').setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) { if (!$('msgs').children.length) addMsg('bot', t('bot_hi')); $('bot-in').focus(); }
+  });
+  $('bot-close').addEventListener('click', function () { $('bot').hidden = true; $('bot-open').setAttribute('aria-expanded', 'false'); $('bot-open').focus(); });
+  $('bot-form').addEventListener('submit', function (e) { e.preventDefault(); var v = $('bot-in').value; $('bot-in').value = ''; ask(v); });
+  $('bot-chips').addEventListener('click', function (e) { var b = e.target.closest ? e.target.closest('button[data-ask]') : null; if (b) ask(b.getAttribute('data-ask')); });
+
+  applyText(); renderAll(); loadLatest(); loadShops();
+  setInterval(tick, 1000);
+  setInterval(loadLatest, 60000);
+  setInterval(loadShops, 120000);
+})();
+</script>
