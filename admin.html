@@ -62,14 +62,20 @@ code { font-family: var(--font-num); font-size: 13px; background: var(--bg); bor
   <form id="v-auth" class="panel" hidden>
     <div class="field"><label for="email">Email</label><input id="email" type="email" autocomplete="email" required></div>
     <div class="field"><label for="pass">Password</label><input id="pass" type="password" autocomplete="current-password" minlength="8" required></div>
-    <div class="row"><button type="submit" class="main">Sign in</button></div>
+    <div class="row"><button type="submit" class="main">Sign in</button><button type="button" id="b-up">Create account</button></div>
+    <p class="note">First time? Click Create account, then you can make that account the owner.</p>
   </form>
 
   <section id="v-noadmin" class="panel" hidden>
     <h2>This account is not an admin yet</h2>
-    <p class="note">In the Firebase console, open Firestore Database, Data, and choose Start collection. Collection ID: <code>admins</code>. Document ID: paste the code below. Add any field, for example <code>admin</code> set to <code>true</code>, then Save. Then reload this page.</p>
-    <p class="note">Your user ID:</p>
-    <p style="margin:0"><code id="uid"></code></p>
+    <p class="note">If there is no owner yet, click the button to make this account the owner. Do it right away: the first account to click becomes the owner, and after that nobody else can claim it.</p>
+    <div class="row"><button type="button" class="main" id="b-claim">Make me the owner</button></div>
+    <details>
+      <summary class="note">An owner already exists? Add another admin by hand</summary>
+      <p class="note" style="margin-top:8px">In the Firebase console, open Firestore Database, Data, and choose Start collection (or open <code>admins</code>). Collection ID: <code>admins</code>. Document ID: the code below. Add any field, for example <code>admin</code> set to <code>true</code>, then Save and reload this page.</p>
+      <p class="note">Your user ID:</p>
+      <p style="margin:0"><code id="uid"></code></p>
+    </details>
   </section>
 
   <section id="v-list" hidden style="display:flex;flex-direction:column;gap:18px">
@@ -173,6 +179,29 @@ code { font-family: var(--font-num); font-size: 13px; background: var(--bg); bor
       .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
       .then(function (r) { if (r.ok && r.j.idToken) { saveSess(fromToken(r.j)); load(); } else say('err', 'Could not sign in. Check your email and password.' + why(r)); })
       .catch(function (er) { say('err', 'Something went wrong.' + why(er)); });
+  });
+  $('b-up').addEventListener('click', function () {
+    var em = $('email').value.trim(), pw = $('pass').value;
+    if (!em || pw.length < 8) { say('err', 'Enter an email and a password of 8 or more characters.'); return; }
+    say('', '');
+    fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' + encodeURIComponent(FKEY), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: em, password: pw, returnSecureToken: true }) })
+      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+      .then(function (r) {
+        if (r.ok && r.j.idToken) { saveSess(fromToken(r.j)); load(); }
+        else say('err', (r.j && r.j.error && r.j.error.message === 'EMAIL_EXISTS' ? 'This email already has an account. Click Sign in.' : 'Could not create the account.') + why(r));
+      })
+      .catch(function (er) { say('err', 'Something went wrong.' + why(er)); });
+  });
+  /* One-time claim: writes admins/<uid> and owner/main together. The rules allow this only while owner/main does not exist. */
+  $('b-claim').addEventListener('click', function () {
+    var b = this, uid = sess.user.id, doc = function (p) { return 'projects/' + encodeURIComponent(PID) + '/databases/(default)/documents/' + p; };
+    b.disabled = true; say('', '');
+    fsCall('POST', ':commit', { writes: [
+      { update: { name: doc('admins/' + uid), fields: { admin: { booleanValue: true } } }, currentDocument: { exists: false } },
+      { update: { name: doc('owner/main'), fields: { uid: { stringValue: uid }, created_at: { timestampValue: new Date().toISOString() } } }, currentDocument: { exists: false } }
+    ] })
+      .then(function () { say('ok', 'Done. This account is now the owner.'); return load(); })
+      .catch(function (e) { b.disabled = false; say('err', (e && e.status === 403 ? 'An owner already exists, so this account cannot claim it. Ask the owner to add you.' : 'Could not set the owner.') + why(e)); });
   });
   $('b-ref').addEventListener('click', function () { say('', ''); load(); });
   $('b-out').addEventListener('click', function () { saveSess(null); shops = []; say('', ''); show('auth'); });
