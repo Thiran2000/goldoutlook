@@ -1,0 +1,27 @@
+name: Update gold data
+
+on:
+  schedule:
+    - cron: "30 1 * * *"   # every day at 01:30 UTC (7:00 AM in Sri Lanka)
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build data/prices.csv
+        run: python3 scripts/update_data.py
+      - name: Commit if changed
+        run: |
+          git config user.name "gold-data-bot"
+          git config user.email "gold-data-bot@users.noreply.github.com"
+          git add data/prices.csv
+          git diff --cached --quiet || git commit -m "Update gold and USD/LKR data"
+          git push
