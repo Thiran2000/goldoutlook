@@ -29,6 +29,7 @@ jobs:
           git config user.name "gold-data-bot"
           git config user.email "gold-data-bot@users.noreply.github.com"
           git add data/retail.json
+          if [ -f data/retail_history.csv ]; then git add data/retail_history.csv; fi
           git diff --cached --quiet || git commit -m "Update retail jeweller rates"
           git pull --rebase
           git push
