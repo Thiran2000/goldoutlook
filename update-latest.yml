@@ -1,0 +1,32 @@
+name: Update latest price
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"   # GitHub's fastest schedule; runs can start a few minutes late
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: latest-price
+  cancel-in-progress: true
+
+jobs:
+  latest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Write data/latest.json
+        run: python3 scripts/update_data.py --latest
+      - name: Commit if changed
+        run: |
+          git config user.name "gold-data-bot"
+          git config user.email "gold-data-bot@users.noreply.github.com"
+          git add data/latest.json
+          git diff --cached --quiet || git commit -m "Update latest price"
+          git pull --rebase
+          git push
