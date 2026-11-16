@@ -24,4 +24,8 @@ jobs:
           git config user.email "gold-data-bot@users.noreply.github.com"
           git add data/prices.csv
           git diff --cached --quiet || git commit -m "Update gold and USD/LKR data"
-          git push
+          for i in 1 2 3 4 5; do
+            git pull --rebase && git push && exit 0
+            sleep 5
+          done
+          exit 1
