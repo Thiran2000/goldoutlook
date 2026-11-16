@@ -5,5 +5,5 @@ window.GOLD_CONFIG = {
   FIREBASE_PROJECT_ID: "gold-outlook",  // "projectId"
   // Live feed (free Cloudflare Worker, see worker/README.md). Leave "" to use the GitHub data files only.
   LIVE_URL: "https://gold-live.thiranperera29.workers.dev/",
-  LIVE_EVERY_SECONDS: 10                 // how often an open page asks for new prices (minimum 5)
+  LIVE_EVERY_SECONDS: 5                // how often an open page asks for new prices (minimum 5)
 };
