@@ -1,22 +1,10 @@
 {
- "updated": "2026-11-16T09:13:17Z",
+ "updated": "2026-11-16T11:35:47Z",
  "unit": "LKR per sovereign (8 g) of the stated karat",
  "sources": [
   {
-   "sell_22k_sovereign": 365000,
-   "at": "2026-11-16T09:13:17Z",
-   "sell_24k_sovereign": 398000,
-   "sell_21k_sovereign": 348000,
-   "sell_18k_sovereign": 298500,
-   "id": "bullion",
-   "name": "Bullion Gold",
-   "url": "https://bulliongold.lk/gold-price/",
-   "city": "Online",
-   "in_median": true
-  },
-  {
    "sell_22k_sovereign": 327928,
-   "at": "2026-11-16T09:13:17Z",
+   "at": "2026-11-16T11:35:47Z",
    "buy_22k_sovereign": 320600,
    "sell_24k_sovereign": 358000,
    "sell_21k_sovereign": 313250,
@@ -25,14 +13,15 @@
    "name": "Ran Lanka",
    "url": "https://ranlanka.lk/",
    "city": "Online",
+   "primary": true,
    "in_median": true
   }
  ],
- "median_22k_sovereign": 346464,
+ "median_22k_sovereign": 327928,
  "market": {
-  "24": 378000,
-  "22": 346464,
-  "21": 330625,
-  "18": 283500
+  "24": 358000,
+  "22": 327928,
+  "21": 313250,
+  "18": 268500
  }
 }
