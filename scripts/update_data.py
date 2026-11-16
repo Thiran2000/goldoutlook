@@ -18,12 +18,14 @@ from datetime import date, timedelta
 
 OUT = os.path.join(os.path.dirname(__file__), "..", "data", "prices.csv")
 GOLD_URL = "https://freegoldapi.com/data/latest.json"
+YAHOO_URL = "https://query1.finance.yahoo.com/v8/finance/chart/GC%3DF?range=2y&interval=1d"
+MAX_GOLD_AGE_DAYS = 7    # fail the run (red X in Actions) if the newest gold row is older than this
 FX_URLS = [
     "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@{d}/v1/currencies/usd.json",
     "https://{d}.currency-api.pages.dev/v1/currencies/usd.json",
 ]
 KEEP_DAYS = 900          # history kept in the file
-MAX_FX_PER_RUN = 150     # polite cap on new exchange-rate lookups per run
+MAX_FX_PER_RUN = 400     # cap on new exchange-rate lookups per run (high enough to back-fill a long gap)
 
 
 def http_json(url, timeout=30):
@@ -32,8 +34,22 @@ def http_json(url, timeout=30):
         return json.loads(r.read().decode("utf-8"))
 
 
-def fetch_gold():
-    """Return {iso_date: usd_per_oz}. Replace this function to use another gold source."""
+def fetch_gold_yahoo():
+    """Daily gold futures (GC=F) from Yahoo Finance. Returns {iso_date: usd_per_oz}."""
+    from datetime import datetime, timezone
+    req = urllib.request.Request(YAHOO_URL, headers={"User-Agent": "Mozilla/5.0 (gold-outlook-updater)"})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        res = json.loads(r.read().decode("utf-8"))["chart"]["result"][0]
+    closes = res["indicators"]["quote"][0]["close"]
+    out = {}
+    for ts, p in zip(res["timestamp"], closes):
+        if isinstance(p, (int, float)) and p > 0:
+            out[datetime.fromtimestamp(ts, timezone.utc).strftime("%Y-%m-%d")] = float(p)
+    return out
+
+
+def fetch_gold_freegoldapi():
+    """Return {iso_date: usd_per_oz} from freegoldapi.com."""
     rows = http_json(GOLD_URL)
     cutoff = (date.today() - timedelta(days=KEEP_DAYS)).isoformat()
     out = {}
@@ -41,6 +57,24 @@ def fetch_gold():
         d, p = str(r.get("date", ""))[:10], r.get("price")
         if d >= cutoff and isinstance(p, (int, float)) and p > 0:
             out[d] = float(p)
+    return out
+
+
+def fetch_gold():
+    """Return {iso_date: usd_per_oz}. Tries Yahoo first, then freegoldapi; Yahoo wins where both have a date.
+    Raises if the newest price is stale, so a dead feed shows up as a failed run instead of a silent no-op."""
+    out = {}
+    for name, fn in (("freegoldapi", fetch_gold_freegoldapi), ("yahoo", fetch_gold_yahoo)):
+        try:
+            got = fn()
+            print("gold source %s: %d rows, newest %s" % (name, len(got), max(got) if got else "none"))
+            out.update(got)
+        except Exception as e:
+            print("gold source %s failed: %s" % (name, e))
+    cutoff = (date.today() - timedelta(days=KEEP_DAYS)).isoformat()
+    out = {d: p for d, p in out.items() if d >= cutoff}
+    if not out or (date.today() - date.fromisoformat(max(out))).days > MAX_GOLD_AGE_DAYS:
+        sys.exit("Gold data is stale (newest %s). All gold sources failed or stopped updating." % (max(out) if out else "none"))
     return out
 
 
@@ -176,4 +210,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
