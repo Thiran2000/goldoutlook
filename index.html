@@ -65,6 +65,7 @@ section { scroll-margin-top: 12px; }
 .stat b { font-family: var(--font-num); font-weight: 500; white-space: nowrap; font-variant-numeric: tabular-nums; text-align: right; overflow-wrap: anywhere; }
 .chg { font-family: var(--font-num); font-size: 12px; margin-left: 6px; }
 .chg.up { color: var(--up); } .chg.down { color: var(--down); }
+.infob { width: 20px; height: 20px; padding: 0; border-radius: 50%; border: 1px solid var(--line); background: none; color: var(--muted); font: inherit; font-size: 12px; line-height: 1; cursor: pointer; }
 .note { font-size: 13px; color: var(--muted); margin: 12px 0 0; max-width: 75ch; }
 .banner { border: 1px solid var(--warn); color: var(--fg); background: var(--accent-softer); border-radius: 6px; padding: 10px 14px; font-size: 14px; }
 .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px 16px; }
@@ -211,7 +212,8 @@ details p { margin: 8px 0 0; color: var(--muted); max-width: 70ch; }
         <h2 data-i="p_title"></h2>
         <div class="klabel" data-i="p_sov"></div>
         <div class="big" id="p-sov">-</div>
-        <div class="status"><span class="dot" id="dot"></span><span id="p-status"></span><span id="p-age"></span><span id="p-chk" class="chk" hidden></span></div>
+        <div class="status"><span class="dot" id="dot"></span><span id="p-status"></span><span id="p-age"></span><span id="p-chk" class="chk" hidden></span><button type="button" id="p-info" class="infob" aria-expanded="false" aria-controls="p-note">?</button></div>
+        <p class="note" id="p-note" hidden></p>
         <div class="rows stat" style="display:block">
           <div><span data-i="p_g24"></span><b id="p-g24">-</b></div>
           <div><span data-i="p_g22"></span><b id="p-g22">-</b></div>
@@ -424,7 +426,7 @@ d_note: "One day's move is usually small next to a shop's margin. Whether the pr
 tag: "Gold prices for Sri Lanka, in plain language",
 p_title: "World price value", p_sov: "22K sovereign (8 g), worked out from the world price", p_note: "This is the value of the gold at the world price and today's dollar rate. Shops in Sri Lanka usually charge more because of the dealer's margin and making charges. Use the buying guide below to check your shop.",
 p_g24: "24K, per gram", p_g22: "22K, per gram", p_world: "World price, per ounce", p_fx: "US dollar in rupees", p_dealer: "Colombo dealer price, 22K sovereign",
-st_live: "Live", st_late: "Delayed", st_ex: "Example data", age: "updated {s} ago", age_ex: "not real prices",
+st_live: "Live", st_late: "Delayed", st_ex: "Example data", age: "updated {s} ago", age_ex: "not real prices", wp_lbl: "World price", chk_lbl: "page checked {s} ago", info_note: "World price (gold in US dollars) comes from a free feed that runs about 10 minutes behind, so \"updated\" shows that delay. This page asks for new prices every 10 seconds; the clock and the seconds counter show that. The Rs figure in this card is worked out from the world price and the dollar rate. The \"Sri Lanka market price\" card above is the middle of the real shop prices, read from the jewellers' own websites; those change a few times a day, and each shop's age is in the shop table below.",
 src_live: "Sources: {g} for gold, {f} for the exchange rate. Checked every minute.", src_ex: "This page is showing made-up example prices. The live site reads a data file that refreshes every few minutes.",
 lk_title: "Price by weight", lk_lead: "Type any amount to see its value at the world price. Examples: 5 pounds, 10 g, 2 sovereign, 1 oz, 3 tola.", lk_q: "Amount", lk_ph: "5 pounds, 10 g, 2 sovereign", lk_karat: "Purity", lk_cur: "Show in", cur_lkr: "Sri Lankan rupees", cur_usd: "US dollars",
 c_g: "1 gram", c_sov: "1 sovereign", c_oz: "1 ounce", c_lb: "1 pound", c_kg: "1 kilogram", c_tola: "1 tola",
@@ -475,7 +477,7 @@ d_note: "එක් දිනක චලනය සාමාන්‍යයෙන�
 tag: "ශ්‍රී ලංකාවේ රන් මිල, සරල භාෂාවෙන්",
 p_title: "ලෝක මිල අගය", p_sov: "22K පවුම (8 g), ලෝක මිලෙන් ගණනය කළ අගය", p_note: "මෙය ලෝක මිලට සහ අද ඩොලර් අගයට රන් වල වටිනාකමයි. ශ්‍රී ලංකාවේ වෙළඳසැල් සාමාන්‍යයෙන් වැඩි මිලක් අය කරයි (වෙළෙන්දාගේ ලාභය සහ රන් වැඩ කුලිය නිසා). ඔබේ වෙළඳසැල පරීක්ෂා කිරීමට පහත උපදෙස් කොටස භාවිත කරන්න.",
 p_g24: "24K, ග්‍රෑම් එකක්", p_g22: "22K, ග්‍රෑම් එකක්", p_world: "ලෝක මිල, අවුන්සයක්", p_fx: "ඩොලරය රුපියල්වලින්", p_dealer: "කොළඹ වෙළෙන්දාගේ මිල, 22K පවුම",
-st_live: "සජීවී", st_late: "ප්‍රමාදයි", st_ex: "උදාහරණ දත්ත", age: "තත්පර {s} කට පෙර යාවත්කාලීන කළා", age_ex: "සැබෑ මිල නොවේ",
+st_live: "සජීවී", st_late: "ප්‍රමාදයි", st_ex: "උදාහරණ දත්ත", age: "තත්පර {s} කට පෙර යාවත්කාලීන කළා", age_ex: "සැබෑ මිල නොවේ", wp_lbl: "ලෝක මිල", chk_lbl: "පිටුව පරීක්ෂා කළේ තත්පර {s} කට පෙර", info_note: "ලෝක මිල (ඩොලර්වලින්) නොමිලේ ලැබෙන ප්‍රභවයකින් එන අතර එය මිනිත්තු 10ක් පමණ පසුපසින් පවතී. මෙම පිටුව තත්පර 10කට වරක් නව මිල පරීක්ෂා කරයි. මෙම කාඩ්පතේ රුපියල් අගය ගණනය කරන්නේ ලෝක මිල සහ ඩොලර් අනුපාතය අනුවයි. ඉහත “ශ්‍රී ලංකා වෙළඳපොළ මිල” යනු ජුවලර්වරුන්ගේ වෙබ් අඩවිවලින් ගත් සැබෑ වෙළඳසැල් මිලවල මධ්‍යස්ථයයි; ඒවා දිනකට කිහිප වතාවක් වෙනස් වේ; එක් එක් වෙළඳසැලේ වයස පහත වගුවේ ඇත.",
 src_live: "මූලාශ්‍ර: රන් සඳහා {g}, විනිමය අනුපාතය සඳහා {f}. විනාඩියකට වරක් පරීක්ෂා කරයි.", src_ex: "මෙම පිටුව පෙන්වන්නේ ව්‍යාජ උදාහරණ මිලයි. සජීවී අඩවිය විනාඩි කිහිපයකට වරක් යාවත්කාලීන වන දත්ත ගොනුවක් කියවයි.",
 lk_title: "බර අනුව මිල", lk_lead: "ඕනෑම ප්‍රමාණයක් ටයිප් කර ලෝක මිලට එහි වටිනාකම බලන්න. උදා: 5 pounds, 10 g, 2 sovereign, 1 oz, 3 tola.", lk_q: "ප්‍රමාණය", lk_ph: "5 pounds, 10 g, 2 sovereign", lk_karat: "පිරිසිදුකම", lk_cur: "පෙන්වන්න", cur_lkr: "ශ්‍රී ලංකා රුපියල්", cur_usd: "ඇමරිකානු ඩොලර්",
 c_g: "ග්‍රෑම් 1", c_sov: "පවුම 1", c_oz: "අවුන්ස 1", c_lb: "රාත්තල 1", c_kg: "කිලෝග්‍රෑම් 1", c_tola: "තෝලා 1",
@@ -526,7 +528,7 @@ d_note: "ஒரு நாளின் மாற்றம் பொதுவா�
 tag: "இலங்கையின் தங்க விலை, எளிய மொழியில்",
 p_title: "உலக விலை மதிப்பு", p_sov: "22K பவுன் (8 g), உலக விலையிலிருந்து கணக்கிடப்பட்டது", p_note: "இது உலக விலை மற்றும் இன்றைய டாலர் மதிப்பில் தங்கத்தின் மதிப்பு. இலங்கையில் கடைகள் பொதுவாக அதிகம் வசூலிக்கும் (வியாபாரி லாபம், செய்கூலி காரணமாக). உங்கள் கடையைச் சரிபார்க்க கீழே உள்ள வாங்கும் வழிகாட்டியைப் பயன்படுத்துங்கள்.",
 p_g24: "24K, ஒரு கிராம்", p_g22: "22K, ஒரு கிராம்", p_world: "உலக விலை, ஒரு அவுன்ஸ்", p_fx: "ரூபாயில் அமெரிக்க டாலர்", p_dealer: "கொழும்பு வியாபாரி விலை, 22K பவுன்",
-st_live: "நேரலை", st_late: "தாமதம்", st_ex: "எடுத்துக்காட்டு தரவு", age: "{s} முன் புதுப்பிக்கப்பட்டது", age_ex: "உண்மையான விலை அல்ல",
+st_live: "நேரலை", st_late: "தாமதம்", st_ex: "எடுத்துக்காட்டு தரவு", age: "{s} முன் புதுப்பிக்கப்பட்டது", age_ex: "உண்மையான விலை அல்ல", wp_lbl: "உலக விலை", chk_lbl: "பக்கம் சரிபார்த்தது {s} முன்", info_note: "உலக விலை (அமெரிக்க டாலரில்) இலவச மூலத்திலிருந்து வருகிறது; அது சுமார் 10 நிமிடம் பின்தங்கியுள்ளது. இந்தப் பக்கம் 10 விநாடிக்கு ஒருமுறை புதிய விலையைக் கேட்கிறது. இந்த அட்டையில் உள்ள ரூபாய் மதிப்பு உலக விலை மற்றும் டாலர் விகிதத்திலிருந்து கணக்கிடப்படுகிறது. மேலே உள்ள “இலங்கை சந்தை விலை” என்பது நகைக்கடைகளின் இணையதளங்களிலிருந்து எடுத்த உண்மையான கடை விலைகளின் நடுமதிப்பு; அவை நாளுக்கு சில முறை மாறும்; ஒவ்வொரு கடையின் வயதும் கீழே உள்ள அட்டவணையில் உள்ளது.",
 src_live: "மூலங்கள்: தங்கத்திற்கு {g}, மாற்று விகிதத்திற்கு {f}. ஒவ்வொரு நிமிடமும் சரிபார்க்கப்படும்.", src_ex: "இந்தப் பக்கம் கற்பனையான எடுத்துக்காட்டு விலைகளைக் காட்டுகிறது. நேரலைத் தளம் சில நிமிடங்களுக்கு ஒருமுறை புதுப்பிக்கப்படும் தரவுக் கோப்பைப் படிக்கிறது.",
 lk_title: "எடை வாரியாக விலை", lk_lead: "எந்த அளவையும் தட்டச்சு செய்து உலக விலையில் அதன் மதிப்பைப் பாருங்கள். எ.கா: 5 pounds, 10 g, 2 sovereign, 1 oz, 3 tola.", lk_q: "அளவு", lk_ph: "5 pounds, 10 g, 2 sovereign", lk_karat: "தூய்மை", lk_cur: "இதில் காட்டு", cur_lkr: "இலங்கை ரூபாய்", cur_usd: "அமெரிக்க டாலர்",
 c_g: "1 கிராம்", c_sov: "1 பவுன்", c_oz: "1 அவுன்ஸ்", c_lb: "1 இறாத்தல்", c_kg: "1 கிலோ", c_tola: "1 தோலா",
@@ -612,7 +614,9 @@ foot: "இது நிதி ஆலோசனை அல்ல. விலைக�
     $('tips').innerHTML = (I[lang].tips || I.en.tips).map(function (x) { return '<li>' + x + '</li>'; }).join('');
     $('faq').innerHTML = (I[lang].learn || I.en.learn).map(function (qa) { return '<details><summary>' + qa[0] + '</summary><p>' + qa[1] + '</p></details>'; }).join('');
     $('chart').setAttribute('aria-label', t('fc_title'));
+    $('p-note').textContent = t('info_note');
   }
+  $('p-info').addEventListener('click', function () { var n = $('p-note'); n.hidden = !n.hidden; $('p-info').setAttribute('aria-expanded', n.hidden ? 'false' : 'true'); });
 
   function renderPrice() {
     var fair22g = toSov(live.spot, live.fx, 22) / 8, sov = fair22g * 8; lastFair = sov;
@@ -658,9 +662,9 @@ foot: "இது நிதி ஆலோசனை அல்ல. விலைக�
     if (live.example) { dot.className = 'dot'; st.textContent = t('st_ex'); age.textContent = t('age_ex'); $('p-chk').hidden = true; return; }
     var s = Math.max(0, Math.round((Date.now() - live.updated.getTime()) / 1000));
     var txt = s < 60 ? s + 's' : s < 3600 ? Math.floor(s / 60) + 'm ' + (s % 60) + 's' : Math.floor(s / 3600) + 'h ' + Math.floor(s % 3600 / 60) + 'm';
-    var fresh = s < 15 * 60; dot.className = 'dot ' + (fresh ? 'live' : 'late'); st.textContent = fresh ? t('st_live') : t('st_late'); age.textContent = t('age', { s: txt });
+    var fresh = s < 15 * 60; dot.className = 'dot ' + (fresh ? 'live' : 'late'); st.textContent = fresh ? t('st_live') : t('st_late'); age.textContent = t('wp_lbl') + ': ' + t('age', { s: txt });
     var chk = $('p-chk');
-    if (liveOk && live.checked) { var cs = Math.max(0, Math.round((Date.now() - live.checked) / 1000)), n = new Date(), p2 = function (v) { return (v < 10 ? '0' : '') + v; }; chk.hidden = false; chk.textContent = '\u00b7 \u27f3 ' + cs + 's \u00b7 ' + p2(n.getHours()) + ':' + p2(n.getMinutes()) + ':' + p2(n.getSeconds()); chk.title = 'Time now, and seconds since this page last received prices from the live feed'; } else chk.hidden = true;
+    if (liveOk && live.checked) { var cs = Math.max(0, Math.round((Date.now() - live.checked) / 1000)), n = new Date(), p2 = function (v) { return (v < 10 ? '0' : '') + v; }; chk.hidden = false; chk.textContent = '\u00b7 ' + t('chk_lbl', { s: cs + 's' }) + ' \u00b7 ' + p2(n.getHours()) + ':' + p2(n.getMinutes()) + ':' + p2(n.getSeconds()); } else chk.hidden = true;
   }
 
   function renderLookup() {
