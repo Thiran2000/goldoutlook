@@ -148,6 +148,8 @@ def parse_ranlanka(text):
     return out
 
 
+DISABLED = {"bullion"}   # Bullion Gold only changes its price once a day, so it is not read
+PRIMARY = "ranlanka"     # Ran Lanka's rate is the Sri Lanka market price
 SOURCES = [
     {"id": "devi", "name": "Devi Jewellers", "url": "https://devijewellers.lk/gold-rate/", "parse": parse_devi},
     {"id": "bullion", "name": "Bullion Gold", "url": "https://bulliongold.lk/gold-price/", "parse": parse_bullion},
@@ -215,11 +217,13 @@ def build(results, previous, now_iso):
             for k in (24, 21, 18):
                 if got.get("sell_%dk" % k):
                     row["sell_%dk_sovereign" % k] = got["sell_%dk" % k]
-        elif src["id"] in old:  # keep last good value with its old timestamp
-            row = {k: v for k, v in old[src["id"]].items() if k not in ("id", "name", "url", "city", "in_median")}
+        elif src["id"] in old and src["id"] not in DISABLED:  # keep last good value with its old timestamp
+            row = {k: v for k, v in old[src["id"]].items() if k not in ("id", "name", "url", "city", "in_median", "primary")}
         else:
             continue
         row.update({"id": src["id"], "name": src["name"], "url": src["url"], "city": "Online"})
+        if src["id"] == PRIMARY:
+            row["primary"] = True
         rows.append(row)
     mark_outliers(rows)
     med = median([r["sell_22k_sovereign"] for r in rows if r["in_median"]])
@@ -282,6 +286,8 @@ def main():
         print("warning: no world price in data/latest.json, plausibility check skipped")
     results = {}
     for src in SOURCES:
+        if src["id"] in DISABLED:
+            continue
         try:
             parsed = src["parse"](fetch_text(src["url"]))
             ok = validate(parsed, fair)
