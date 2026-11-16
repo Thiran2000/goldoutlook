@@ -211,7 +211,7 @@ details p { margin: 8px 0 0; color: var(--muted); max-width: 70ch; }
         <h2 data-i="p_title"></h2>
         <div class="klabel" data-i="p_sov"></div>
         <div class="big" id="p-sov">-</div>
-        <div class="status"><span class="dot" id="dot"></span><span id="p-status"></span><span id="p-age"></span></div>
+        <div class="status"><span class="dot" id="dot"></span><span id="p-status"></span><span id="p-age"></span><span id="p-chk" class="chk" hidden></span></div>
         <div class="rows stat" style="display:block">
           <div><span data-i="p_g24"></span><b id="p-g24">-</b></div>
           <div><span data-i="p_g22"></span><b id="p-g22">-</b></div>
@@ -655,10 +655,12 @@ foot: "இது நிதி ஆலோசனை அல்ல. விலைக�
   }
   function tick() {
     var dot = $('dot'), st = $('p-status'), age = $('p-age');
-    if (live.example) { dot.className = 'dot'; st.textContent = t('st_ex'); age.textContent = t('age_ex'); return; }
+    if (live.example) { dot.className = 'dot'; st.textContent = t('st_ex'); age.textContent = t('age_ex'); $('p-chk').hidden = true; return; }
     var s = Math.max(0, Math.round((Date.now() - live.updated.getTime()) / 1000));
     var txt = s < 60 ? s + 's' : s < 3600 ? Math.floor(s / 60) + 'm ' + (s % 60) + 's' : Math.floor(s / 3600) + 'h ' + Math.floor(s % 3600 / 60) + 'm';
     var fresh = s < 15 * 60; dot.className = 'dot ' + (fresh ? 'live' : 'late'); st.textContent = fresh ? t('st_live') : t('st_late'); age.textContent = t('age', { s: txt });
+    var chk = $('p-chk');
+    if (liveOk && live.checked) { var cs = Math.max(0, Math.round((Date.now() - live.checked) / 1000)), n = new Date(), p2 = function (v) { return (v < 10 ? '0' : '') + v; }; chk.hidden = false; chk.textContent = '\u00b7 \u27f3 ' + cs + 's \u00b7 ' + p2(n.getHours()) + ':' + p2(n.getMinutes()) + ':' + p2(n.getSeconds()); chk.title = 'Time now, and seconds since this page last received prices from the live feed'; } else chk.hidden = true;
   }
 
   function renderLookup() {
@@ -918,7 +920,7 @@ foot: "இது நிதி ஆலோசனை அல்ல. விலைக�
       if (a === false) return Promise.reject();
       liveRetail = !!(j.retail && j.retail.sources && j.retail.sources.length);
       if (liveRetail) b = applyRetail(j.retail);
-      liveOk = true; liveFails = 0;
+      liveOk = true; liveFails = 0; live.checked = Date.now();
       if (a || b) renderAll();
     }).catch(function () { if (++liveFails >= 3) liveOk = false; });
   }
