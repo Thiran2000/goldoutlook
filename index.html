@@ -135,6 +135,47 @@ details p { margin: 8px 0 0; color: var(--muted); max-width: 70ch; }
 .botform input { flex: 1 1 auto; font-family: var(--font-body); }
 .botchips { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 12px 10px; }
 .botchips button { font-size: 12px; padding: 5px 9px; }
+
+/* Karat cards, market switch, outlook cards */
+.kgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 10px; }
+.kcard { position: relative; border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 16px 16px 14px; overflow: hidden; min-width: 0; }
+.kcard::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 3px; background: linear-gradient(90deg, var(--accent), transparent); }
+.kcard.k22 { border-color: var(--accent); }
+.kcard .kn { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+.kcard .kp { font-family: var(--font-num); font-size: 25px; font-weight: 500; letter-spacing: -0.02em; margin: 6px 0 0; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.kcard .ku { font-size: 12px; color: var(--muted); }
+.kcard .kr { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; padding-top: 7px; margin-top: 7px; border-top: 1px solid var(--line); color: var(--muted); }
+.kcard .kr b { font-family: var(--font-num); font-weight: 500; color: var(--fg); }
+.kcard .est { font-size: 11px; color: var(--muted); border: 1px dashed var(--line); border-radius: 999px; padding: 1px 7px; text-transform: none; letter-spacing: 0; font-weight: 500; }
+.seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--line); border-radius: 999px; padding: 3px; gap: 2px; background: var(--bg); margin: 4px 0 14px; }
+.seg button { border: 0; border-radius: 999px; padding: 9px 18px; background: transparent; font-weight: 500; }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--bg); font-weight: 600; }
+.chip[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-softer); font-weight: 600; }
+.optrow { display: flex; flex-wrap: wrap; gap: 8px 22px; align-items: center; margin-bottom: 16px; }
+.optrow .chips { margin-top: 0; }
+.optrow .ol { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-inline-end: 4px; }
+.hz { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-bottom: 18px; }
+.hzc { text-align: left; border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; background: var(--surface); min-width: 0; }
+.hzc span { display: block; }
+.hzc[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); background: var(--accent-softer); }
+.hzc .k { font-size: 13px; color: var(--muted); }
+.hzc .v { font-family: var(--font-num); font-size: 20px; font-weight: 500; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.hzc .chgp { font-family: var(--font-num); font-size: 12px; }
+.hzc .dr { font-family: var(--font-num); font-size: 12px; color: var(--muted); overflow-wrap: anywhere; }
+.rbar { position: relative; height: 8px; background: var(--accent-softer); border-radius: 4px; margin: 12px 4px 10px; border: 1px solid var(--line); }
+.rbar i { position: absolute; display: block; }
+.rbar .fill { top: 0; bottom: 0; background: var(--accent-soft); border-radius: 4px; }
+.rbar .mid { top: -4px; width: 3px; height: 14px; background: var(--accent); border-radius: 2px; transform: translateX(-50%); }
+.rbar .now { top: -3px; width: 12px; height: 12px; border-radius: 50%; background: var(--fg); border: 2px solid var(--surface); transform: translateX(-50%); }
+.drv { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin-bottom: 16px; }
+.drv .tile .v { font-size: 18px; }
+.kcard .kr b, #ft-body td.num, #ft-head th.num { white-space: nowrap; }
+@media (max-width: 520px) {
+  .seg { display: flex; width: 100%; }
+  .seg button { flex: 1 1 0; padding: 9px 8px; font-size: 14px; }
+  .hzc .v { font-size: 18px; }
+}
+.drv .tile .sb { font-size: 12px; color: var(--muted); margin-top: 4px; }
 </style>
 
 <div class="wrap">
@@ -182,13 +223,9 @@ details p { margin: 8px 0 0; color: var(--muted); max-width: 70ch; }
     </div>
     <div class="gap" id="gap" hidden></div>
     <p class="src" id="p-src"></p>
-  </section>
-
-  <section id="days" class="panel" aria-labelledby="h-days">
-    <h2 id="h-days" data-i="d_title"></h2>
-    <p class="lead" data-i="d_lead"></p>
-    <div class="tiles" id="days-grid" style="margin-bottom:0"></div>
-    <p class="note" data-i="d_note"></p>
+    <h3 style="margin-top:20px" data-i="kg_title"></h3>
+    <div class="kgrid" id="kgrid"></div>
+    <p class="note" id="kg-note"></p>
   </section>
 
   <section id="lookup" class="panel" aria-labelledby="h-lk">
@@ -210,19 +247,16 @@ details p { margin: 8px 0 0; color: var(--muted); max-width: 70ch; }
   </section>
 
   <section id="forecast" class="panel" aria-labelledby="h-fc">
-    <h2 id="h-fc" data-i="fc_title"></h2>
-    <p class="lead" data-i="fc_lead"></p>
-    <div class="controls" style="margin-bottom:16px">
-      <div class="field"><label for="horizon" data-i="fc_h"></label>
-        <select id="horizon"><option value="1" data-i="h1"></option><option value="5" data-i="h5"></option><option value="21" selected data-i="h21"></option><option value="63" data-i="h63"></option></select></div>
+    <h2 id="h-fc" data-i="ol_title"></h2>
+    <p class="lead" data-i="ol_lead"></p>
+    <div class="seg" id="mk-seg" role="group" aria-label="Market">
+      <button type="button" data-mk="sl" aria-pressed="true" data-i="mk_sl"></button>
+      <button type="button" data-mk="world" aria-pressed="false" data-i="mk_world"></button>
     </div>
+    <div class="optrow" id="fc-opts"></div>
+    <div class="hz" id="hz"></div>
+    <p class="exnote" id="fc-stale" hidden></p>
     <p class="sentence" id="fc-sentence"></p>
-    <div class="tiles">
-      <div class="tile"><div class="k" data-i="fc_now"></div><div class="v" id="t-last">-</div></div>
-      <div class="tile"><div class="k" data-i="fc_mid"></div><div class="v" id="t-med">-</div></div>
-      <div class="tile"><div class="k" data-i="fc_rng"></div><div class="v" id="t-rng" style="font-size:17px">-</div></div>
-      <div class="tile"><div class="k" data-i="fc_up"></div><div class="v" id="t-up">-</div><span class="pill" id="t-pill"></span></div>
-    </div>
     <div class="chartbox"><svg id="chart" viewBox="0 0 720 320" role="img" aria-label="Chart"></svg></div>
     <div class="legend">
       <span><i style="background:var(--fg)"></i><span data-i="lg_past"></span></span>
@@ -230,6 +264,11 @@ details p { margin: 8px 0 0; color: var(--muted); max-width: 70ch; }
       <span><i style="background:var(--accent-soft)"></i><span data-i="lg_50"></span></span>
       <span><i style="background:var(--accent-softer);border:1px solid var(--accent-soft)"></i><span data-i="lg_90"></span></span>
     </div>
+    <h3 style="margin-top:22px" data-i="ol_drv"></h3>
+    <div class="drv" id="drivers"></div>
+    <h3 id="ft-h" data-i="ol_tbl"></h3>
+    <div class="tablewrap"><table><thead id="ft-head"></thead><tbody id="ft-body"></tbody></table></div>
+    <p class="note" id="fc-method"></p>
     <h3 style="margin-top:22px" data-i="bt_title"></h3>
     <div class="tablewrap"><table><thead><tr><th data-i="bt_method"></th><th class="num" data-i="bt_miss"></th></tr></thead><tbody id="bt-body"></tbody></table></div>
     <p class="note" id="bt-verdict"></p>
@@ -307,26 +346,29 @@ function sampleSeries(n) {
   return { dates: dates, gold: g, fx: f };
 }
 function toSov(gold, fx, karat) { return gold / KG * fx * 8 * karat / 24; }
-function prep(S) {
-  var n = S.length, r = [0], P = [0], v = [], j;
-  for (j = 1; j < n; j++) { r.push(Math.log(S[j] / S[j - 1])); P.push(P[j - 1] + r[j]); }
-  var init = 0, m = Math.min(30, n - 1); for (j = 1; j <= m; j++) init += r[j] * r[j]; init /= Math.max(1, m);
-  for (j = 0; j < n; j++) v.push(j <= m ? init : LAMBDA * v[j - 1] + (1 - LAMBDA) * r[j] * r[j]);
+/* D (optional) is the running count of trading days at each point. A gap in the data then counts as elapsed time,
+   not as one huge one-day move. Without D every step is one day, as before. */
+function prep(S, D) {
+  var n = S.length, r = [0], P = [0], v = [], q = [0], j;
+  for (j = 1; j < n; j++) { var g = D ? Math.max(1, D[j] - D[j - 1]) : 1; r.push(Math.log(S[j] / S[j - 1])); P.push(P[j - 1] + r[j]); q.push(r[j] * r[j] / g); }
+  var init = 0, m = Math.min(30, n - 1); for (j = 1; j <= m; j++) init += q[j]; init /= Math.max(1, m);
+  for (j = 0; j < n; j++) v.push(j <= m ? init : LAMBDA * v[j - 1] + (1 - LAMBDA) * q[j]);
   return { r: r, P: P, v: v };
 }
-function trailMean(P, t, w) { var a = Math.max(0, t - w); return t - a > 0 ? (P[t] - P[a]) / (t - a) : 0; }
+function trailMean(P, t, w, D) { var a = Math.max(0, t - w), span = D ? D[t] - D[a] : t - a; return span > 0 ? (P[t] - P[a]) / span : 0; }
 var Z = { q05: -1.6449, q25: -0.6745, q75: 0.6745, q95: 1.6449 };
-function forecast(S, h) {
-  var p = prep(S), t = S.length - 1, sig = Math.sqrt(p.v[t]), mu = 0.25 * trailMean(p.P, t, 120);
-  var last = S[t], sh = sig * Math.sqrt(h), median = last * Math.exp(mu * h);
-  return { last: last, mu: mu, sigma: sig, median: median, q05: median * Math.exp(Z.q05 * sh), q25: median * Math.exp(Z.q25 * sh), q75: median * Math.exp(Z.q75 * sh), q95: median * Math.exp(Z.q95 * sh), pUp: cdf(mu * h / sh) };
+function forecast(S, h, extra, f, D) {
+  extra = extra || 0; f = f || 1;
+  var p = prep(S, D), t = S.length - 1, sig = Math.sqrt(p.v[t]), mu = 0.25 * trailMean(p.P, t, 120, D);
+  var last = S[t] * f, sh = Math.sqrt(sig * sig * h + extra * extra), median = last * Math.exp(mu * h);
+  return { last: last, mu: mu, sigma: sig, extra: extra, median: median, q05: median * Math.exp(Z.q05 * sh), q25: median * Math.exp(Z.q25 * sh), q75: median * Math.exp(Z.q75 * sh), q95: median * Math.exp(Z.q95 * sh), pUp: cdf(mu * h / sh) };
 }
-function bandAt(fc, k) { var sk = fc.sigma * Math.sqrt(k), m = fc.last * Math.exp(fc.mu * k); return { m: m, q05: m * Math.exp(Z.q05 * sk), q25: m * Math.exp(Z.q25 * sk), q75: m * Math.exp(Z.q75 * sk), q95: m * Math.exp(Z.q95 * sk) }; }
-function backtest(S, H) {
-  var p = prep(S), n = S.length, start = Math.max(60, n - 300 - H), c = 0, hit = 0, e = { naive: 0, model: 0, trend: 0 };
+function bandAt(fc, k) { var sk = Math.sqrt(fc.sigma * fc.sigma * k + (fc.extra || 0) * (fc.extra || 0)), m = fc.last * Math.exp(fc.mu * k); return { m: m, q05: m * Math.exp(Z.q05 * sk), q25: m * Math.exp(Z.q25 * sk), q75: m * Math.exp(Z.q75 * sk), q95: m * Math.exp(Z.q95 * sk) }; }
+function backtest(S, H, D) {
+  var p = prep(S, D), n = S.length, start = Math.max(60, n - 300 - H), c = 0, hit = 0, e = { naive: 0, model: 0, trend: 0 };
   for (var t = start; t <= n - 1 - H; t++) {
     var a = S[t + H], last = S[t], sh = Math.sqrt(p.v[t]) * Math.sqrt(H);
-    var pm = last * Math.exp(0.25 * trailMean(p.P, t, 120) * H), pt = last * Math.exp(trailMean(p.P, t, 20) * H);
+    var pm = last * Math.exp(0.25 * trailMean(p.P, t, 120, D) * H), pt = last * Math.exp(trailMean(p.P, t, 20, D) * H);
     e.naive += Math.abs(a - last) / a; e.model += Math.abs(a - pm) / a; e.trend += Math.abs(a - pt) / a;
     if (Math.abs(Math.log(a / pm)) <= 1.6449 * sh) hit++; c++;
   }
@@ -360,6 +402,21 @@ function goldValueUsd(grams, karat, spot) { return grams * karat / 24 / KG * spo
 /* ---------- words (EN, Sinhala, Tamil). Have a native speaker review SI and TA before launch. ---------- */
 var I = {
 en: {
+kg_title: "Sri Lanka price by karat", kg_sov: "per sovereign (8 g)", kg_gram: "per gram", kg_world: "World value", kg_est: "estimate", kg_vs: "vs world value",
+kg_note_src: "22K and other karats come from the shop prices listed below. Cards marked 'estimate' are worked out from the 22K price by purity.",
+mk_sl: "Sri Lanka (LKR)", mk_world: "Global (USD)",
+ol_title: "Price outlook", ol_lead: "Two separate outlooks. The Sri Lanka outlook is the price you pay in shops. The global outlook is the world gold price in dollars. Nobody can say if gold will rise or fall, so each one shows a likely range, not a promise.",
+ol_karat: "Karat", ol_unit: "Unit", ol_sov: "Per sovereign (8 g)", ol_gram: "Per gram", ol_oz: "Per ounce", ol_g24: "Per gram, 24K",
+ol_drv: "What drives the outlook", ol_tbl_sl: "Every karat, for the chosen period", ol_tbl_w: "Other units, for the chosen period", ol_tbl: "Details",
+ol_col_k: "Item", ol_col_now: "Now", ol_col_mid: "Middle guess", ol_col_rng: "9 in 10 range", ol_col_up: "Chance higher",
+ol_sentence: "In {h}, the {what} is likely to be between {lo} and {hi}, about 9 times out of 10. The middle guess is {mid}. Whether it goes up or down is close to a coin flip.",
+ol_what_sl: "{k}K gold {u} in Sri Lankan shops", ol_what_w: "world gold price {u}", ol_u_sov: "sovereign (8 g)", ol_u_gram: "per gram", ol_u_oz: "per ounce", ol_u_g24: "per gram (24K)",
+dr_world: "World gold, in dollars", dr_world_sub: "{p} chance higher in {h}. Past 3 months: {c}.", dr_fx: "Dollar in rupees", dr_fx_sub: "Past month: {c}. A weaker rupee lifts the rupee price.", dr_prem: "Shop premium over world value", dr_prem_sub: "Assumed to stay the same, give or take {s}%. Shops add margin and making charges.",
+dr_m1: "Past month", dr_m3: "Past 3 months", dr_vol: "Yearly swing", dr_vol_sub: "How much the price usually moves in a year.",
+ol_m_sl: "How this is worked out: the world gold price in dollars, times the dollar rate, gives the world-price value. We then add today's shop premium ({p}) and keep it the same. The past line on the chart is the world-price value scaled by that premium, because shop-price history is not available yet. Because shop prices also drift from the world price, the range is widened by about {s}%. Shop prices are being recorded every few hours, so the premium can be modelled properly once enough days have been collected.",
+ol_m_w: "How this is worked out: from the daily gold price in dollars. The range comes from how much the price has been moving lately.",
+ol_ex: "Example data is showing, so these numbers are not real yet.",
+sl_na: "No Sri Lanka shop price yet", dr_nodata: "Not enough history", ol_stale: "The price history file is {n} days old, so the ranges lean on fewer recent days and the past-month figures are blank. In GitHub, open Actions and run \u201cUpdate gold data\u201d to refresh it.", up_word: "higher", pm: "past month", ytd: "",
 sl_tag: "What you pay in Sri Lanka", sl_title: "Sri Lanka market price", sl_sov: "22K sovereign (8 g), Colombo market", w_tag: "World gold, converted", sl_buy: "Dealers buy back at", sl_g22: "22K, per gram", sl_s24: "24K sovereign", sl_med: "Median of {n} shops, 22K sovereign", sl_upd: "Updated {a} ago", sl_src: "Source: {s}", sl_old: "This price is older than a day. Ask a shop for today's price.", sl_none: "No Sri Lanka market price has been posted yet. The world-price value is shown on the right. Approved shops' prices appear in the shop list below.", sl_gap: "The Sri Lanka price is {d} ({p}%) above the world-price value. This difference is the dealer margin, making charges and local costs.", sl_gap_lo: "The Sri Lanka price is {d} ({p}%) below the world-price value.", sl_by: "Posted by the site owner from Colombo dealer prices.",
 nav_price: "Price now", nav_lookup: "By weight", nav_forecast: "Forecast", nav_buy: "Buying guide", nav_alerts: "Alerts", nav_learn: "Learn",
 d_title: "Today, tomorrow and the day after", d_lead: "The 22K sovereign at the world-price value. Tomorrow and the day after show a likely range, not a promise.", d_today: "Today", d_tom: "Tomorrow", d_dat: "Day after tomorrow", d_now: "Price now", d_range: "9 in 10 range", d_mid: "Middle guess",
@@ -534,7 +591,17 @@ foot: "இது நிதி ஆலோசனை அல்ல. விலைக�
   function series() {
     var h = live.hist, g = h.gold.slice(), f = h.fx.slice(), d = h.dates.slice(), today = new Date().toISOString().slice(0, 10);
     if (!live.example && !live.histExample) { if (d[d.length - 1] === today) { g[g.length - 1] = live.spot; f[f.length - 1] = live.fx; } else { g.push(live.spot); f.push(live.fx); d.push(today); } }
-    return { gold: g, fx: f, dates: d, S: g.map(function (x, i) { return toSov(x, f[i], 22); }) };
+    var D = [0], i, stale = 0;
+    for (i = 1; i < d.length; i++) { var cg = (Date.parse(d[i]) - Date.parse(d[i - 1])) / 864e5; D.push(D[i - 1] + Math.max(1, Math.round(cg * 5 / 7))); }
+    if (!live.example && !live.histExample) stale = Math.round((Date.parse(today) - Date.parse(h.dates[h.dates.length - 1])) / 864e5);
+    return { gold: g, fx: f, dates: d, D: D, stale: stale, S: g.map(function (x, i) { return toSov(x, f[i], 22); }) };
+  }
+
+  /* Value about n calendar days ago, or null when the history has no point close enough to that day. */
+  function ago(arr, dates, n) {
+    var target = Date.parse(dates[dates.length - 1]) - n * 864e5, i = dates.length - 1;
+    while (i > 0 && Date.parse(dates[i]) > target) i--;
+    return target - Date.parse(dates[i]) <= Math.max(5, n * 0.3) * 864e5 && Date.parse(dates[i]) <= target ? arr[i] : null;
   }
 
   function applyText() {
@@ -608,14 +675,14 @@ foot: "இது நிதி ஆலோசனை அல்ல. விலைக�
     sub.textContent = t('lk_res', { n: w.n, u: w.unit, g: nf(w.grams, w.grams < 100 ? 2 : 1), k: karat, o: other(val) });
   }
 
-  function chart(S, fc, h, dates) {
+  function chart(S, fc, h, dates, axf) {
     var W = 720, H = 320, L = 66, R = 14, T = 12, B = 30, hist = Math.min(90, S.length), hs = S.slice(S.length - hist), bands = [], k, lo = Infinity, hi = -Infinity, i;
     for (k = 1; k <= h; k++) bands.push(bandAt(fc, k));
     hs.forEach(function (v) { lo = Math.min(lo, v); hi = Math.max(hi, v); });
     bands.forEach(function (b) { lo = Math.min(lo, b.q05); hi = Math.max(hi, b.q95); });
     var pad = (hi - lo) * 0.06; lo -= pad; hi += pad;
     var total = hist - 1 + h, x = function (j) { return L + (W - L - R) * j / total; }, y = function (v) { return T + (H - T - B) * (1 - (v - lo) / (hi - lo)); }, s = '';
-    for (i = 0; i <= 4; i++) { var tv = lo + (hi - lo) * i / 4, ty = y(tv); s += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + ty + '" y2="' + ty + '" stroke="var(--line)" stroke-width="1"/><text x="' + (L - 8) + '" y="' + (ty + 4) + '" text-anchor="end">' + nf(tv / 1000, 0) + 'k</text>'; }
+    for (i = 0; i <= 4; i++) { var tv = lo + (hi - lo) * i / 4, ty = y(tv); s += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + ty + '" y2="' + ty + '" stroke="var(--line)" stroke-width="1"/><text x="' + (L - 8) + '" y="' + (ty + 4) + '" text-anchor="end">' + (axf ? axf(tv) : nf(tv / 1000, 0) + 'k') + '</text>'; }
     var x0 = x(hist - 1);
     function poly(a, b) { var up = [x0 + ',' + y(fc.last)], dn = [x0 + ',' + y(fc.last)]; bands.forEach(function (bd, j) { up.push(x(hist + j) + ',' + y(bd[b])); dn.push(x(hist + j) + ',' + y(bd[a])); }); return up.concat(dn.reverse()).join(' '); }
     s += '<polygon points="' + poly('q05', 'q95') + '" fill="var(--accent-softer)" stroke="var(--accent-soft)" stroke-width="1"/><polygon points="' + poly('q25', 'q75') + '" fill="var(--accent-soft)" stroke="none"/>';
@@ -627,18 +694,116 @@ foot: "இது நிதி ஆலோசனை அல்ல. விலைக�
     $('chart').innerHTML = s;
   }
 
+  /* ---------- outlook: two separate markets ---------- */
+  var FC = { mk: 'sl', karat: 22, unit: 'sov', wunit: 'oz', h: 21 }, HZ = [1, 5, 21, 63], PREM_SD = 0.012;
+  var pct = function (v, d) { return (v >= 0 ? '+' : '') + nf(v * 100, d === undefined ? 1 : d) + '%'; };
+  var KARATS = [24, 22, 21, 18];
+
+  /* Sri Lanka price per sovereign for each karat. The 22K price follows the same order as the hero card
+     (owner price, dealer.json, then the median of shop and jeweller prices). */
+  function slPrices() {
+    if (live.example) return null;
+    var p22 = 0, src = '';
+    if (MKT) { p22 = MKT.sell; src = 'owner'; } else if (live.dealer) { p22 = live.dealer; src = 'dealer'; } else if (live.shopMedian) { p22 = live.shopMedian; src = 'market'; }
+    if (!(p22 > 0)) return null;
+    var out = { src: src, p: {}, est: {} }, rows = (live.retail || []).filter(function (r) { return r.inMedian; });
+    KARATS.forEach(function (k) {
+      var v = k === 22 ? p22 : 0;
+      if (!v && src === 'owner' && k === 24 && MKT.s24 > 0) v = MKT.s24;
+      if (!v && src === 'market') { var a = rows.map(function (r) { return r.karats[k]; }).filter(function (x) { return x > 0; }); if (a.length) v = median(a); }
+      if (!v) { v = p22 * k / 22; out.est[k] = true; }
+      out.p[k] = v;
+    });
+    return out;
+  }
+
+  function renderKarats() {
+    var sl = slPrices(), html = '';
+    KARATS.forEach(function (k) {
+      var wv = toSov(live.spot, live.fx, k), p = sl ? sl.p[k] : 0;
+      html += '<div class="kcard' + (k === 22 ? ' k22' : '') + '"><div class="kn"><span>' + k + 'K</span>' + (sl && sl.est[k] ? '<span class="est">' + t('kg_est') + '</span>' : '') + '</div>' +
+        '<div class="kp">' + (p ? rs(p) : '-') + '</div><div class="ku">' + t('kg_sov') + '</div>' +
+        '<div class="kr"><span>' + t('kg_gram') + '</span><b>' + (p ? rs(p / 8) : '-') + '</b></div>' +
+        '<div class="kr"><span>' + t('kg_world') + '</span><b>' + rs(wv) + '</b></div>' +
+        '<div class="kr"><span>' + t('kg_vs') + '</span><b class="' + (p ? (p >= wv ? 'chg up' : 'chg down') : '') + '" style="margin:0;font-size:inherit">' + (p ? pct(p / wv - 1) : '-') + '</b></div></div>';
+    });
+    $('kgrid').innerHTML = html; $('kg-note').textContent = sl ? t('kg_note_src') : '';
+  }
+
+  /* Everything the outlook needs for the chosen market: the series, a scale factor and a formatter. */
+  function outlookSetup(sr, sl) {
+    if (FC.mk === 'sl') {
+      var S = sr.S, last = S[S.length - 1], k = FC.karat, price = sl ? sl.p[k] : toSov(live.spot, live.fx, k), div = FC.unit === 'g' ? 8 : 1;
+      return { S: S, D: sr.D, dates: sr.dates, f: price / last / div, extra: sl ? PREM_SD : 0, fmt: rs, ax: function (v) { return nf(v / 1000, div > 1 ? 1 : 0) + 'k'; },
+        what: t('ol_what_sl', { k: k, u: t(FC.unit === 'g' ? 'ol_u_gram' : 'ol_u_sov') }), karatScale: function (kk) { return (sl ? sl.p[kk] : toSov(live.spot, live.fx, kk)) / last / div; } };
+    }
+    var g = FC.wunit === 'g', f = g ? 1 / KG : 1;
+    return { S: sr.gold, D: sr.D, dates: sr.dates, f: f, extra: 0, fmt: function (v) { return '$' + nf(v, g ? 2 : 0); }, ax: function (v) { return '$' + nf(v, g ? 0 : 0); },
+      what: t('ol_what_w', { u: t(g ? 'ol_u_g24' : 'ol_u_oz') }) };
+  }
+
+  function chip(label, attr, on) { return '<button type="button" class="chip" data-fc="' + attr + '" aria-pressed="' + (on ? 'true' : 'false') + '">' + label + '</button>'; }
+
   function renderForecast() {
-    var h = parseInt($('horizon').value, 10), sr = series(), fc = forecast(sr.S, h), hl = t('h' + h);
-    $('fc-sentence').innerHTML = t('fc_sentence', { h: hl, lo: '<b>' + rs(fc.q05) + '</b>', hi: '<b>' + rs(fc.q95) + '</b>', mid: '<b>' + rs(fc.median) + '</b>' });
-    $('t-last').textContent = rs(fc.last); $('t-med').textContent = rs(fc.median); $('t-rng').textContent = rs(fc.q05) + ' - ' + rs(fc.q95);
-    $('t-up').textContent = nf(fc.pUp * 100, 0) + '%';
-    var pill = $('t-pill'); pill.className = 'pill ' + (fc.pUp > 0.55 ? 'up' : fc.pUp < 0.45 ? 'down' : ''); pill.textContent = fc.pUp > 0.55 ? t('lean_up') : fc.pUp < 0.45 ? t('lean_down') : t('lean_flat');
-    chart(sr.S, fc, h, sr.dates);
-    var bt = backtest(sr.S, 5), body = $('bt-body');
+    var sr = series(), sl = slPrices(), isSL = FC.mk === 'sl', o = outlookSetup(sr, sl), h = FC.h;
+    Array.prototype.forEach.call(document.querySelectorAll('#mk-seg button'), function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-mk') === FC.mk ? 'true' : 'false'); });
+    /* option chips */
+    $('fc-opts').innerHTML = isSL
+      ? '<div class="chips"><span class="ol">' + t('ol_karat') + '</span>' + KARATS.map(function (k) { return chip(k + 'K', 'karat:' + k, FC.karat === k); }).join('') + '</div><div class="chips"><span class="ol">' + t('ol_unit') + '</span>' + chip(t('ol_sov'), 'unit:sov', FC.unit === 'sov') + chip(t('ol_gram'), 'unit:g', FC.unit === 'g') + '</div>'
+      : '<div class="chips"><span class="ol">' + t('ol_unit') + '</span>' + chip(t('ol_oz'), 'wunit:oz', FC.wunit === 'oz') + chip(t('ol_g24'), 'wunit:g', FC.wunit === 'g') + '</div>';
+    /* horizon cards with a shared range axis */
+    var fcs = HZ.map(function (x) { return forecast(o.S, x, o.extra, o.f, o.D); }), lo = Infinity, hi = -Infinity;
+    fcs.forEach(function (f) { lo = Math.min(lo, f.q05, f.last); hi = Math.max(hi, f.q95, f.last); });
+    var pos = function (v) { return Math.max(0, Math.min(100, (v - lo) / (hi - lo) * 100)); };
+    $('hz').innerHTML = fcs.map(function (f, i) {
+      var x = HZ[i], ch = f.median / f.last - 1, cls = f.pUp > 0.55 ? 'up' : f.pUp < 0.45 ? 'down' : '';
+      return '<button type="button" class="hzc" data-h="' + x + '" aria-pressed="' + (x === h ? 'true' : 'false') + '"><span class="k">' + (x === 1 ? t('d_tom') : t('h' + x)) + '</span>' +
+        '<span class="v">' + o.fmt(f.median) + ' <span class="chgp chg ' + (ch >= 0 ? 'up' : 'down') + '" style="display:inline;margin:0">' + pct(ch, 2) + '</span></span>' +
+        '<span class="rbar"><i class="fill" style="left:' + pos(f.q05) + '%;width:' + Math.max(1, pos(f.q95) - pos(f.q05)) + '%"></i><i class="mid" style="left:' + pos(f.median) + '%"></i><i class="now" style="left:' + pos(f.last) + '%"></i></span>' +
+        '<span class="dr">' + o.fmt(f.q05) + ' - ' + o.fmt(f.q95) + '</span>' +
+        '<span class="pill ' + cls + '" style="margin-top:8px;display:inline-block">' + nf(f.pUp * 100, 0) + '% ' + t('up_word') + '</span></button>';
+    }).join('');
+    /* sentence and chart for the chosen period */
+    var fc = fcs[HZ.indexOf(h)], hl = t('h' + h);
+    $('fc-sentence').innerHTML = t('ol_sentence', { h: hl, what: o.what, lo: '<b>' + o.fmt(fc.q05) + '</b>', hi: '<b>' + o.fmt(fc.q95) + '</b>', mid: '<b>' + o.fmt(fc.median) + '</b>' }) + (live.example || live.histExample ? ' ' + t('ol_ex') : '');
+    chart(o.S.map(function (v) { return v * o.f; }), fc, h, o.dates, o.ax);
+    /* drivers */
+    var n = sr.gold.length, pm = ago(sr.gold, sr.dates, 30), p3 = ago(sr.gold, sr.dates, 91), fm = ago(sr.fx, sr.dates, 30);
+    var g1 = pm ? sr.gold[n - 1] / pm - 1 : null, g3 = p3 ? sr.gold[n - 1] / p3 - 1 : null, fxc = fm ? sr.fx[n - 1] / fm - 1 : null;
+    var pctn = function (v) { return v === null ? 'n/a' : pct(v, 1); };
+    var gfc = forecast(sr.gold, h, 0, 1, sr.D), vol = prep(sr.gold, sr.D).v, yr = Math.sqrt(vol[vol.length - 1] * 252);
+    var tile = function (k, v, sb) { return '<div class="tile"><div class="k">' + k + '</div><div class="v">' + v + '</div><div class="sb">' + sb + '</div></div>'; };
+    var drv;
+    if (isSL) {
+      var fair22 = toSov(live.spot, live.fx, 22), prem = sl ? sl.p[22] / fair22 - 1 : null;
+      drv = tile(t('dr_world'), '$' + nf(live.spot, 0), t('dr_world_sub', { p: nf(gfc.pUp * 100, 0) + '%', h: hl, c: pctn(g3) })) +
+        tile(t('dr_fx'), 'Rs ' + nf(live.fx, 2), t('dr_fx_sub', { c: pctn(fxc) })) +
+        tile(t('dr_prem'), prem === null ? '-' : pct(prem, 1), prem === null ? t('sl_na') : t('dr_prem_sub', { s: nf(PREM_SD * 100, 1) }));
+    } else {
+      drv = tile(t('dr_m1'), pctn(g1), pm ? '$' + nf(pm, 0) + ' to $' + nf(live.spot, 0) : t('dr_nodata')) + tile(t('dr_m3'), pctn(g3), p3 ? '$' + nf(p3, 0) + ' to $' + nf(live.spot, 0) : t('dr_nodata')) + tile(t('dr_vol'), nf(yr * 100, 0) + '%', t('dr_vol_sub'));
+    }
+    $('drivers').innerHTML = drv;
+    /* details table */
+    var head = '<tr><th>' + t('ol_col_k') + '</th><th class="num">' + t('ol_col_now') + '</th><th class="num">' + t('ol_col_mid') + '</th><th class="num">' + t('ol_col_rng') + '</th><th class="num">' + t('ol_col_up') + '</th></tr>', rows;
+    $('ft-h').textContent = t(isSL ? 'ol_tbl_sl' : 'ol_tbl_w'); $('ft-head').innerHTML = head;
+    var line = function (label, f, fmt) { return '<tr><td>' + label + '</td><td class="num">' + fmt(f.last) + '</td><td class="num">' + fmt(f.median) + '</td><td class="num">' + fmt(f.q05) + ' - ' + fmt(f.q95) + '</td><td class="num">' + nf(f.pUp * 100, 0) + '%</td></tr>'; };
+    if (isSL) rows = KARATS.map(function (k) { return line(k + 'K ' + t(FC.unit === 'g' ? 'ol_u_gram' : 'ol_u_sov'), forecast(sr.S, h, o.extra, o.karatScale(k), sr.D), rs); }).join('');
+    else rows = [['ol_oz', 1, function (v) { return '$' + nf(v, 0); }], ['ol_g24', 1 / KG, function (v) { return '$' + nf(v, 2); }], ['ol_g24', live.fx / KG, function (v) { return 'Rs ' + nf(v, 0); }]].map(function (r, i) { return line(t(r[0]) + (i === 2 ? ' (LKR)' : ' (USD)'), forecast(sr.gold, h, 0, r[1], sr.D), r[2]); }).join('').replace(' (USD)', '');
+    $('ft-body').innerHTML = rows;
+    $('fc-method').textContent = isSL ? t('ol_m_sl', { p: sl ? pct(sl.p[22] / toSov(live.spot, live.fx, 22) - 1, 1) : '-', s: nf(PREM_SD * 100, 1) }) : t('ol_m_w');
+    /* honest test on past prices (5 days ahead) for the series being forecast */
+    var st = $('fc-stale'); st.hidden = !(sr.stale > 7); st.textContent = sr.stale > 7 ? t('ol_stale', { n: sr.stale }) : '';
+    var bt = backtest(isSL ? sr.S : sr.gold, 5, sr.D), body = $('bt-body');
     if (!bt) { body.innerHTML = ''; $('bt-verdict').textContent = ''; return; }
     body.innerHTML = [['bt_naive', bt.naive], ['bt_model', bt.model], ['bt_trend', bt.trend]].map(function (r) { return '<tr><td>' + t(r[0]) + '</td><td class="num">' + nf(r[1] * 100, 2) + '%</td></tr>'; }).join('');
     $('bt-verdict').textContent = t('bt_v', { n: bt.n, cmp: bt.model < bt.naive * 0.98 ? t('bt_better') : t('bt_same'), c: nf(bt.coverage * 100, 0) }) + (live.example || live.histExample ? t('bt_ex') : '');
   }
+  $('mk-seg').addEventListener('click', function (e) { var b = e.target.closest ? e.target.closest('button[data-mk]') : null; if (!b) return; FC.mk = b.getAttribute('data-mk'); renderForecast(); });
+  $('fc-opts').addEventListener('click', function (e) {
+    var b = e.target.closest ? e.target.closest('button[data-fc]') : null; if (!b) return;
+    var kv = b.getAttribute('data-fc').split(':'); if (kv[0] === 'karat') FC.karat = parseInt(kv[1], 10); else FC[kv[0]] = kv[1]; renderForecast();
+  });
+  $('hz').addEventListener('click', function (e) { var b = e.target.closest ? e.target.closest('button[data-h]') : null; if (!b) return; FC.h = parseInt(b.getAttribute('data-h'), 10); renderForecast(); });
 
   function renderShop() {
     var v = parseFloat($('shop').value), out = $('shop-out');
@@ -654,23 +819,10 @@ foot: "இது நிதி ஆலோசனை அல்ல. விலைக�
     if (hit.length && lastFair > 0) { b.hidden = false; b.textContent = hit.map(function (a) { return t('al_hit', { p: rs(lastFair), d: t(a.dir === 'below' ? 'al_below' : 'al_above'), v: rs(a.val) }); }).join('  '); } else b.hidden = true;
   }
 
-  function renderDays() {
-    var sr = series(), fc = forecast(sr.S, 1), grid = $('days-grid'); grid.textContent = '';
-    var loc = lang === 'si' ? 'si-LK' : lang === 'ta' ? 'ta-LK' : 'en-GB';
-    var dateOf = function (n) { var d = new Date(Date.now() + n * 86400000); try { return d.toLocaleDateString(loc, { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'Asia/Colombo' }); } catch (e) { return d.toDateString(); } };
-    [['d_today', 0], ['d_tom', 1], ['d_dat', 2]].forEach(function (x) {
-      var tile = document.createElement('div'), mk = function (cls, text) { var e = document.createElement('div'); e.className = cls; e.textContent = text; tile.appendChild(e); };
-      tile.className = 'tile'; mk('k', t(x[0])); mk('dd', dateOf(x[1]));
-      if (x[1] === 0) { mk('k', t('d_now')); mk('v', rs(fc.last)); }
-      else { var b = bandAt(fc, x[1]); mk('k', t('d_range')); mk('v', rs(b.q05) + ' - ' + rs(b.q95)); mk('dr', t('d_mid') + ': ' + rs(b.m)); tile.lastChild.previousSibling.style.fontSize = '17px'; }
-      grid.appendChild(tile);
-    });
-  }
-
-  function renderAll() { renderPrice(); renderDays(); renderLookup(); renderForecast(); renderShops(); renderShop(); renderAlerts(); renderBot(); }
+  function renderAll() { renderPrice(); renderKarats(); renderLookup(); renderForecast(); renderShops(); renderShop(); renderAlerts(); renderBot(); }
 
   ['q', 'karat', 'cur'].forEach(function (id) { $(id).addEventListener('input', renderLookup); });
-  $('horizon').addEventListener('input', renderForecast); $('shop').addEventListener('input', renderShop);
+  $('shop').addEventListener('input', renderShop);
   $('chips').addEventListener('click', function (e) { var b = e.target.closest ? e.target.closest('button[data-q]') : null; if (b) { $('q').value = b.getAttribute('data-q'); renderLookup(); } });
   document.querySelector('.langs').addEventListener('click', function (e) { var b = e.target.closest ? e.target.closest('button[data-lang]') : null; if (!b) return; lang = b.getAttribute('data-lang'); try { localStorage.setItem('gollk-lang', lang); } catch (x) {} applyText(); renderAll(); });
   $('al-add').addEventListener('click', function () { var v = parseFloat($('al-val').value); if (!(v > 0) || alerts.length >= 10) return; alerts.push({ dir: $('al-dir').value, val: v }); saveAlerts(); $('al-val').value = ''; renderAlerts(); });
@@ -740,7 +892,7 @@ foot: "இது நிதி ஆலோசனை அல்ல. விலைக�
       var out = [];
       (j && j.sources || []).forEach(function (s) {
         var at = new Date(s.at), sell = parseFloat(s.sell_22k_sovereign), buy = parseFloat(s.buy_22k_sovereign);
-        if (sell > 0 && !isNaN(at.getTime()) && Date.now() - at.getTime() < SET.maxAge * 3600000) out.push({ name: String(s.name || '').slice(0, 80), city: String(s.city || 'Online').slice(0, 60), url: /^https:\/\//.test(s.url || '') ? s.url : '', sell: sell, buy: buy > 0 ? buy : null, at: at, inMedian: s.in_median !== false, auto: true });
+        if (sell > 0 && !isNaN(at.getTime()) && Date.now() - at.getTime() < SET.maxAge * 3600000) out.push({ name: String(s.name || '').slice(0, 80), city: String(s.city || 'Online').slice(0, 60), url: /^https:\/\//.test(s.url || '') ? s.url : '', sell: sell, buy: buy > 0 ? buy : null, at: at, inMedian: s.in_median !== false, auto: true, karats: { 24: parseFloat(s.sell_24k_sovereign) || 0, 21: parseFloat(s.sell_21k_sovereign) || 0, 18: parseFloat(s.sell_18k_sovereign) || 0 } });
       });
       live.retail = out; updateMedian(); renderAll();
     }).catch(function () {});
@@ -804,7 +956,7 @@ foot: "இது நிதி ஆலோசனை அல்ல. விலைக�
     if (!best && (tt === 'hi' || tt.indexOf('hello') === 0 || tt.indexOf('hey') === 0 || tt.indexOf('ආයුබෝවන්') > -1 || tt.indexOf('வணக்கம்') > -1)) return t('bot_hi');
     if (!best) return t('bot_fallback');
     if (LEARN_IDX[best] !== undefined) { var qa = (I[lang].learn || I.en.learn)[LEARN_IDX[best]]; return qa[0] + '\n' + qa[1]; }
-    if (best === 'fc') { var sr = series(), fc = forecast(sr.S, 21); return t('bot_fc', { h: t('h21'), lo: rs(fc.q05), hi: rs(fc.q95), mid: rs(fc.median) }) + ex; }
+    if (best === 'fc') { var sr = series(), fc = forecast(sr.S, 21, 0, 1, sr.D); return t('bot_fc', { h: t('h21'), lo: rs(fc.q05), hi: rs(fc.q95), mid: rs(fc.median) }) + ex; }
     if (best === 'shops') {
       var rows = shopRows().slice().sort(function (a, b) { return a.sell - b.sell; }).slice(0, 3);
       return (rows.length ? t('bot_shops', { list: rows.map(function (r) { return r.name + ' (' + r.city + ') ' + rs(r.sell); }).join('; ') }) : t('bot_noshops')) + (rows.length ? ex : '');
