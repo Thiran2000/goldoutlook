@@ -88,6 +88,7 @@ code { font-family: var(--font-num); font-size: 13px; background: var(--bg); bor
   <section id="v-list" hidden style="display:flex;flex-direction:column;gap:18px">
     <div class="tabs" role="tablist">
       <button type="button" role="tab" data-tab="shops" aria-selected="true">Shops</button>
+      <button type="button" role="tab" data-tab="market" aria-selected="false">Market price</button>
       <button type="button" role="tab" data-tab="settings" aria-selected="false">Site settings</button>
       <button type="button" role="tab" data-tab="admins" aria-selected="false" id="tab-admins" hidden>Admins</button>
     </div>
@@ -102,10 +103,21 @@ code { font-family: var(--font-num); font-size: 13px; background: var(--bg); bor
       <div class="panel"><h2>Approved</h2><div class="list" id="l-appr"></div></div>
     </div>
 
+    <form id="t-market" class="panel" hidden>
+      <h2>Sri Lanka market price</h2>
+      <p class="note">Enter today's Colombo (Pettah) price. The public site shows it next to the world price, with the time you saved it. Update it whenever the market price changes.</p>
+      <div class="grid2">
+        <div class="field"><label for="m-sell">22K sovereign, selling price (Rs)</label><input id="m-sell" type="number" inputmode="numeric" min="50000" max="2000000" step="500" required></div>
+        <div class="field"><label for="m-buy">22K sovereign, buying price (Rs, optional)</label><input id="m-buy" type="number" inputmode="numeric" min="50000" max="2000000" step="500"></div>
+        <div class="field"><label for="m-24">24K sovereign, selling price (Rs, optional)</label><input id="m-24" type="number" inputmode="numeric" min="50000" max="2000000" step="500"></div>
+        <div class="field"><label for="m-src">Source (optional, shown on the site)</label><input id="m-src" type="text" maxlength="60" placeholder="e.g. Pettah dealers"></div>
+      </div>
+      <div class="row"><button type="submit" class="main" id="b-save-m">Save market price</button><span class="note" id="m-when"></span></div>
+    </form>
+
     <form id="t-settings" class="panel" hidden>
       <h2>Site settings</h2>
       <p class="note">These show on the public site within a few minutes of saving.</p>
-      <div class="field"><label for="s-dealer">Colombo dealer reference price, 22K sovereign (Rs). Leave empty to hide.</label><input id="s-dealer" type="number" inputmode="numeric" min="0" step="500"></div>
       <div class="field"><label for="s-ann">Notice on top of the site (up to 300 characters)</label><textarea id="s-ann" maxlength="300"></textarea></div>
       <label class="check"><input id="s-annon" type="checkbox"> Show the notice</label>
       <div class="grid2">
@@ -209,7 +221,7 @@ code { font-family: var(--font-num); font-size: 13px; background: var(--bg); bor
         var d = x && x.document; if (!d || !d.fields) return; var f = d.fields;
         shops.push({ id: d.name.split('/').pop(), name: gv(f, 'name'), city: gv(f, 'city'), phone: gv(f, 'phone'), approved: gv(f, 'approved') === true, sell: gv(f, 'sell_22k_sovereign'), updated: gv(f, 'updated_at'), created: gv(f, 'created_at') });
       });
-      show('list'); render(); loadSettings(); loadOwnerAdmins();
+      show('list'); render(); loadSettings(); loadMarket(); loadOwnerAdmins();
     }).catch(function (e) {
       if (e && (e.auth || e.status === 401)) { saveSess(null); show('auth'); return; }
       if (e && e.status === 403) { $('uid').textContent = sess.user.id; show('noadmin'); return; }
@@ -251,24 +263,44 @@ code { font-family: var(--font-num); font-size: 13px; background: var(--bg); bor
   function loadSettings() {
     fsCall('GET', '/settings/site').then(function (d) {
       var f = d && d.fields || {};
-      $('s-dealer').value = gv(f, 'dealer_22k_sovereign') > 0 ? gv(f, 'dealer_22k_sovereign') : '';
       $('s-ann').value = gv(f, 'announcement') || '';
       $('s-annon').checked = gv(f, 'announcement_on') === true;
       $('s-age').value = gv(f, 'max_age_hours') || 24;
       $('s-flag').value = gv(f, 'flag_pct') || 25;
     }).catch(function (e) {
-      if (e && e.status === 404) { $('s-dealer').value = ''; $('s-ann').value = ''; $('s-annon').checked = false; $('s-age').value = 24; $('s-flag').value = 25; }
+      if (e && e.status === 404) { $('s-ann').value = ''; $('s-annon').checked = false; $('s-age').value = 24; $('s-flag').value = 25; }
       else say('err', 'Could not load settings.' + why(e));
     });
   }
   $('t-settings').addEventListener('submit', function (e) {
     e.preventDefault(); say('', '');
-    var dl = $('s-dealer').value.trim() === '' ? 0 : Math.round(Number($('s-dealer').value)), age = Math.round(Number($('s-age').value)), fl = Math.round(Number($('s-flag').value)), b = $('b-save-set');
-    if (!(dl === 0 || (dl >= 50000 && dl <= 2000000))) { say('err', 'Dealer price must be empty or between Rs 50,000 and Rs 2,000,000.'); return; }
+    var age = Math.round(Number($('s-age').value)), fl = Math.round(Number($('s-flag').value)), b = $('b-save-set');
     if (!(age >= 1 && age <= 168) || !(fl >= 5 && fl <= 100)) { say('err', 'Check the hours (1 to 168) and the percent (5 to 100).'); return; }
     b.disabled = true;
-    fsCall('PATCH', '/settings/site', { fields: { dealer_22k_sovereign: iv(dl), announcement: { stringValue: $('s-ann').value.trim().slice(0, 300) }, announcement_on: { booleanValue: $('s-annon').checked }, max_age_hours: iv(age), flag_pct: iv(fl) } })
+    fsCall('PATCH', '/settings/site', { fields: { announcement: { stringValue: $('s-ann').value.trim().slice(0, 300) }, announcement_on: { booleanValue: $('s-annon').checked }, max_age_hours: iv(age), flag_pct: iv(fl) } })
       .then(function () { say('ok', 'Settings saved. The public site picks them up within a few minutes.'); $('set-when').textContent = 'Saved ' + new Date().toLocaleTimeString(); })
+      .catch(function (er) { say('err', 'Could not save.' + why(er)); })
+      .then(function () { b.disabled = false; });
+  });
+
+  /* ---------- Sri Lanka market price (settings/market) ---------- */
+  function loadMarket() {
+    fsCall('GET', '/settings/market').then(function (d) {
+      var f = d && d.fields || {}, u = gv(f, 'updated_at');
+      $('m-sell').value = gv(f, 'sell_22k_sovereign') || ''; $('m-buy').value = gv(f, 'buy_22k_sovereign') || ''; $('m-24').value = gv(f, 'sell_24k_sovereign') || ''; $('m-src').value = gv(f, 'source') || '';
+      $('m-when').textContent = u ? 'Last saved ' + ago(new Date(u)) : '';
+    }).catch(function () {});
+  }
+  $('t-market').addEventListener('submit', function (e) {
+    e.preventDefault(); say('', '');
+    var n = function (id) { var v = $(id).value.trim(); return v === '' ? 0 : Math.round(Number(v)); }, sell = n('m-sell'), buy = n('m-buy'), g24 = n('m-24'), src = $('m-src').value.trim().slice(0, 60), ok = function (v) { return v >= 50000 && v <= 2000000; };
+    if (!ok(sell)) { say('err', 'Enter the 22K selling price between Rs 50,000 and Rs 2,000,000.'); return; }
+    if (buy && (!ok(buy) || buy >= sell)) { say('err', 'The buying price must be below the selling price.'); return; }
+    if (g24 && !ok(g24)) { say('err', 'Check the 24K price.'); return; }
+    var f = { sell_22k_sovereign: iv(sell) }; if (buy) f.buy_22k_sovereign = iv(buy); if (g24) f.sell_24k_sovereign = iv(g24); if (src) f.source = { stringValue: src };
+    var b = $('b-save-m'); b.disabled = true;
+    fsCall('POST', ':commit', { writes: [{ update: { name: 'projects/' + encodeURIComponent(PID) + '/databases/(default)/documents/settings/market', fields: f }, updateTransforms: [{ fieldPath: 'updated_at', setToServerValue: 'REQUEST_TIME' }] }] })
+      .then(function () { say('ok', 'Market price saved. The public site shows it within a minute or two.'); $('m-when').textContent = 'Saved just now'; })
       .catch(function (er) { say('err', 'Could not save.' + why(er)); })
       .then(function () { b.disabled = false; });
   });
@@ -309,7 +341,7 @@ code { font-family: var(--font-num); font-size: 13px; background: var(--bg); bor
 
   /* ---------- tabs ---------- */
   function tab(name) {
-    ['shops', 'settings', 'admins'].forEach(function (n) { $('t-' + n).hidden = n !== name; });
+    ['shops', 'market', 'settings', 'admins'].forEach(function (n) { $('t-' + n).hidden = n !== name; });
     Array.prototype.forEach.call(document.querySelectorAll('.tabs button'), function (b) { b.setAttribute('aria-selected', b.getAttribute('data-tab') === name ? 'true' : 'false'); });
   }
   document.querySelector('.tabs').addEventListener('click', function (e) { var b = e.target.closest ? e.target.closest('button[data-tab]') : null; if (b) tab(b.getAttribute('data-tab')); });

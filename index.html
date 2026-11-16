@@ -108,6 +108,18 @@ details:last-child { border-bottom: 0; }
 summary { cursor: pointer; font-weight: 500; font-size: 16px; }
 details p { margin: 8px 0 0; color: var(--muted); max-width: 70ch; }
 .fine { font-size: 13px; color: var(--muted); max-width: 80ch; margin: 0; }
+.pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 10px; }
+@media (max-width: 680px) { .pair { grid-template-columns: minmax(0, 1fr); } }
+.pcard { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 18px; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.pcard.sl { border: 2px solid var(--accent); }
+.pcard h2 { margin: 0; font-size: 18px; }
+.pcard .tagline { font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); }
+.pcard .big { margin: 6px 0 2px; }
+.pcard .sub { font-size: 14px; color: var(--muted); }
+.pcard .rows { margin-top: 8px; border-top: 1px solid var(--line); }
+.pcard .rows div { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
+.pcard .rows b { font-family: var(--font-num); font-weight: 500; text-align: right; }
+.gap { margin-top: 10px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 6px; font-size: 14px; background: var(--surface); }
 .src { font-size: 12px; color: var(--muted); margin-top: 8px; }
 .flag { color: var(--warn); font-size: 12px; }
 .exnote { font-size: 13px; color: var(--warn); margin: 0 0 10px; }
@@ -143,22 +155,32 @@ details p { margin: 8px 0 0; color: var(--muted); max-width: 70ch; }
 
   <section id="price" aria-labelledby="h-price">
     <h1 data-i="tag"></h1>
-    <div class="panel hero" style="margin-top:10px">
-      <div>
-        <h2 id="h-price" data-i="p_title"></h2>
+    <div class="pair">
+      <div class="pcard sl" id="sl-card">
+        <div class="tagline" data-i="sl_tag"></div>
+        <h2 id="h-price" data-i="sl_title"></h2>
+        <div class="klabel" data-i="sl_sov"></div>
+        <div class="big" id="sl-sov">-</div>
+        <div class="sub" id="sl-meta"></div>
+        <div class="rows" id="sl-rows"></div>
+        <p class="note" id="sl-note" style="margin:8px 0 0"></p>
+      </div>
+      <div class="pcard" id="w-card">
+        <div class="tagline" style="color:var(--muted)" data-i="w_tag"></div>
+        <h2 data-i="p_title"></h2>
         <div class="klabel" data-i="p_sov"></div>
         <div class="big" id="p-sov">-</div>
         <div class="status"><span class="dot" id="dot"></span><span id="p-status"></span><span id="p-age"></span></div>
-        <p class="note" data-i="p_note"></p>
-      </div>
-      <div class="stat">
-        <div><span data-i="p_g24"></span><b id="p-g24">-</b></div>
-        <div><span data-i="p_g22"></span><b id="p-g22">-</b></div>
-        <div><span data-i="p_world"></span><b><span id="p-world">-</span><span class="chg" id="p-chg"></span></b></div>
-        <div><span data-i="p_fx"></span><b id="p-fx">-</b></div>
-        <div id="p-dealer-row" hidden><span id="p-dealer-lab"></span><b id="p-dealer">-</b></div>
+        <div class="rows stat" style="display:block">
+          <div><span data-i="p_g24"></span><b id="p-g24">-</b></div>
+          <div><span data-i="p_g22"></span><b id="p-g22">-</b></div>
+          <div><span data-i="p_world"></span><b><span id="p-world">-</span><span class="chg" id="p-chg"></span></b></div>
+          <div><span data-i="p_fx"></span><b id="p-fx">-</b></div>
+        </div>
+        <p class="note" data-i="p_note" style="margin:8px 0 0"></p>
       </div>
     </div>
+    <div class="gap" id="gap" hidden></div>
     <p class="src" id="p-src"></p>
   </section>
 
@@ -338,11 +360,12 @@ function goldValueUsd(grams, karat, spot) { return grams * karat / 24 / KG * spo
 /* ---------- words (EN, Sinhala, Tamil). Have a native speaker review SI and TA before launch. ---------- */
 var I = {
 en: {
+sl_tag: "What you pay in Sri Lanka", sl_title: "Sri Lanka market price", sl_sov: "22K sovereign (8 g), Colombo market", w_tag: "World gold, converted", sl_buy: "Dealers buy back at", sl_g22: "22K, per gram", sl_s24: "24K sovereign", sl_med: "Median of {n} shops, 22K sovereign", sl_upd: "Updated {a} ago", sl_src: "Source: {s}", sl_old: "This price is older than a day. Ask a shop for today's price.", sl_none: "No Sri Lanka market price has been posted yet. The world-price value is shown on the right. Approved shops' prices appear in the shop list below.", sl_gap: "The Sri Lanka price is {d} ({p}%) above the world-price value. This difference is the dealer margin, making charges and local costs.", sl_gap_lo: "The Sri Lanka price is {d} ({p}%) below the world-price value.", sl_by: "Posted by the site owner from Colombo dealer prices.",
 nav_price: "Price now", nav_lookup: "By weight", nav_forecast: "Forecast", nav_buy: "Buying guide", nav_alerts: "Alerts", nav_learn: "Learn",
 d_title: "Today, tomorrow and the day after", d_lead: "The 22K sovereign at the world-price value. Tomorrow and the day after show a likely range, not a promise.", d_today: "Today", d_tom: "Tomorrow", d_dat: "Day after tomorrow", d_now: "Price now", d_range: "9 in 10 range", d_mid: "Middle guess",
 d_note: "One day's move is usually small next to a shop's margin. Whether the price goes up or down is close to a coin flip.",
 tag: "Gold prices for Sri Lanka, in plain language",
-p_title: "Gold price now", p_sov: "22K sovereign (8 g), worked out from the world price", p_note: "This is the value of the gold at the world price and today's dollar rate. Shops in Sri Lanka usually charge more because of the dealer's margin and making charges. Use the buying guide below to check your shop.",
+p_title: "World price value", p_sov: "22K sovereign (8 g), worked out from the world price", p_note: "This is the value of the gold at the world price and today's dollar rate. Shops in Sri Lanka usually charge more because of the dealer's margin and making charges. Use the buying guide below to check your shop.",
 p_g24: "24K, per gram", p_g22: "22K, per gram", p_world: "World price, per ounce", p_fx: "US dollar in rupees", p_dealer: "Colombo dealer price, 22K sovereign",
 st_live: "Live", st_late: "Delayed", st_ex: "Example data", age: "updated {s} ago", age_ex: "not real prices",
 src_live: "Sources: {g} for gold, {f} for the exchange rate. Checked every minute.", src_ex: "This page is showing made-up example prices. The live site reads a data file that refreshes every few minutes.",
@@ -388,11 +411,12 @@ bot_alert: "Open the Price alerts section, choose below or above, type a price a
 foot: "Not financial advice. Prices are worked out from public sources and may differ from your jeweller. The forecast shows how far gold usually moves, not what it will do. Sinhala and Tamil text should be checked by a native speaker."
 },
 si: {
+sl_tag: "ශ්‍රී ලංකාවේ ඔබ ගෙවන මිල", sl_title: "ශ්‍රී ලංකා වෙළඳපොළ මිල", sl_sov: "22K පවුම (8 g), කොළඹ වෙළඳපොළ", w_tag: "ලෝක රන් මිල, රුපියල්වලට", sl_buy: "වෙළෙන්දන් ආපසු මිලදී ගන්නා මිල", sl_g22: "22K, ග්‍රෑම් එකක්", sl_s24: "24K පවුම", sl_med: "වෙළඳසැල් {n}ක මධ්‍යස්ථ මිල, 22K පවුම", sl_upd: "{a} කට පෙර යාවත්කාලීන කළා", sl_src: "මූලාශ්‍රය: {s}", sl_old: "මෙම මිල දිනකට වඩා පැරණියි. අද මිල වෙළඳසැලෙන් අසන්න.", sl_none: "ශ්‍රී ලංකා වෙළඳපොළ මිලක් තවම පළ කර නැත. දකුණු පස ලෝක මිල අගය පෙන්වයි. අනුමත වෙළඳසැල් මිල පහත ලැයිස්තුවේ ඇත.", sl_gap: "ශ්‍රී ලංකා මිල ලෝක මිල අගයට වඩා {d} ({p}%) ක් වැඩිය. මෙම වෙනස වෙළෙන්දාගේ ලාභය, රන් වැඩ කුලිය සහ දේශීය වියදම්වලට අයත් වේ.", sl_gap_lo: "ශ්‍රී ලංකා මිල ලෝක මිල අගයට වඩා {d} ({p}%) ක් අඩුය.", sl_by: "කොළඹ වෙළෙන්දන්ගේ මිල අනුව අඩවි හිමිකරු පළ කළා.",
 nav_price: "දැන් මිල", nav_lookup: "බර අනුව", nav_forecast: "අනාවැකිය", nav_buy: "මිලදී ගැනීමේ උපදෙස්", nav_alerts: "ඇඟවීම්", nav_learn: "ඉගෙන ගන්න",
 d_title: "අද, හෙට සහ අනිද්දා", d_lead: "ලෝක මිල අගයට 22K පවුම. හෙට සහ අනිද්දා පෙන්වන්නේ පොරොන්දුවක් නොව ඉඩ ඇති පරාසයකි.", d_today: "අද", d_tom: "හෙට", d_dat: "අනිද්දා", d_now: "දැන් මිල", d_range: "10න් 9ක පරාසය", d_mid: "මැද අනුමානය",
 d_note: "එක් දිනක චලනය සාමාන්‍යයෙන් වෙළඳසැල් ලාභයට වඩා කුඩාය. මිල ඉහළ යයිද පහළ යයිද යන්න කාසියක් උඩ දැමීමක් හා ආසන්නයි.",
 tag: "ශ්‍රී ලංකාවේ රන් මිල, සරල භාෂාවෙන්",
-p_title: "රන් මිල දැන්", p_sov: "22K පවුම (8 g), ලෝක මිලෙන් ගණනය කළ අගය", p_note: "මෙය ලෝක මිලට සහ අද ඩොලර් අගයට රන් වල වටිනාකමයි. ශ්‍රී ලංකාවේ වෙළඳසැල් සාමාන්‍යයෙන් වැඩි මිලක් අය කරයි (වෙළෙන්දාගේ ලාභය සහ රන් වැඩ කුලිය නිසා). ඔබේ වෙළඳසැල පරීක්ෂා කිරීමට පහත උපදෙස් කොටස භාවිත කරන්න.",
+p_title: "ලෝක මිල අගය", p_sov: "22K පවුම (8 g), ලෝක මිලෙන් ගණනය කළ අගය", p_note: "මෙය ලෝක මිලට සහ අද ඩොලර් අගයට රන් වල වටිනාකමයි. ශ්‍රී ලංකාවේ වෙළඳසැල් සාමාන්‍යයෙන් වැඩි මිලක් අය කරයි (වෙළෙන්දාගේ ලාභය සහ රන් වැඩ කුලිය නිසා). ඔබේ වෙළඳසැල පරීක්ෂා කිරීමට පහත උපදෙස් කොටස භාවිත කරන්න.",
 p_g24: "24K, ග්‍රෑම් එකක්", p_g22: "22K, ග්‍රෑම් එකක්", p_world: "ලෝක මිල, අවුන්සයක්", p_fx: "ඩොලරය රුපියල්වලින්", p_dealer: "කොළඹ වෙළෙන්දාගේ මිල, 22K පවුම",
 st_live: "සජීවී", st_late: "ප්‍රමාදයි", st_ex: "උදාහරණ දත්ත", age: "තත්පර {s} කට පෙර යාවත්කාලීන කළා", age_ex: "සැබෑ මිල නොවේ",
 src_live: "මූලාශ්‍ර: රන් සඳහා {g}, විනිමය අනුපාතය සඳහා {f}. විනාඩියකට වරක් පරීක්ෂා කරයි.", src_ex: "මෙම පිටුව පෙන්වන්නේ ව්‍යාජ උදාහරණ මිලයි. සජීවී අඩවිය විනාඩි කිහිපයකට වරක් යාවත්කාලීන වන දත්ත ගොනුවක් කියවයි.",
@@ -438,11 +462,12 @@ bot_alert: "මිල ඇඟවීම් කොටස විවෘත කර, �
 foot: "මෙය මූල්‍ය උපදෙස් නොවේ. මිල ගණනය කරන්නේ පොදු මූලාශ්‍රවලිනි, ඔබේ වෙළෙන්දාගේ මිලට වඩා වෙනස් විය හැක. අනාවැකිය පෙන්වන්නේ රන් සාමාන්‍යයෙන් කොපමණ චලනය වේද යන්නයි, එය කුමක් කරයිද යන්න නොවේ. සිංහල සහ දෙමළ පාඨ ස්වදේශීය කථිකයෙකු විසින් පරීක්ෂා කළ යුතුය."
 },
 ta: {
+sl_tag: "இலங்கையில் நீங்கள் செலுத்தும் விலை", sl_title: "இலங்கை சந்தை விலை", sl_sov: "22K பவுன் (8 g), கொழும்பு சந்தை", w_tag: "உலக தங்கம், ரூபாயில்", sl_buy: "கடைகள் திரும்ப வாங்கும் விலை", sl_g22: "22K, ஒரு கிராம்", sl_s24: "24K பவுன்", sl_med: "{n} கடைகளின் நடுநிலை விலை, 22K பவுன்", sl_upd: "{a} முன் புதுப்பிக்கப்பட்டது", sl_src: "மூலம்: {s}", sl_old: "இந்த விலை ஒரு நாளுக்கு மேல் பழையது. இன்றைய விலையை கடையில் கேளுங்கள்.", sl_none: "இலங்கை சந்தை விலை இன்னும் பதிவிடப்படவில்லை. வலப்புறம் உலக விலை மதிப்பு காட்டப்படுகிறது. அங்கீகரிக்கப்பட்ட கடை விலைகள் கீழே உள்ளன.", sl_gap: "இலங்கை விலை உலக விலை மதிப்பை விட {d} ({p}%) அதிகம். இந்த வேறுபாடு கடையின் லாபம், செய்கூலி மற்றும் உள்ளூர் செலவுகள்.", sl_gap_lo: "இலங்கை விலை உலக விலை மதிப்பை விட {d} ({p}%) குறைவு.", sl_by: "கொழும்பு கடை விலைகளின் அடிப்படையில் தள உரிமையாளர் பதிவிட்டது.",
 nav_price: "இப்போதைய விலை", nav_lookup: "எடை வாரியாக", nav_forecast: "கணிப்பு", nav_buy: "வாங்கும் வழிகாட்டி", nav_alerts: "எச்சரிக்கைகள்", nav_learn: "கற்றுக்கொள்ள",
 d_title: "இன்று, நாளை, நாளை மறுநாள்", d_lead: "உலக விலை மதிப்பில் 22K பவுன். நாளையும் நாளை மறுநாளும் காட்டுவது உறுதிமொழி அல்ல, சாத்தியமான வரம்பு.", d_today: "இன்று", d_tom: "நாளை", d_dat: "நாளை மறுநாள்", d_now: "இப்போதைய விலை", d_range: "10 இல் 9 வரம்பு", d_mid: "நடுத்தர கணிப்பு",
 d_note: "ஒரு நாளின் மாற்றம் பொதுவாக கடையின் லாபத்தை விடச் சிறியது. ஏறுமா இறங்குமா என்பது கிட்டத்தட்ட சுண்டிவிடும் நாணயம் போன்றது.",
 tag: "இலங்கையின் தங்க விலை, எளிய மொழியில்",
-p_title: "தங்க விலை இப்போது", p_sov: "22K பவுன் (8 g), உலக விலையிலிருந்து கணக்கிடப்பட்டது", p_note: "இது உலக விலை மற்றும் இன்றைய டாலர் மதிப்பில் தங்கத்தின் மதிப்பு. இலங்கையில் கடைகள் பொதுவாக அதிகம் வசூலிக்கும் (வியாபாரி லாபம், செய்கூலி காரணமாக). உங்கள் கடையைச் சரிபார்க்க கீழே உள்ள வாங்கும் வழிகாட்டியைப் பயன்படுத்துங்கள்.",
+p_title: "உலக விலை மதிப்பு", p_sov: "22K பவுன் (8 g), உலக விலையிலிருந்து கணக்கிடப்பட்டது", p_note: "இது உலக விலை மற்றும் இன்றைய டாலர் மதிப்பில் தங்கத்தின் மதிப்பு. இலங்கையில் கடைகள் பொதுவாக அதிகம் வசூலிக்கும் (வியாபாரி லாபம், செய்கூலி காரணமாக). உங்கள் கடையைச் சரிபார்க்க கீழே உள்ள வாங்கும் வழிகாட்டியைப் பயன்படுத்துங்கள்.",
 p_g24: "24K, ஒரு கிராம்", p_g22: "22K, ஒரு கிராம்", p_world: "உலக விலை, ஒரு அவுன்ஸ்", p_fx: "ரூபாயில் அமெரிக்க டாலர்", p_dealer: "கொழும்பு வியாபாரி விலை, 22K பவுன்",
 st_live: "நேரலை", st_late: "தாமதம்", st_ex: "எடுத்துக்காட்டு தரவு", age: "{s} முன் புதுப்பிக்கப்பட்டது", age_ex: "உண்மையான விலை அல்ல",
 src_live: "மூலங்கள்: தங்கத்திற்கு {g}, மாற்று விகிதத்திற்கு {f}. ஒவ்வொரு நிமிடமும் சரிபார்க்கப்படும்.", src_ex: "இந்தப் பக்கம் கற்பனையான எடுத்துக்காட்டு விலைகளைக் காட்டுகிறது. நேரலைத் தளம் சில நிமிடங்களுக்கு ஒருமுறை புதுப்பிக்கப்படும் தரவுக் கோப்பைப் படிக்கிறது.",
@@ -530,10 +555,36 @@ foot: "இது நிதி ஆலோசனை அல்ல. விலைக�
     $('p-world').textContent = '$' + nf(live.spot, 2);
     var c = $('p-chg'); if (live.prevSpot && live.prevSpot !== live.spot) { var up = live.spot > live.prevSpot; c.textContent = (up ? '▲ ' : '▼ ') + nf(Math.abs(live.spot - live.prevSpot), 2); c.className = 'chg ' + (up ? 'up' : 'down'); } else { c.textContent = ''; }
     $('p-fx').textContent = nf(live.fx, 2);
-    var dl = live.shopMedian || live.dealer; $('p-dealer-row').hidden = !dl;
-    if (dl) { $('p-dealer').textContent = rs(dl); $('p-dealer-lab').textContent = live.shopMedian ? t('p_dealer_med', { n: live.shopN }) : t('p_dealer'); }
+    renderSL(sov);
     $('p-src').textContent = live.example ? t('src_ex') : t('src_live', { g: live.srcGold || 'gold feed', f: live.srcFx || 'FX feed' });
     tick();
+  }
+  function ageText(d) { var m = Math.max(0, Math.round((Date.now() - d.getTime()) / 60000)); return m < 60 ? m + ' min' : m < 2880 ? Math.floor(m / 60) + ' h' : Math.floor(m / 1440) + ' days'; }
+  function renderSL(fair) {
+    /* Sri Lanka market price: the owner's posted price first, then the dealer.json value, then the shop median. */
+    var big = $('sl-sov'), meta = $('sl-meta'), rows = $('sl-rows'), note = $('sl-note'), gap = $('gap'), price = 0, html = '';
+    var row = function (k, v) { html += '<div><span>' + esc(k) + '</span><b>' + v + '</b></div>'; };
+    meta.textContent = ''; note.textContent = '';
+    if (live.example) { big.textContent = '-'; rows.innerHTML = ''; note.textContent = t('sl_none'); gap.hidden = true; return; }
+    if (MKT) {
+      price = MKT.sell; big.textContent = rs(price);
+      meta.textContent = t('sl_upd', { a: ageText(MKT.at) }) + (MKT.src ? ' \u00b7 ' + t('sl_src', { s: MKT.src }) : '');
+      if (MKT.buy) row(t('sl_buy'), rs(MKT.buy));
+      row(t('sl_g22'), rs(price / 8));
+      if (MKT.s24) row(t('sl_s24'), rs(MKT.s24));
+      if (Date.now() - MKT.at.getTime() > 36 * 3600000) note.textContent = t('sl_old');
+      else note.textContent = t('sl_by');
+    } else if (live.dealer) {
+      price = live.dealer; big.textContent = rs(price); row(t('sl_g22'), rs(price / 8)); note.textContent = t('sl_by');
+    } else if (live.shopMedian) {
+      price = live.shopMedian; big.textContent = rs(price); row(t('sl_g22'), rs(price / 8)); meta.textContent = t('sl_med', { n: live.shopN });
+    } else { big.textContent = '-'; note.textContent = t('sl_none'); }
+    if (live.shopMedian && MKT) row(t('sl_med', { n: live.shopN }), rs(live.shopMedian));
+    rows.innerHTML = html;
+    if (price > 0 && fair > 0) {
+      var d = price - fair, p = Math.abs(d / fair * 100);
+      gap.textContent = t(d >= 0 ? 'sl_gap' : 'sl_gap_lo', { d: rs(Math.abs(d)), p: nf(p, 1) }); gap.hidden = false;
+    } else gap.hidden = true;
   }
   function tick() {
     var dot = $('dot'), st = $('p-status'), age = $('p-age');
@@ -626,20 +677,26 @@ foot: "இது நிதி ஆலோசனை அல்ல. விலைக�
   $('al-list').addEventListener('click', function (e) { var b = e.target.closest ? e.target.closest('button[data-rm]') : null; if (!b) return; alerts.splice(parseInt(b.getAttribute('data-rm'), 10), 1); saveAlerts(); renderAlerts(); });
 
   /* Site settings set by the owner in admin.html (Firestore settings/site, public read). Defaults apply if missing. */
-  var SET = { dealer: 0, flag: 25, maxAge: 24 };
+  var SET = { dealer: 0, flag: 25, maxAge: 24 }, MKT = null;
   function loadSettings() {
     var pid = (window.GOLD_CONFIG || {}).FIREBASE_PROJECT_ID; if (!pid) return Promise.resolve();
     return fetch('https://firestore.googleapis.com/v1/projects/' + encodeURIComponent(pid) + '/databases/(default)/documents/settings/site', { cache: 'no-store' })
       .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
       .then(function (d) {
         var f = (d && d.fields) || {}, n = function (k) { var v = f[k]; return v && v.integerValue !== undefined ? Number(v.integerValue) : v && v.doubleValue !== undefined ? Number(v.doubleValue) : null; };
-        SET.dealer = n('dealer_22k_sovereign') > 0 ? n('dealer_22k_sovereign') : 0;
         SET.flag = n('flag_pct') >= 5 && n('flag_pct') <= 100 ? n('flag_pct') : 25;
         SET.maxAge = n('max_age_hours') >= 1 && n('max_age_hours') <= 168 ? n('max_age_hours') : 24;
         var txt = f.announcement && f.announcement.stringValue ? f.announcement.stringValue : '', on = f.announcement_on && f.announcement_on.booleanValue === true, el = document.getElementById('site-note');
         el.textContent = txt; el.hidden = !(on && txt);
-        live.dealer = SET.dealer > 0 ? SET.dealer : (live.dealerJson || null);
-      }).catch(function () {});
+      }).catch(function () {})
+      .then(function () {
+        return fetch('https://firestore.googleapis.com/v1/projects/' + encodeURIComponent(pid) + '/databases/(default)/documents/settings/market', { cache: 'no-store' })
+          .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
+          .then(function (d) {
+            var f = (d && d.fields) || {}, n = function (k) { var v = f[k]; return v && v.integerValue !== undefined ? Number(v.integerValue) : null; }, at = f.updated_at && f.updated_at.timestampValue ? new Date(f.updated_at.timestampValue) : null;
+            MKT = n('sell_22k_sovereign') > 0 && at && !isNaN(at.getTime()) ? { sell: n('sell_22k_sovereign'), buy: n('buy_22k_sovereign'), s24: n('sell_24k_sovereign'), src: f.source && f.source.stringValue || '', at: at } : null;
+          }).catch(function () {});
+      });
   }
 
   /* Data: data/latest.json (every few minutes) and data/prices.csv (daily history). Without them the page shows example data. */
@@ -648,7 +705,7 @@ foot: "இது நிதி ஆலோசனை அல்ல. விலைக�
       var spot = parseFloat(j.gold_usd_oz), fx = parseFloat(j.usdlkr), up = new Date(j.updated);
       if (!(spot > 0 && fx > 0) || isNaN(up.getTime())) return;
       if (!live.example && live.spot !== spot) live.prevSpot = live.spot;
-      live.spot = spot; live.fx = fx; live.updated = up; live.dealer = SET.dealer > 0 ? SET.dealer : (parseFloat(j.dealer_22k_sovereign_lkr) > 0 ? parseFloat(j.dealer_22k_sovereign_lkr) : null); live.dealerJson = parseFloat(j.dealer_22k_sovereign_lkr) > 0 ? parseFloat(j.dealer_22k_sovereign_lkr) : null; live.srcGold = j.source_gold || ''; live.srcFx = j.source_fx || '';
+      live.spot = spot; live.fx = fx; live.updated = up; live.dealer = parseFloat(j.dealer_22k_sovereign_lkr) > 0 ? parseFloat(j.dealer_22k_sovereign_lkr) : null; live.srcGold = j.source_gold || ''; live.srcFx = j.source_fx || '';
       if (live.example) {
         live.example = false; live.histExample = true;
         live.hist = { dates: SAMPLE.dates, gold: SAMPLE.gold.map(function (g) { return g * spot; }), fx: SAMPLE.fx.map(function (f) { return f * fx; }) };
