@@ -22,6 +22,7 @@ import json
 import os
 import re
 import sys
+import time
 import urllib.request
 from datetime import datetime, timezone
 from html.parser import HTMLParser
@@ -79,10 +80,30 @@ def per_sovereign(v):
 N = r"(\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d{4,}(?:\.\d+)?)"
 
 
-def fetch_text(url, timeout=30):
-    req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "text/html,*/*"})
-    with urllib.request.urlopen(req, timeout=timeout) as r:
-        return html_to_text(r.read().decode("utf-8", "replace"))
+BROWSER_UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
+              "Chrome/124.0 Safari/537.36")
+
+
+def fetch_text(url, timeout=30, tries=3):
+    """Some sites drop requests that do not look like a normal page visit, so send ordinary browser headers
+    and retry a few times (a dropped connection is sometimes just a hiccup)."""
+    headers = {"User-Agent": BROWSER_UA,
+               "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+               "Accept-Language": "en-US,en;q=0.9",
+               "Accept-Encoding": "identity",
+               "Cache-Control": "no-cache",
+               "Connection": "close"}
+    last = None
+    for i in range(tries):
+        try:
+            req = urllib.request.Request(url, headers=headers)
+            with urllib.request.urlopen(req, timeout=timeout) as r:
+                return html_to_text(r.read().decode("utf-8", "replace"))
+        except Exception as e:
+            last = e
+            print("  attempt %d for %s failed: %s" % (i + 1, url, e))
+            time.sleep(3 * (i + 1))
+    raise last
 
 
 # ---------------------------------------------------------------- one parser per site (text in, dict out)
