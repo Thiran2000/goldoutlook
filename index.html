@@ -852,18 +852,22 @@ foot: "இது நிதி ஆலோசனை அல்ல. விலைக�
   }
 
   /* Data: data/latest.json (every few minutes) and data/prices.csv (daily history). Without them the page shows example data. */
+  function applyLatest(j) {
+    var spot = parseFloat(j.gold_usd_oz), fx = parseFloat(j.usdlkr), up = new Date(j.updated);
+    if (!(spot > 0 && fx > 0) || isNaN(up.getTime())) return false;
+    var changed = live.example || live.spot !== spot || live.fx !== fx;
+    if (!live.example && live.spot !== spot) live.prevSpot = live.spot;
+    live.spot = spot; live.fx = fx; live.updated = up; live.dealer = parseFloat(j.dealer_22k_sovereign_lkr) > 0 ? parseFloat(j.dealer_22k_sovereign_lkr) : null; live.srcGold = j.source_gold || ''; live.srcFx = j.source_fx || '';
+    if (live.example) {
+      live.example = false; live.histExample = true;
+      live.hist = { dates: SAMPLE.dates, gold: SAMPLE.gold.map(function (g) { return g * spot; }), fx: SAMPLE.fx.map(function (f) { return f * fx; }) };
+      fetch('data/prices.csv', { cache: 'no-store' }).then(function (r) { return r.ok ? r.text() : Promise.reject(); }).then(function (tx) { live.hist = parseCsv(tx); live.histExample = false; renderAll(); }).catch(function () {});
+    }
+    return changed;
+  }
   function loadLatest() {
     fetch('data/latest.json', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : Promise.reject(); }).then(function (j) {
-      var spot = parseFloat(j.gold_usd_oz), fx = parseFloat(j.usdlkr), up = new Date(j.updated);
-      if (!(spot > 0 && fx > 0) || isNaN(up.getTime())) return;
-      if (!live.example && live.spot !== spot) live.prevSpot = live.spot;
-      live.spot = spot; live.fx = fx; live.updated = up; live.dealer = parseFloat(j.dealer_22k_sovereign_lkr) > 0 ? parseFloat(j.dealer_22k_sovereign_lkr) : null; live.srcGold = j.source_gold || ''; live.srcFx = j.source_fx || '';
-      if (live.example) {
-        live.example = false; live.histExample = true;
-        live.hist = { dates: SAMPLE.dates, gold: SAMPLE.gold.map(function (g) { return g * spot; }), fx: SAMPLE.fx.map(function (f) { return f * fx; }) };
-        fetch('data/prices.csv', { cache: 'no-store' }).then(function (r) { return r.ok ? r.text() : Promise.reject(); }).then(function (tx) { live.hist = parseCsv(tx); live.histExample = false; renderAll(); }).catch(function () {});
-      }
-      renderAll();
+      if (applyLatest(j) !== false) renderAll();
     }).catch(function () {});
   }
 
@@ -887,15 +891,36 @@ foot: "இது நிதி ஆலோசனை அல்ல. விலைக�
     live.shopN = v.length; live.shopMedian = v.length >= ((live.retail || []).length ? 2 : 3) ? median(v) : null;
   }
   /* data/retail.json is written by scripts/update_retail.py from the jewellers' public rate pages. */
+  function applyRetail(j) {
+    var out = [];
+    (j && j.sources || []).forEach(function (s) {
+      var at = new Date(s.at), sell = parseFloat(s.sell_22k_sovereign), buy = parseFloat(s.buy_22k_sovereign);
+      if (sell > 0 && !isNaN(at.getTime()) && Date.now() - at.getTime() < SET.maxAge * 3600000) out.push({ name: String(s.name || '').slice(0, 80), city: String(s.city || 'Online').slice(0, 60), url: /^https:\/\//.test(s.url || '') ? s.url : '', sell: sell, buy: buy > 0 ? buy : null, at: at, inMedian: s.in_median !== false, auto: true, karats: { 24: parseFloat(s.sell_24k_sovereign) || 0, 21: parseFloat(s.sell_21k_sovereign) || 0, 18: parseFloat(s.sell_18k_sovereign) || 0 } });
+    });
+    var sig = JSON.stringify(out.map(function (r) { return [r.name, r.sell, r.buy, r.karats[24], r.karats[21], r.karats[18]]; })), changed = sig !== live.retailSig;
+    live.retail = out; live.retailSig = sig; updateMedian();
+    return changed;
+  }
   function loadRetail() {
+    if (liveRetail) return;   /* the live feed is supplying the shop rates */
     fetch('data/retail.json', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : Promise.reject(); }).then(function (j) {
-      var out = [];
-      (j && j.sources || []).forEach(function (s) {
-        var at = new Date(s.at), sell = parseFloat(s.sell_22k_sovereign), buy = parseFloat(s.buy_22k_sovereign);
-        if (sell > 0 && !isNaN(at.getTime()) && Date.now() - at.getTime() < SET.maxAge * 3600000) out.push({ name: String(s.name || '').slice(0, 80), city: String(s.city || 'Online').slice(0, 60), url: /^https:\/\//.test(s.url || '') ? s.url : '', sell: sell, buy: buy > 0 ? buy : null, at: at, inMedian: s.in_median !== false, auto: true, karats: { 24: parseFloat(s.sell_24k_sovereign) || 0, 21: parseFloat(s.sell_21k_sovereign) || 0, 18: parseFloat(s.sell_18k_sovereign) || 0 } });
-      });
-      live.retail = out; updateMedian(); renderAll();
+      applyRetail(j); renderAll();
     }).catch(function () {});
+  }
+  /* Optional live feed: a free Cloudflare Worker (see worker/README.md). Set LIVE_URL in config.js to turn it on.
+     If it is missing or fails, the site keeps using data/latest.json and data/retail.json as before. */
+  var liveOk = false, liveRetail = false, liveFails = 0;
+  function loadLive() {
+    var url = (window.GOLD_CONFIG || {}).LIVE_URL;
+    if (!url || document.hidden) return;
+    fetch(url, { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : Promise.reject(); }).then(function (j) {
+      var a = applyLatest(j), b = false;
+      if (a === false) return Promise.reject();
+      liveRetail = !!(j.retail && j.retail.sources && j.retail.sources.length);
+      if (liveRetail) b = applyRetail(j.retail);
+      liveOk = true; liveFails = 0;
+      if (a || b) renderAll();
+    }).catch(function () { if (++liveFails >= 3) liveOk = false; });
   }
   function renderShops() {
     var rows = shopRows().slice().sort(function (a, b) { return a.sell - b.sell; }), fair = lastFair || 1;
@@ -977,10 +1002,13 @@ foot: "இது நிதி ஆலோசனை அல்ல. விலைக�
   $('bot-form').addEventListener('submit', function (e) { e.preventDefault(); var v = $('bot-in').value; $('bot-in').value = ''; ask(v); });
   $('bot-chips').addEventListener('click', function (e) { var b = e.target.closest ? e.target.closest('button[data-ask]') : null; if (b) ask(b.getAttribute('data-ask')); });
 
-  applyText(); renderAll(); loadSettings().then(function () { renderAll(); loadShops(); loadRetail(); }); loadLatest();
+  applyText(); renderAll(); loadSettings().then(function () { renderAll(); loadShops(); loadRetail(); }); loadLatest(); loadLive();
   setInterval(tick, 1000);
-  setInterval(loadLatest, 60000);
+  setInterval(function () { if (!liveOk) loadLatest(); }, 60000);
   setInterval(loadRetail, 300000);
+  var LIVE_MS = Math.max(5000, parseInt((window.GOLD_CONFIG || {}).LIVE_EVERY_SECONDS, 10) * 1000 || 10000);
+  setInterval(loadLive, LIVE_MS);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) loadLive(); });
   setInterval(loadShops, 120000); setInterval(function () { loadSettings().then(renderAll); }, 300000);
 })();
 </script>
