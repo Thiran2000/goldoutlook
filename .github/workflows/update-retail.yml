@@ -1,0 +1,34 @@
+name: Update retail jeweller rates
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"   # every 30 minutes; jewellers change rates a few times a day at most
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: retail-rates
+  cancel-in-progress: true
+
+jobs:
+  retail:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check the parsers
+        run: python3 scripts/test_update_retail.py
+      - name: Write data/retail.json
+        run: python3 scripts/update_retail.py
+      - name: Commit if changed
+        run: |
+          git config user.name "gold-data-bot"
+          git config user.email "gold-data-bot@users.noreply.github.com"
+          git add data/retail.json
+          git diff --cached --quiet || git commit -m "Update retail jeweller rates"
+          git pull --rebase
+          git push
