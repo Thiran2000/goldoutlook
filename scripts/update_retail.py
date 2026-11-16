@@ -30,6 +30,7 @@ from html.parser import HTMLParser
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 OUT = os.path.join(ROOT, "data", "retail.json")
 LATEST = os.path.join(ROOT, "data", "latest.json")
+HISTORY = os.path.join(ROOT, "data", "retail_history.csv")
 
 OZ_G = 31.1035
 BAND = 0.35          # accept values within +/-35% of the world-price value
@@ -127,10 +128,10 @@ def parse_devi(text):
 def parse_bullion(text):
     """Rows like '22 KT (Per 8g) LKR 365,000'."""
     out = {}
-    for k, key in (("22", "sell_22k"), ("24", "sell_24k")):
+    for k in ("18", "21", "22", "24"):
         m = re.search(k + r"\s*KT\s*\(\s*Per\s*8\s*g\s*\)\D{0,25}" + N, text, re.I)
         if m:
-            out[key] = per_sovereign(num(m.group(1)))
+            out["sell_%sk" % k] = per_sovereign(num(m.group(1)))
     return out
 
 
@@ -138,12 +139,12 @@ def parse_ranlanka(text):
     """Table: KARAT | PURITY | BUYING PRICE | SELLING PRICE, per pawn (8 g).
     The shop BUYS from you at 'Buying' and SELLS to you at 'Selling'."""
     out = {}
-    m = re.search(r"22\s*KT\D{0,12}91\.6\s*%\D{0,12}" + N + r"\D{0,12}" + N, text, re.I)
-    if m:
-        out["buy_22k"], out["sell_22k"] = per_sovereign(num(m.group(1))), per_sovereign(num(m.group(2)))
-    m = re.search(r"24\s*KT\D{0,12}100\s*%\D{0,12}" + N + r"\D{0,12}" + N, text, re.I)
-    if m:
-        out["sell_24k"] = per_sovereign(num(m.group(2)))
+    for k, purity in (("24", r"100"), ("22", r"91\.6"), ("21", r"87\.5"), ("18", r"75(?:\.0)?")):
+        m = re.search(k + r"\s*KT\D{0,12}" + purity + r"\s*%\D{0,12}" + N + r"\D{0,12}" + N, text, re.I)
+        if m:
+            out["sell_%sk" % k] = per_sovereign(num(m.group(2)))
+            if k == "22":
+                out["buy_22k"] = per_sovereign(num(m.group(1)))
     return out
 
 
@@ -160,18 +161,25 @@ def fair_sovereign(spot_usd_oz, usdlkr):
     return spot_usd_oz / OZ_G * usdlkr * (22 / 24) * 8
 
 
+KARATS = (24, 22, 21, 18)
+
+
 def validate(parsed, fair):
-    """Return the parsed dict if the 22K price is plausible, else None."""
+    """Return a cleaned dict if the 22K price is plausible, else None.
+    Other karats are kept only if they are also near the world-price value for that karat."""
     s = parsed.get("sell_22k")
     if not s:
         return None
     if fair and not (fair * (1 - BAND) <= s <= fair * (1 + BAND)):
         return None
     clean = {"sell_22k": round(s)}
-    for k in ("buy_22k", "sell_24k"):
-        v = parsed.get(k)
-        if v and (not fair or fair * (1 - BAND) <= v * (22 / 24 if k == "sell_24k" else 1) <= fair * (1 + BAND)):
-            clean[k] = round(v)
+    if parsed.get("buy_22k") and (not fair or fair * (1 - BAND) <= parsed["buy_22k"] <= fair * (1 + BAND)):
+        clean["buy_22k"] = round(parsed["buy_22k"])
+    for k in (24, 21, 18):
+        v = parsed.get("sell_%dk" % k)
+        want = fair * k / 22 if fair else None
+        if v and (not want or want * (1 - BAND) <= v <= want * (1 + BAND)):
+            clean["sell_%dk" % k] = round(v)
     return clean
 
 
@@ -204,8 +212,9 @@ def build(results, previous, now_iso):
             row = {"sell_22k_sovereign": got["sell_22k"], "at": now_iso}
             if got.get("buy_22k"):
                 row["buy_22k_sovereign"] = got["buy_22k"]
-            if got.get("sell_24k"):
-                row["sell_24k_sovereign"] = got["sell_24k"]
+            for k in (24, 21, 18):
+                if got.get("sell_%dk" % k):
+                    row["sell_%dk_sovereign" % k] = got["sell_%dk" % k]
         elif src["id"] in old:  # keep last good value with its old timestamp
             row = {k: v for k, v in old[src["id"]].items() if k not in ("id", "name", "url", "city", "in_median")}
         else:
@@ -214,8 +223,46 @@ def build(results, previous, now_iso):
         rows.append(row)
     mark_outliers(rows)
     med = median([r["sell_22k_sovereign"] for r in rows if r["in_median"]])
-    return {"updated": now_iso, "unit": "LKR per 22K sovereign (8 g)", "sources": rows,
-            "median_22k_sovereign": round(med) if med else None}
+    market = {}
+    for k in KARATS:
+        vals = [r["sell_%dk_sovereign" % k] for r in rows if r["in_median"] and r.get("sell_%dk_sovereign" % k)]
+        if vals:
+            market[str(k)] = round(median(vals))
+    return {"updated": now_iso, "unit": "LKR per sovereign (8 g) of the stated karat", "sources": rows,
+            "median_22k_sovereign": round(med) if med else None, "market": market}
+
+
+HISTORY_HEADER = "time,median_22k,world_value_22k,premium_pct,sources\n"
+
+
+def log_history(path, data, fair, now_iso, min_gap_hours=3):
+    """Append one line to data/retail_history.csv when the median changed or 3 h have passed.
+    This builds the record of how far Sri Lankan shops sit above the world price, which the forecast can learn from."""
+    med = data.get("median_22k_sovereign")
+    if not med:
+        return False
+    last = None
+    if os.path.exists(path):
+        try:
+            with open(path) as f:
+                rows = [l.strip().split(",") for l in f.read().strip().split("\n")[1:] if l.strip()]
+            last = rows[-1] if rows else None
+        except Exception:
+            last = None
+    if last:
+        try:
+            age_h = (datetime.strptime(now_iso, "%Y-%m-%dT%H:%M:%SZ") - datetime.strptime(last[0], "%Y-%m-%dT%H:%M:%SZ")).total_seconds() / 3600
+            if float(last[1]) == med and age_h < min_gap_hours:
+                return False
+        except Exception:
+            pass
+    prem = "%.2f" % ((med / fair - 1) * 100) if fair else ""
+    new = not os.path.exists(path)
+    with open(path, "a") as f:
+        if new:
+            f.write(HISTORY_HEADER)
+        f.write("%s,%d,%s,%s,%d\n" % (now_iso, med, round(fair) if fair else "", prem, len(data["sources"])))
+    return True
 
 
 def load_json(path):
@@ -253,7 +300,9 @@ def main():
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, "w") as f:
         json.dump(data, f, indent=1)
-    print("wrote", OUT, "median", data["median_22k_sovereign"])
+    print("wrote", OUT, "median", data["median_22k_sovereign"], "market", data["market"])
+    if log_history(HISTORY, data, fair, now):
+        print("logged", HISTORY)
 
 
 if __name__ == "__main__":

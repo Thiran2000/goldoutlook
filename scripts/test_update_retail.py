@@ -25,7 +25,8 @@ RAN = """<h2>Gold Buying and Selling Price in Sri Lanka</h2><table>
 <tr><th>Karat</th><th>Purity</th><th>Buying Price</th><th>Selling Price</th></tr>
 <tr><td>24KT</td><td>100%</td><td>LKR 350,000</td><td>LKR 358,000</td></tr>
 <tr><td>22KT</td><td>91.6%</td><td>LKR 320,600</td><td>LKR 327,928</td></tr>
-<tr><td>21KT</td><td>87.5%</td><td>LKR 306,250</td><td>LKR 313,250</td></tr></table>"""
+<tr><td>21KT</td><td>87.5%</td><td>LKR 306,250</td><td>LKR 313,250</td></tr>
+<tr><td>18KT</td><td>75.0%</td><td>LKR 262,500</td><td>LKR 268,500</td></tr></table>"""
 
 FAIR = u.fair_sovereign(3859.95, 332.671)  # about 302,700
 
@@ -46,10 +47,12 @@ class T(unittest.TestCase):
     def test_bullion(self):
         r = u.parse_bullion(u.html_to_text(BULLION))
         self.assertEqual((r["sell_22k"], r["sell_24k"]), (365000, 398000))
+        self.assertEqual((r["sell_21k"], r["sell_18k"]), (348000, 298500))
 
     def test_ranlanka(self):
         r = u.parse_ranlanka(u.html_to_text(RAN))
         self.assertEqual((r["buy_22k"], r["sell_22k"], r["sell_24k"]), (320600, 327928, 358000))
+        self.assertEqual((r["sell_21k"], r["sell_18k"]), (313250, 268500))
 
     def test_validate_rejects_junk(self):
         self.assertIsNone(u.validate({"sell_22k": 1200}, FAIR))
@@ -64,6 +67,30 @@ class T(unittest.TestCase):
         self.assertFalse(by["bullion"]["in_median"])
         self.assertTrue(by["devi"]["in_median"])
         self.assertEqual(d["median_22k_sovereign"], round((329400 + 327928) / 2))
+
+    def test_market_median_per_karat(self):
+        res = {"devi": {"sell_22k": 329400, "sell_24k": 358000},
+               "bullion": {"sell_22k": 365000, "sell_24k": 398000, "sell_21k": 348000, "sell_18k": 298500},
+               "ranlanka": {"sell_22k": 327928, "sell_24k": 358000, "sell_21k": 313250, "sell_18k": 268500}}
+        d = u.build(res, None, "2026-11-16T06:00:00Z")
+        self.assertEqual(d["market"]["24"], 358000)   # bullion left out as outlier
+        self.assertEqual(d["market"]["21"], 313250)
+        self.assertEqual(d["market"]["18"], 268500)
+
+    def test_validate_drops_bad_karat_only(self):
+        r = u.validate({"sell_22k": 329400, "sell_18k": 5000, "sell_24k": 358000}, FAIR)
+        self.assertEqual(r["sell_22k"], 329400)
+        self.assertNotIn("sell_18k", r)
+        self.assertEqual(r["sell_24k"], 358000)
+
+    def test_history_log(self):
+        import tempfile
+        d = u.build({"ranlanka": {"sell_22k": 327928}}, None, "2026-11-16T06:00:00Z")
+        path = os.path.join(tempfile.mkdtemp(), "h.csv")
+        self.assertTrue(u.log_history(path, d, FAIR, "2026-11-16T06:00:00Z"))
+        self.assertFalse(u.log_history(path, d, FAIR, "2026-11-16T07:00:00Z"))  # same median, under 3 h
+        self.assertTrue(u.log_history(path, d, FAIR, "2026-11-16T10:00:00Z"))   # 4 h later
+        self.assertEqual(len(open(path).read().strip().split("\n")), 3)
 
     def test_failed_source_keeps_old_value_and_old_time(self):
         first = u.build({"devi": {"sell_22k": 329400}, "bullion": None, "ranlanka": None}, None, "2026-11-16T06:00:00Z")
