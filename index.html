@@ -924,7 +924,7 @@ foot: "இது நிதி ஆலோசனை அல்ல. விலைக�
   function loadLive() {
     var url = (window.GOLD_CONFIG || {}).LIVE_URL;
     if (!url || document.hidden) return;
-    fetch(url, { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : Promise.reject(); }).then(function (j) {
+    fetch(url + (url.indexOf('?') > -1 ? '&' : '?') + '_=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : Promise.reject(); }).then(function (j) {
       var a = applyLatest(j), b = false;
       if (a === null) return Promise.reject();
       liveRetail = !!(j.retail && j.retail.sources && j.retail.sources.length);
