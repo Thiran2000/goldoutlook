@@ -1,6 +1,7 @@
 <title>Gold Outlook LK</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+Sinhala:wght@400;500;600&family=Noto+Sans+Tamil:wght@400;500;600&display=swap">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+Sinhala:wght@400;500;600&family=Noto+Sans+Tamil:wght@400;500;600&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+Sinhala:wght@400;500;600&family=Noto+Sans+Tamil:wght@400;500;600&display=swap"></noscript>
 <style>
 /* Layout: slim top bar (name, section links, language) then one column: live price, weight lookup, forecast, buying guide, alerts, learn, footer. */
 :root {
@@ -920,18 +921,20 @@ foot: "இது நிதி ஆலோசனை அல்ல. விலைக�
   }
   /* Optional live feed: a free Cloudflare Worker (see worker/README.md). Set LIVE_URL in config.js to turn it on.
      If it is missing or fails, the site keeps using data/latest.json and data/retail.json as before. */
-  var liveOk = false, liveRetail = false, liveFails = 0;
+  var liveOk = false, liveRetail = false, liveFails = 0, liveBusy = false;
   function loadLive() {
     var url = (window.GOLD_CONFIG || {}).LIVE_URL;
-    if (!url || document.hidden) return;
-    fetch(url + (url.indexOf('?') > -1 ? '&' : '?') + '_=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : Promise.reject(); }).then(function (j) {
+    if (!url || document.hidden || liveBusy) return;
+    liveBusy = true;
+    var ctl = window.AbortController ? new AbortController() : null, to = setTimeout(function () { if (ctl) ctl.abort(); liveBusy = false; }, 8000);
+    fetch(url + (url.indexOf('?') > -1 ? '&' : '?') + '_=' + Date.now(), { cache: 'no-store', signal: ctl ? ctl.signal : undefined }).then(function (r) { return r.ok ? r.json() : Promise.reject(); }).then(function (j) {
       var a = applyLatest(j), b = false;
       if (a === null) return Promise.reject();
       liveRetail = !!(j.retail && j.retail.sources && j.retail.sources.length);
       if (liveRetail) b = applyRetail(j.retail);
       liveOk = true; liveFails = 0; live.checked = Date.now();
       if (a || b) renderAll();
-    }).catch(function () { if (++liveFails >= 3) liveOk = false; });
+    }).catch(function () { if (++liveFails >= 3) liveOk = false; }).then(function () { clearTimeout(to); liveBusy = false; });
   }
   function renderShops() {
     var rows = shopRows().slice().sort(function (a, b) { return a.sell - b.sell; }), fair = lastFair || 1;
