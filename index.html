@@ -121,6 +121,15 @@ details p { margin: 8px 0 0; color: var(--muted); max-width: 70ch; }
 .pcard .rows { margin-top: 8px; border-top: 1px solid var(--line); }
 .pcard .rows div { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
 .pcard .rows b { font-family: var(--font-num); font-weight: 500; text-align: right; }
+.pcard .rows table.sltable { width: 100%; border-collapse: collapse; font-size: 14px; }
+.sltable th { text-align: right; font-size: 12px; font-weight: 600; color: var(--muted); padding: 8px 0 6px; border-bottom: 1px solid var(--line); }
+.sltable th:first-child, .sltable td:first-child { text-align: left; }
+.sltable td { padding: 7px 0; border-bottom: 1px solid var(--line); text-align: right; font-family: var(--font-num); vertical-align: top; }
+.sltable td:first-child { font-family: inherit; font-weight: 600; }
+.sltable td small { display: block; font-size: 12px; color: var(--muted); }
+.sltable tr.k22 td { font-weight: 600; }
+.pcard .rows .slspread { font-size: 13px; color: var(--muted); }
+.pcard .rows .slspread b { font-size: 13px; }
 .gap { margin-top: 10px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 6px; font-size: 14px; background: var(--surface); }
 .src { font-size: 12px; color: var(--muted); margin-top: 8px; }
 .flag { color: var(--warn); font-size: 12px; }
@@ -433,7 +442,7 @@ ol_m_sl: "How this is worked out: the world gold price in dollars, times the dol
 ol_m_w: "How this is worked out: from the daily gold price in dollars. The range comes from how much the price has been moving lately.",
 ol_ex: "Example data is showing, so these numbers are not real yet.",
 sl_na: "No Sri Lanka shop price yet", dr_nodata: "Not enough history", ol_stale: "The price history file is {n} days old, so the ranges lean on fewer recent days and the past-month figures are blank. In GitHub, open Actions and run \u201cUpdate gold data\u201d to refresh it.", up_word: "higher", pm: "past month", ytd: "",
-sl_tag: "What you pay in Sri Lanka", sl_title: "Sri Lanka market price", sl_sov: "22K sovereign (8 g), Colombo market", w_tag: "World gold, converted", sl_buy: "Dealers buy back at", sl_g22: "22K, per gram", sl_s24: "24K sovereign", sl_med: "Median of {n} shops, 22K sovereign", sl_pri: "{n} rate, 22K sovereign", sl_upd: "Updated {a} ago", sl_src: "Source: {s}", sl_old: "This price is older than a day. Ask a shop for today's price.", sl_none: "No Sri Lanka market price has been posted yet. The world-price value is shown on the right. Approved shops' prices appear in the shop list below.", sl_gap: "The Sri Lanka price is {d} ({p}%) above the world-price value. This difference is the dealer margin, making charges and local costs.", sl_gap_lo: "The Sri Lanka price is {d} ({p}%) below the world-price value.", sl_by: "Posted by the site owner from Colombo dealer prices.",
+sl_tag: "What you pay in Sri Lanka", sl_title: "Sri Lanka market price", sl_sov: "22K sovereign (8 g), Colombo market", w_tag: "World gold, converted", sl_buy: "Dealers buy back at", sl_g22: "22K, per gram", sl_s24: "24K sovereign", sl_med: "Median of {n} shops, 22K sovereign", sl_pri: "{n} rate, 22K sovereign", sl_upd: "Updated {a} ago", sl_src: "Source: {s}", sl_old: "This price is older than a day. Ask a shop for today's price.", sl_none: "No Sri Lanka market price has been posted yet. The world-price value is shown on the right. Approved shops' prices appear in the shop list below.", sl_gap: "The Sri Lanka price is {d} ({p}%) above the world-price value. This difference is the dealer margin, making charges and local costs.", sl_gap_lo: "The Sri Lanka price is {d} ({p}%) below the world-price value.", sl_by: "Posted by the site owner from Colombo dealer prices.", sl_spread: "Gap between buying and selling, 22K sovereign", sl_by_src: "Rates from {s}", sl_est_note: "~ Estimate: only the 22K buying price is posted. Other karats use the same buy/sell ratio.",
 nav_price: "Price now", nav_lookup: "By weight", nav_forecast: "Forecast", nav_buy: "Buying guide", nav_alerts: "Alerts", nav_learn: "Learn",
 d_title: "Today, tomorrow and the day after", d_lead: "The 22K sovereign at the world-price value. Tomorrow and the day after show a likely range, not a promise.", d_today: "Today", d_tom: "Tomorrow", d_dat: "Day after tomorrow", d_now: "Price now", d_range: "9 in 10 range", d_mid: "Middle guess",
 d_note: "One day's move is usually small next to a shop's margin. Whether the price goes up or down is close to a coin flip.",
@@ -484,7 +493,7 @@ bot_alert: "Open the Price alerts section, choose below or above, type a price a
 foot: "Not financial advice. Prices are worked out from public sources and may differ from your jeweller. The forecast shows how far gold usually moves, not what it will do. Sinhala and Tamil text should be checked by a native speaker."
 },
 si: {
-sl_tag: "ශ්‍රී ලංකාවේ ඔබ ගෙවන මිල", sl_title: "ශ්‍රී ලංකා වෙළඳපොළ මිල", sl_sov: "22K පවුම (8 g), කොළඹ වෙළඳපොළ", w_tag: "ලෝක රන් මිල, රුපියල්වලට", sl_buy: "වෙළෙන්දන් ආපසු මිලදී ගන්නා මිල", sl_g22: "22K, ග්‍රෑම් එකක්", sl_s24: "24K පවුම", sl_med: "වෙළඳසැල් {n}ක මධ්‍යස්ථ මිල, 22K පවුම", sl_pri: "{n} මිල, 22K පවුම", sl_upd: "{a} කට පෙර යාවත්කාලීන කළා", sl_src: "මූලාශ්‍රය: {s}", sl_old: "මෙම මිල දිනකට වඩා පැරණියි. අද මිල වෙළඳසැලෙන් අසන්න.", sl_none: "ශ්‍රී ලංකා වෙළඳපොළ මිලක් තවම පළ කර නැත. දකුණු පස ලෝක මිල අගය පෙන්වයි. අනුමත වෙළඳසැල් මිල පහත ලැයිස්තුවේ ඇත.", sl_gap: "ශ්‍රී ලංකා මිල ලෝක මිල අගයට වඩා {d} ({p}%) ක් වැඩිය. මෙම වෙනස වෙළෙන්දාගේ ලාභය, රන් වැඩ කුලිය සහ දේශීය වියදම්වලට අයත් වේ.", sl_gap_lo: "ශ්‍රී ලංකා මිල ලෝක මිල අගයට වඩා {d} ({p}%) ක් අඩුය.", sl_by: "කොළඹ වෙළෙන්දන්ගේ මිල අනුව අඩවි හිමිකරු පළ කළා.",
+sl_tag: "ශ්‍රී ලංකාවේ ඔබ ගෙවන මිල", sl_title: "ශ්‍රී ලංකා වෙළඳපොළ මිල", sl_sov: "22K පවුම (8 g), කොළඹ වෙළඳපොළ", w_tag: "ලෝක රන් මිල, රුපියල්වලට", sl_buy: "වෙළෙන්දන් ආපසු මිලදී ගන්නා මිල", sl_g22: "22K, ග්‍රෑම් එකක්", sl_s24: "24K පවුම", sl_med: "වෙළඳසැල් {n}ක මධ්‍යස්ථ මිල, 22K පවුම", sl_pri: "{n} මිල, 22K පවුම", sl_upd: "{a} කට පෙර යාවත්කාලීන කළා", sl_src: "මූලාශ්‍රය: {s}", sl_old: "මෙම මිල දිනකට වඩා පැරණියි. අද මිල වෙළඳසැලෙන් අසන්න.", sl_none: "ශ්‍රී ලංකා වෙළඳපොළ මිලක් තවම පළ කර නැත. දකුණු පස ලෝක මිල අගය පෙන්වයි. අනුමත වෙළඳසැල් මිල පහත ලැයිස්තුවේ ඇත.", sl_gap: "ශ්‍රී ලංකා මිල ලෝක මිල අගයට වඩා {d} ({p}%) ක් වැඩිය. මෙම වෙනස වෙළෙන්දාගේ ලාභය, රන් වැඩ කුලිය සහ දේශීය වියදම්වලට අයත් වේ.", sl_gap_lo: "ශ්‍රී ලංකා මිල ලෝක මිල අගයට වඩා {d} ({p}%) ක් අඩුය.", sl_by: "කොළඹ වෙළෙන්දන්ගේ මිල අනුව අඩවි හිමිකරු පළ කළා.", sl_spread: "මිලදී ගැනීම සහ විකිණීම අතර වෙනස, 22K පවුම", sl_by_src: "{s} මිල", sl_est_note: "~ ඇස්තමේන්තුව: පළ කර ඇත්තේ 22K මිලදී ගැනීමේ මිල පමණි. අනෙක් කැරට් සඳහා එම අනුපාතයම භාවිත කළා.",
 nav_price: "දැන් මිල", nav_lookup: "බර අනුව", nav_forecast: "අනාවැකිය", nav_buy: "මිලදී ගැනීමේ උපදෙස්", nav_alerts: "ඇඟවීම්", nav_learn: "ඉගෙන ගන්න",
 d_title: "අද, හෙට සහ අනිද්දා", d_lead: "ලෝක මිල අගයට 22K පවුම. හෙට සහ අනිද්දා පෙන්වන්නේ පොරොන්දුවක් නොව ඉඩ ඇති පරාසයකි.", d_today: "අද", d_tom: "හෙට", d_dat: "අනිද්දා", d_now: "දැන් මිල", d_range: "10න් 9ක පරාසය", d_mid: "මැද අනුමානය",
 d_note: "එක් දිනක චලනය සාමාන්‍යයෙන් වෙළඳසැල් ලාභයට වඩා කුඩාය. මිල ඉහළ යයිද පහළ යයිද යන්න කාසියක් උඩ දැමීමක් හා ආසන්නයි.",
@@ -535,7 +544,7 @@ bot_alert: "මිල ඇඟවීම් කොටස විවෘත කර, �
 foot: "මෙය මූල්‍ය උපදෙස් නොවේ. මිල ගණනය කරන්නේ පොදු මූලාශ්‍රවලිනි, ඔබේ වෙළෙන්දාගේ මිලට වඩා වෙනස් විය හැක. අනාවැකිය පෙන්වන්නේ රන් සාමාන්‍යයෙන් කොපමණ චලනය වේද යන්නයි, එය කුමක් කරයිද යන්න නොවේ. සිංහල සහ දෙමළ පාඨ ස්වදේශීය කථිකයෙකු විසින් පරීක්ෂා කළ යුතුය."
 },
 ta: {
-sl_tag: "இலங்கையில் நீங்கள் செலுத்தும் விலை", sl_title: "இலங்கை சந்தை விலை", sl_sov: "22K பவுன் (8 g), கொழும்பு சந்தை", w_tag: "உலக தங்கம், ரூபாயில்", sl_buy: "கடைகள் திரும்ப வாங்கும் விலை", sl_g22: "22K, ஒரு கிராம்", sl_s24: "24K பவுன்", sl_med: "{n} கடைகளின் நடுநிலை விலை, 22K பவுன்", sl_pri: "{n} விலை, 22K பவுன்", sl_upd: "{a} முன் புதுப்பிக்கப்பட்டது", sl_src: "மூலம்: {s}", sl_old: "இந்த விலை ஒரு நாளுக்கு மேல் பழையது. இன்றைய விலையை கடையில் கேளுங்கள்.", sl_none: "இலங்கை சந்தை விலை இன்னும் பதிவிடப்படவில்லை. வலப்புறம் உலக விலை மதிப்பு காட்டப்படுகிறது. அங்கீகரிக்கப்பட்ட கடை விலைகள் கீழே உள்ளன.", sl_gap: "இலங்கை விலை உலக விலை மதிப்பை விட {d} ({p}%) அதிகம். இந்த வேறுபாடு கடையின் லாபம், செய்கூலி மற்றும் உள்ளூர் செலவுகள்.", sl_gap_lo: "இலங்கை விலை உலக விலை மதிப்பை விட {d} ({p}%) குறைவு.", sl_by: "கொழும்பு கடை விலைகளின் அடிப்படையில் தள உரிமையாளர் பதிவிட்டது.",
+sl_tag: "இலங்கையில் நீங்கள் செலுத்தும் விலை", sl_title: "இலங்கை சந்தை விலை", sl_sov: "22K பவுன் (8 g), கொழும்பு சந்தை", w_tag: "உலக தங்கம், ரூபாயில்", sl_buy: "கடைகள் திரும்ப வாங்கும் விலை", sl_g22: "22K, ஒரு கிராம்", sl_s24: "24K பவுன்", sl_med: "{n} கடைகளின் நடுநிலை விலை, 22K பவுன்", sl_pri: "{n} விலை, 22K பவுன்", sl_upd: "{a} முன் புதுப்பிக்கப்பட்டது", sl_src: "மூலம்: {s}", sl_old: "இந்த விலை ஒரு நாளுக்கு மேல் பழையது. இன்றைய விலையை கடையில் கேளுங்கள்.", sl_none: "இலங்கை சந்தை விலை இன்னும் பதிவிடப்படவில்லை. வலப்புறம் உலக விலை மதிப்பு காட்டப்படுகிறது. அங்கீகரிக்கப்பட்ட கடை விலைகள் கீழே உள்ளன.", sl_gap: "இலங்கை விலை உலக விலை மதிப்பை விட {d} ({p}%) அதிகம். இந்த வேறுபாடு கடையின் லாபம், செய்கூலி மற்றும் உள்ளூர் செலவுகள்.", sl_gap_lo: "இலங்கை விலை உலக விலை மதிப்பை விட {d} ({p}%) குறைவு.", sl_by: "கொழும்பு கடை விலைகளின் அடிப்படையில் தள உரிமையாளர் பதிவிட்டது.", sl_spread: "வாங்கும் - விற்கும் விலை வேறுபாடு, 22K பவுன்", sl_by_src: "{s} விலைகள்", sl_est_note: "~ மதிப்பீடு: 22K வாங்கும் விலை மட்டுமே வெளியிடப்பட்டுள்ளது. மற்ற காரட்டுகளுக்கு அதே விகிதம் பயன்படுத்தப்பட்டது.",
 nav_price: "இப்போதைய விலை", nav_lookup: "எடை வாரியாக", nav_forecast: "கணிப்பு", nav_buy: "வாங்கும் வழிகாட்டி", nav_alerts: "எச்சரிக்கைகள்", nav_learn: "கற்றுக்கொள்ள",
 d_title: "இன்று, நாளை, நாளை மறுநாள்", d_lead: "உலக விலை மதிப்பில் 22K பவுன். நாளையும் நாளை மறுநாளும் காட்டுவது உறுதிமொழி அல்ல, சாத்தியமான வரம்பு.", d_today: "இன்று", d_tom: "நாளை", d_dat: "நாளை மறுநாள்", d_now: "இப்போதைய விலை", d_range: "10 இல் 9 வரம்பு", d_mid: "நடுத்தர கணிப்பு",
 d_note: "ஒரு நாளின் மாற்றம் பொதுவாக கடையின் லாபத்தை விடச் சிறியது. ஏறுமா இறங்குமா என்பது கிட்டத்தட்ட சுண்டிவிடும் நாணயம் போன்றது.",
@@ -665,6 +674,29 @@ foot: "இது நிதி ஆலோசனை அல்ல. விலைக�
       price = live.shopMedian; big.textContent = rs(price); row(t('sl_g22'), rs(price / 8)); meta.textContent = live.shopPrimary ? t('sl_pri', { n: live.shopPrimary }) : t('sl_med', { n: live.shopN });
     } else { big.textContent = '-'; note.textContent = t('sl_none'); }
     if (live.shopMedian && MKT) row(live.shopPrimary ? t('sl_pri', { n: live.shopPrimary }) : t('sl_med', { n: live.shopN }), rs(live.shopMedian));
+    /* Buying and selling table for every karat. Owner price (22K, 24K) wins, the rest comes from the primary jeweller's rates. */
+    var src = (live.retail || []).filter(function (r) { return r.primary && r.sells; })[0] || (live.retail || []).filter(function (r) { return r.sells; })[0] || null;
+    var sell = {}, buy = {};
+    [24, 22, 21, 18].forEach(function (k) { sell[k] = src && src.sells[k] > 0 ? src.sells[k] : 0; buy[k] = src && src.buys[k] > 0 ? src.buys[k] : 0; });
+    if (MKT) { sell[22] = MKT.sell; if (MKT.buy) buy[22] = MKT.buy; if (MKT.s24) sell[24] = MKT.s24; }
+    if (price > 0 && !sell[22]) sell[22] = price;
+    /* The jeweller only posts a 22K buying price. Other karats are estimated from the 22K buy/sell ratio and marked with ~. */
+    var estB = {}, anyEst = false;
+    if (sell[22] > 0 && buy[22] > 0) [24, 21, 18].forEach(function (k) { if (!buy[k] && sell[k] > 0) { buy[k] = Math.round(sell[k] * buy[22] / sell[22] / 100) * 100; estB[k] = true; anyEst = true; } });
+    if (sell[22] > 0 || buy[22] > 0) {
+      var cell = function (v, est) { return v > 0 ? (est ? '~' : '') + rs(v) + '<small>' + (est ? '~' : '') + rs(v / 8) + ' ' + t('rl_pg') + '</small>' : '-'; };
+      html = '<table class="sltable"><thead><tr><th>' + esc(t('rl_karat')) + '</th><th>' + esc(t('rl_buy')) + '</th><th>' + esc(t('rl_sell')) + '</th></tr></thead><tbody>' +
+        [24, 22, 21, 18].map(function (k) { return '<tr' + (k === 22 ? ' class="k22"' : '') + '><td>' + k + 'K</td><td>' + cell(buy[k], estB[k]) + '</td><td>' + cell(sell[k]) + '</td></tr>'; }).join('') + '</tbody></table>';
+      if (sell[22] > 0 && buy[22] > 0) {
+        var sp = sell[22] - buy[22];
+        html += '<div class="slspread"><span>' + esc(t('sl_spread')) + '</span><b>' + rs(sp) + ' (' + nf(sp / sell[22] * 100, 1) + '%)</b></div>';
+      }
+      if (anyEst) html += '<div class="slspread"><span>' + esc(t('sl_est_note')) + '</span></div>';
+      if (src) {
+        html += '<div class="slspread"><span>' + esc(t('sl_by_src', { s: src.name })) + '</span><b>' + esc(t('sl_upd', { a: ageText(src.at) })) + '</b></div>';
+        if (!meta.textContent) meta.textContent = t('sl_pri', { n: src.name });
+      }
+    }
     rows.innerHTML = html;
     if (price > 0 && fair > 0) {
       var d = price - fair, p = Math.abs(d / fair * 100);

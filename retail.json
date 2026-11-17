@@ -1,0 +1,27 @@
+{
+ "updated": "2026-11-17T00:40:47Z",
+ "unit": "LKR per sovereign (8 g) of the stated karat",
+ "sources": [
+  {
+   "sell_22k_sovereign": 327928,
+   "at": "2026-11-17T00:40:47Z",
+   "buy_22k_sovereign": 320600,
+   "sell_24k_sovereign": 358000,
+   "sell_21k_sovereign": 313250,
+   "sell_18k_sovereign": 268500,
+   "id": "ranlanka",
+   "name": "Ran Lanka",
+   "url": "https://ranlanka.lk/",
+   "city": "Online",
+   "primary": true,
+   "in_median": true
+  }
+ ],
+ "median_22k_sovereign": 327928,
+ "market": {
+  "24": 358000,
+  "22": 327928,
+  "21": 313250,
+  "18": 268500
+ }
+}
