@@ -148,7 +148,7 @@ def parse_ranlanka(text):
     return out
 
 
-DISABLED = {"bullion"}   # Bullion Gold only changes its price once a day, so it is not read
+DISABLED = {"bullion", "ranlanka"}   # Bullion: changes once a day. Ran Lanka: its page is filled by JavaScript, so this script would only see a stale copy. The Worker reads its live data.
 PRIMARY = "ranlanka"     # Ran Lanka's rate is the Sri Lanka market price
 SOURCES = [
     {"id": "devi", "name": "Devi Jewellers", "url": "https://devijewellers.lk/gold-rate/", "parse": parse_devi},
