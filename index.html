@@ -860,7 +860,7 @@ foot: "இது நிதி ஆலோசனை அல்ல. விலைக�
   /* Data: data/latest.json (every few minutes) and data/prices.csv (daily history). Without them the page shows example data. */
   function applyLatest(j) {
     var spot = parseFloat(j.gold_usd_oz), fx = parseFloat(j.usdlkr), up = new Date(j.updated);
-    if (!(spot > 0 && fx > 0) || isNaN(up.getTime())) return false;
+    if (!(spot > 0 && fx > 0) || isNaN(up.getTime())) return null;   /* null = unusable data; true/false = changed or not */
     var changed = live.example || live.spot !== spot || live.fx !== fx;
     if (!live.example && live.spot !== spot) live.prevSpot = live.spot;
     live.spot = spot; live.fx = fx; live.updated = up; live.dealer = parseFloat(j.dealer_22k_sovereign_lkr) > 0 ? parseFloat(j.dealer_22k_sovereign_lkr) : null; live.srcGold = j.source_gold || ''; live.srcFx = j.source_fx || '';
@@ -874,7 +874,7 @@ foot: "இது நிதி ஆலோசனை அல்ல. விலைக�
   function loadLatest() {
     fetch('data/latest.json', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : Promise.reject(); }).then(function (j) {
       if (liveOk && !live.example) return;   /* the live feed is already supplying prices */
-      if (applyLatest(j) !== false) renderAll();
+      if (applyLatest(j) !== null) renderAll();
     }).catch(function () {});
   }
 
@@ -926,7 +926,7 @@ foot: "இது நிதி ஆலோசனை அல்ல. விலைக�
     if (!url || document.hidden) return;
     fetch(url, { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : Promise.reject(); }).then(function (j) {
       var a = applyLatest(j), b = false;
-      if (a === false) return Promise.reject();
+      if (a === null) return Promise.reject();
       liveRetail = !!(j.retail && j.retail.sources && j.retail.sources.length);
       if (liveRetail) b = applyRetail(j.retail);
       liveOk = true; liveFails = 0; live.checked = Date.now();
