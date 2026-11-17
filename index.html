@@ -1017,7 +1017,7 @@ foot: "இது நிதி ஆலோசனை அல்ல. விலைக�
   setInterval(tick, 1000);
   setInterval(function () { if (!liveOk) loadLatest(); }, 60000);
   setInterval(loadRetail, 300000);
-  var LIVE_MS = Math.max(5000, parseInt((window.GOLD_CONFIG || {}).LIVE_EVERY_SECONDS, 10) * 1000 || 10000);
+  var LIVE_MS = Math.max(3000, parseInt((window.GOLD_CONFIG || {}).LIVE_EVERY_SECONDS, 10) * 1000 || 5000);
   setInterval(loadLive, LIVE_MS);
   document.addEventListener('visibilitychange', function () { if (!document.hidden) loadLive(); });
   setInterval(loadShops, 120000); setInterval(function () { loadSettings().then(renderAll); }, 300000);
