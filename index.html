@@ -277,6 +277,19 @@ details p { margin: 8px 0 0; color: var(--muted); max-width: 70ch; }
     <p class="note" id="bt-verdict"></p>
   </section>
 
+  <section id="rl" class="panel" aria-labelledby="h-rl" hidden>
+    <h2 id="h-rl" data-i="rl_title"></h2>
+    <p class="lead" data-i="rl_lead"></p>
+    <div class="tablewrap"><table><thead><tr><th data-i="rl_karat"></th><th class="num" data-i="rl_buy"></th><th class="num" data-i="rl_sell"></th></tr></thead><tbody id="rl-body"></tbody></table></div>
+    <p class="note" id="rl-upd"></p>
+    <h3 style="margin:22px 0 8px;font-size:16px" data-i="rl_calc"></h3>
+    <div class="row">
+      <div class="field"><label for="rl-k" data-i="rl_kt"></label><select id="rl-k"><option value="24">24K</option><option value="22" selected>22K</option><option value="21">21K</option><option value="18">18K</option></select></div>
+      <div class="field"><label for="rl-w" data-i="rl_w"></label><input id="rl-w" type="number" inputmode="decimal" min="0" step="any" placeholder="8"></div>
+    </div>
+    <p class="result" id="rl-res" aria-live="polite"></p>
+  </section>
+
   <section id="shops" class="panel" aria-labelledby="h-sh">
     <h2 id="h-sh" data-i="sh_title"></h2>
     <p class="lead" data-i="sh_lead"></p>
@@ -456,7 +469,7 @@ learn: [
 ["What do I get if I sell?", "Shops usually pay less than their selling price and may deduct making charges. Ask about the buy-back rule before you buy."]
 ],
 nav_shops: "Shop prices", p_dealer_med: "Median of {n} shops, 22K sovereign",
-sh_title: "Shop prices today", sh_lead: "Prices posted by jewellers we have approved. Each price shows when it was posted and how far it is from the world-price value. Prices older than 24 hours are hidden.",
+rl_title: "Ran Lanka rates, all karats", rl_lead: "Buying price is what the shop pays you. Selling price is what you pay the shop. Prices are per sovereign (8 g).", rl_karat: "Karat", rl_buy: "Buying price", rl_sell: "Selling price", rl_calc: "Price for your weight", rl_kt: "Karat", rl_w: "Weight (grams)", rl_res: "{w} g of {k}K gold: the shop buys it from you for {b} and sells it to you for {s}.", rl_hint: "Choose a karat and type a weight to see the price.", rl_upd: "Ran Lanka changed these rates {a} ago.", rl_pg: "/ g", sh_title: "Shop prices today", sh_lead: "Prices posted by jewellers we have approved. Each price shows when it was posted and how far it is from the world-price value. Prices older than 24 hours are hidden.",
 sh_shop: "Shop", sh_city: "City", sh_price: "22K sovereign", sh_vs: "Vs world price", sh_buy: "Shop buys at", sh_upd: "Posted",
 sh_none: "No approved shop prices yet. Jewellers can join below.", sh_ex: "Example shops, not real prices.", sh_join: "Are you a jeweller? Add your prices", sh_flag: "Check this price",
 sh_note: "A shop price far from the world-price value can be a typing mistake. Always check purity, weight and making charges on the bill.",
@@ -507,7 +520,7 @@ learn: [
 ["විකුණුවොත් මට කුමක් ලැබෙයිද?", "වෙළඳසැල් සාමාන්‍යයෙන් තමන්ගේ විකුණුම් මිලට වඩා අඩුවෙන් ගෙවයි, වැඩ කුලිය කපා ගත හැක. මිලදී ගැනීමට පෙර නැවත මිලට ගන්නා නීතිය ගැන අසන්න."]
 ],
 nav_shops: "වෙළඳසැල් මිල", p_dealer_med: "වෙළඳසැල් {n}ක මධ්‍යස්ථ මිල, 22K පවුම",
-sh_title: "අද වෙළඳසැල් මිල", sh_lead: "අප අනුමත කළ ස්වර්ණාභරණ වෙළෙන්දන් පළ කළ මිල ගණන්. සෑම මිලක්ම පළ කළ වේලාව සහ ලෝක මිල අගයෙන් කොපමණ දුරස්ථදැයි පෙන්වයි. පැය 24කට වඩා පැරණි මිල සඟවා ඇත.",
+rl_title: "රන් ලංකා මිල, සියලු කැරට්", rl_lead: "මිලදී ගැනීමේ මිල යනු වෙළඳසැල ඔබට ගෙවන මිලයි. විකිණීමේ මිල යනු ඔබ වෙළඳසැලට ගෙවන මිලයි. මිල පවුමකට (ග්‍රෑම් 8) වේ.", rl_karat: "කැරට්", rl_buy: "මිලදී ගැනීමේ මිල", rl_sell: "විකිණීමේ මිල", rl_calc: "ඔබේ බරට මිල", rl_kt: "කැරට්", rl_w: "බර (ග්‍රෑම්)", rl_res: "{k}K රත්තරන් ග්‍රෑම් {w}ක්: වෙළඳසැල ඔබෙන් මිලදී ගන්නේ {b}කට, ඔබට විකුණන්නේ {s}කට.", rl_hint: "කැරට් එකක් තෝරා බර ටයිප් කරන්න.", rl_upd: "රන් ලංකා මෙම මිල වෙනස් කළේ {a} කට පෙරයි.", rl_pg: "/ ග්‍රෑ.", sh_title: "අද වෙළඳසැල් මිල", sh_lead: "අප අනුමත කළ ස්වර්ණාභරණ වෙළෙන්දන් පළ කළ මිල ගණන්. සෑම මිලක්ම පළ කළ වේලාව සහ ලෝක මිල අගයෙන් කොපමණ දුරස්ථදැයි පෙන්වයි. පැය 24කට වඩා පැරණි මිල සඟවා ඇත.",
 sh_shop: "වෙළඳසැල", sh_city: "නගරය", sh_price: "22K පවුම", sh_vs: "ලෝක මිලට සාපේක්ෂව", sh_buy: "වෙළඳසැල ගන්නා මිල", sh_upd: "පළ කළේ",
 sh_none: "තවම අනුමත වෙළඳසැල් මිල නැත. ස්වර්ණාභරණ වෙළෙන්දන්ට පහතින් එක් විය හැක.", sh_ex: "උදාහරණ වෙළඳසැල්, සැබෑ මිල නොවේ.", sh_join: "ඔබ ස්වර්ණාභරණ වෙළෙන්දෙක්ද? ඔබේ මිල එක් කරන්න", sh_flag: "මෙම මිල පරීක්ෂා කරන්න",
 sh_note: "ලෝක මිල අගයෙන් බොහෝ දුරින් පිහිටි වෙළඳසැල් මිලක් ටයිප් කිරීමේ වැරැද්දක් විය හැක. බිල්පතේ පිරිසිදුකම, බර සහ වැඩ කුලිය සැම විටම පරීක්ෂා කරන්න.",
@@ -558,7 +571,7 @@ learn: [
 ["விற்றால் எனக்கு என்ன கிடைக்கும்?", "கடைகள் பொதுவாக தங்கள் விற்பனை விலையை விடக் குறைவாகவே கொடுக்கும், செய்கூலியையும் கழிக்கலாம். வாங்குவதற்கு முன் திரும்ப வாங்கும் விதியைப் பற்றிக் கேளுங்கள்."]
 ],
 nav_shops: "கடை விலைகள்", p_dealer_med: "{n} கடைகளின் நடுநிலை விலை, 22K பவுன்",
-sh_title: "இன்றைய கடை விலைகள்", sh_lead: "நாங்கள் அங்கீகரித்த நகைக்கடைகள் பதிவிட்ட விலைகள். ஒவ்வொரு விலையும் எப்போது பதிவிடப்பட்டது, உலக விலை மதிப்பிலிருந்து எவ்வளவு வேறுபடுகிறது என்பதைக் காட்டும். 24 மணி நேரத்துக்கு மேற்பட்ட விலைகள் மறைக்கப்படும்.",
+rl_title: "ரன் லங்கா விலைகள், அனைத்து காரட்", rl_lead: "வாங்கும் விலை என்பது கடை உங்களுக்குத் தரும் விலை. விற்கும் விலை என்பது நீங்கள் கடைக்குத் தரும் விலை. விலைகள் ஒரு பவுனுக்கு (8 கிராம்).", rl_karat: "காரட்", rl_buy: "வாங்கும் விலை", rl_sell: "விற்கும் விலை", rl_calc: "உங்கள் எடைக்கான விலை", rl_kt: "காரட்", rl_w: "எடை (கிராம்)", rl_res: "{w} கிராம் {k}K தங்கம்: கடை உங்களிடமிருந்து {b}க்கு வாங்கும், உங்களுக்கு {s}க்கு விற்கும்.", rl_hint: "காரட்டைத் தேர்ந்தெடுத்து எடையை உள்ளிடுங்கள்.", rl_upd: "ரன் லங்கா இந்த விலைகளை {a} முன் மாற்றியது.", rl_pg: "/ கி.", sh_title: "இன்றைய கடை விலைகள்", sh_lead: "நாங்கள் அங்கீகரித்த நகைக்கடைகள் பதிவிட்ட விலைகள். ஒவ்வொரு விலையும் எப்போது பதிவிடப்பட்டது, உலக விலை மதிப்பிலிருந்து எவ்வளவு வேறுபடுகிறது என்பதைக் காட்டும். 24 மணி நேரத்துக்கு மேற்பட்ட விலைகள் மறைக்கப்படும்.",
 sh_shop: "கடை", sh_city: "நகரம்", sh_price: "22K பவுன்", sh_vs: "உலக விலையுடன் ஒப்பிடு", sh_buy: "கடை வாங்கும் விலை", sh_upd: "பதிவிட்டது",
 sh_none: "இன்னும் அங்கீகரிக்கப்பட்ட கடை விலைகள் இல்லை. நகைக்கடைகள் கீழே இணையலாம்.", sh_ex: "எடுத்துக்காட்டு கடைகள், உண்மையான விலை அல்ல.", sh_join: "நீங்கள் நகைக்கடை உரிமையாளரா? உங்கள் விலைகளைச் சேர்க்கவும்", sh_flag: "இந்த விலையைச் சரிபாருங்கள்",
 sh_note: "உலக விலை மதிப்பிலிருந்து மிகவும் வேறுபட்ட கடை விலை தட்டச்சுப் பிழையாக இருக்கலாம். பில்லில் தூய்மை, எடை, செய்கூலியை எப்போதும் சரிபாருங்கள்.",
@@ -826,7 +839,7 @@ foot: "இது நிதி ஆலோசனை அல்ல. விலைக�
     if (hit.length && lastFair > 0) { b.hidden = false; b.textContent = hit.map(function (a) { return t('al_hit', { p: rs(lastFair), d: t(a.dir === 'below' ? 'al_below' : 'al_above'), v: rs(a.val) }); }).join('  '); } else b.hidden = true;
   }
 
-  function renderAll() { renderPrice(); renderKarats(); renderLookup(); renderForecast(); renderShops(); renderShop(); renderAlerts(); renderBot(); }
+  function renderAll() { renderPrice(); renderKarats(); renderLookup(); renderForecast(); renderRL(); renderShops(); renderShop(); renderAlerts(); renderBot(); }
 
   ['q', 'karat', 'cur'].forEach(function (id) { $(id).addEventListener('input', renderLookup); });
   $('shop').addEventListener('input', renderShop);
@@ -906,9 +919,9 @@ foot: "இது நிதி ஆலோசனை அல்ல. விலைக�
     var out = [];
     (j && j.sources || []).forEach(function (s) {
       var at = new Date(s.at), sell = parseFloat(s.sell_22k_sovereign), buy = parseFloat(s.buy_22k_sovereign);
-      if (sell > 0 && !isNaN(at.getTime()) && Date.now() - at.getTime() < SET.maxAge * 3600000) out.push({ name: String(s.name || '').slice(0, 80), city: String(s.city || 'Online').slice(0, 60), url: /^https:\/\//.test(s.url || '') ? s.url : '', sell: sell, buy: buy > 0 ? buy : null, at: at, inMedian: s.in_median !== false, primary: s.primary === true, auto: true, karats: { 24: parseFloat(s.sell_24k_sovereign) || 0, 21: parseFloat(s.sell_21k_sovereign) || 0, 18: parseFloat(s.sell_18k_sovereign) || 0 } });
+      if (sell > 0 && !isNaN(at.getTime()) && Date.now() - at.getTime() < SET.maxAge * 3600000) out.push({ name: String(s.name || '').slice(0, 80), city: String(s.city || 'Online').slice(0, 60), url: /^https:\/\//.test(s.url || '') ? s.url : '', sell: sell, buy: buy > 0 ? buy : null, at: at, inMedian: s.in_median !== false, primary: s.primary === true, auto: true, karats: { 24: parseFloat(s.sell_24k_sovereign) || 0, 21: parseFloat(s.sell_21k_sovereign) || 0, 18: parseFloat(s.sell_18k_sovereign) || 0 }, sells: { 24: parseFloat(s.sell_24k_sovereign) || 0, 22: sell, 21: parseFloat(s.sell_21k_sovereign) || 0, 18: parseFloat(s.sell_18k_sovereign) || 0 }, buys: { 24: parseFloat(s.buy_24k_sovereign) || 0, 22: buy || 0, 21: parseFloat(s.buy_21k_sovereign) || 0, 18: parseFloat(s.buy_18k_sovereign) || 0 } });
     });
-    var sig = JSON.stringify(out.map(function (r) { return [r.name, r.sell, r.buy, r.karats[24], r.karats[21], r.karats[18]]; })), changed = sig !== live.retailSig;
+    var sig = JSON.stringify(out.map(function (r) { return [r.name, r.at.getTime(), r.sell, r.buy, r.karats[24], r.karats[21], r.karats[18], r.buys[24], r.buys[21], r.buys[18]]; })), changed = sig !== live.retailSig;
     live.retail = out; live.retailSig = sig; updateMedian();
     return changed;
   }
@@ -936,6 +949,25 @@ foot: "இது நிதி ஆலோசனை அல்ல. விலைக�
       if (a || b) renderAll();
     }).catch(function () { if (++liveFails >= 3) liveOk = false; }).then(function () { clearTimeout(to); liveBusy = false; });
   }
+  /* Ran Lanka board: buying and selling price for every karat, plus a weight calculator. */
+  function rlRow() { return (live.retail || []).filter(function (r) { return r.primary && r.sells; })[0] || null; }
+  function renderRL() {
+    var r = rlRow(), sec = $('rl');
+    if (!r) { sec.hidden = true; return; }
+    sec.hidden = false;
+    var cell = function (v) { return v > 0 ? rs(v) + '<br><span class="src">' + rs(v / 8) + ' ' + t('rl_pg') + '</span>' : '-'; };
+    $('rl-body').innerHTML = [24, 22, 21, 18].map(function (k) { return '<tr><td>' + k + 'K</td><td class="num">' + cell(r.buys[k]) + '</td><td class="num">' + cell(r.sells[k]) + '</td></tr>'; }).join('');
+    $('rl-upd').textContent = t('rl_upd', { a: ageText(r.at) });
+    renderRLCalc();
+  }
+  function renderRLCalc() {
+    var r = rlRow(), k = parseInt($('rl-k').value, 10), g = parseFloat($('rl-w').value), out = $('rl-res');
+    if (!r) { out.textContent = ''; return; }
+    if (!(g > 0)) { out.textContent = t('rl_hint'); return; }
+    var b = r.buys[k] > 0 ? rs(r.buys[k] / 8 * g) : '-', sl = r.sells[k] > 0 ? rs(r.sells[k] / 8 * g) : '-';
+    out.innerHTML = esc(t('rl_res', { w: nf(g, g < 100 ? 2 : 1), k: k, b: '@@B@@', s: '@@S@@' })).replace('@@B@@', '<b>' + b + '</b>').replace('@@S@@', '<b>' + sl + '</b>');
+  }
+  $('rl-k').addEventListener('input', renderRLCalc); $('rl-w').addEventListener('input', renderRLCalc);
   function renderShops() {
     var rows = shopRows().slice().sort(function (a, b) { return a.sell - b.sell; }), fair = lastFair || 1;
     $('sh-ex').hidden = !live.example; $('sh-empty').hidden = rows.length > 0; $('sh-wrap').hidden = !rows.length;
