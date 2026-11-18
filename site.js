@@ -41,14 +41,14 @@
   });
   var here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
   function headerHTML() {
-    return '<header class="site-header"><div class="container"><a class="logo" href="index.html"><i>Au</i>Gold Outlook LK</a>' +
+    return '<header class="site-header"><div class="container"><a class="logo" href="index.html">Gold Outlook LK</a>' +
       '<nav class="menu" aria-label="Main">' + PAGES.map(function (p) { return '<a href="' + p[0] + '"' + (p[0] === here ? ' class="on" aria-current="page"' : (p[2] ? ' class="hot"' : '')) + '>' + T[lang][p[1]] + '</a>'; }).join('') + '</nav>' +
       '<div class="langs" role="group" aria-label="Language">' + LANGS.map(function (l) { return '<button type="button" data-lang="' + l[0] + '" aria-pressed="' + (l[0] === lang) + '">' + l[1] + '</button>'; }).join('') + '</div>' +
       '<button class="burger" type="button" aria-label="Menu" aria-expanded="false">☰</button></div></header>';
   }
   function footerHTML() {
     var x = T[lang];
-    return '<footer class="site-footer"><div class="container"><div class="cols"><div><div class="logo" style="margin-bottom:10px"><i>Au</i>Gold Outlook LK</div><div>' + x.tag + '</div></div>' +
+    return '<footer class="site-footer"><div class="container"><div class="cols"><div><div class="logo" style="margin-bottom:10px">Gold Outlook LK</div><div>' + x.tag + '</div></div>' +
       '<div><b style="color:var(--cream)">' + x.pages + '</b><br>' + PAGES.map(function (p) { return '<a href="' + p[0] + '">' + x[p[1]] + '</a>'; }).join('<br>') + '</div>' +
       '<div><b style="color:var(--cream)">' + x.shops + '</b><br><a href="prices.html#shops">' + x.shopnow + '</a><br><a href="shop.html">' + x.post + '</a></div></div>' +
       '<p class="fine">' + x.fine + '</p></div></footer>';
@@ -124,7 +124,14 @@
     /* photo slots: <figure class="photo"><div class="art" data-art="ring"></div><img data-src="images/x.jpg"> ...
        The image is only added if the file exists, so the drawn art shows until you add a real photo. */
     $$('.photo img[data-src]', root).forEach(function (im) {
-      var t = new Image(); t.onload = function () { im.src = im.getAttribute('data-src'); im.alt = im.getAttribute('data-alt') || im.alt || ''; im.style.opacity = 1; var a = im.parentNode.querySelector('.art'); if (a) a.style.opacity = 0; }; t.onerror = function () { im.remove(); }; t.src = im.getAttribute('data-src');
+      /* tries .jpg, then .jpeg, .webp, .png so any photo format works */
+      var base = im.getAttribute('data-src').replace(/\.(jpe?g|png|webp)$/i, ''), exts = ['jpg', 'jpeg', 'webp', 'png', 'JPG', 'JPEG', 'PNG'], n = 0;
+      (function tryNext() {
+        if (n >= exts.length) { im.remove(); return; }
+        var t = new Image(), u = base + '.' + exts[n++];
+        t.onload = function () { im.src = u; im.alt = im.getAttribute('data-alt') || im.alt || ''; im.style.opacity = 1; var a = im.parentNode.querySelector('.art'); if (a) a.style.transition = 'opacity .8s', a.style.opacity = 0; };
+        t.onerror = tryNext; t.src = u;
+      })();
     });
     /* scroll reveal */
     var rv = $$('.reveal:not(.in)', root);
