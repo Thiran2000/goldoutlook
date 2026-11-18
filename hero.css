@@ -1,0 +1,55 @@
+/* ---------- Premium hero scene: photo / video / rendered fallback ---------- */
+.stage.pro { aspect-ratio: 1 / 1; max-width: 560px; border-radius: 32px; isolation: isolate; perspective: 1200px; }
+.stage.pro .glow { inset: -4%; z-index: 0; background: radial-gradient(circle at 50% 55%, rgba(255, 200, 90, .5), rgba(240, 192, 78, 0) 62%); }
+.stage.pro .rays { position: absolute; inset: -20%; z-index: 0; pointer-events: none; opacity: .5; mix-blend-mode: screen;
+  background: conic-gradient(from 0deg at 50% 55%, transparent 0 8%, rgba(255, 215, 120, .18) 10% 12%, transparent 14% 30%, rgba(255, 215, 120, .14) 32% 35%, transparent 37% 58%, rgba(255, 215, 120, .16) 60% 62%, transparent 64% 82%, rgba(255, 215, 120, .12) 84% 87%, transparent 89%);
+  -webkit-mask-image: radial-gradient(circle at 50% 55%, #000 0, transparent 68%); mask-image: radial-gradient(circle at 50% 55%, #000 0, transparent 68%);
+  animation: raysSpin 40s linear infinite; }
+@keyframes raysSpin { to { transform: rotate(360deg); } }
+
+/* real media (shown only when the file exists) */
+.stage.pro .media { position: absolute; inset: 0; z-index: 2; border-radius: 32px; overflow: hidden; opacity: 0; transition: opacity 1.2s ease; border: 1px solid var(--line); box-shadow: 0 30px 80px rgba(0, 0, 0, .6), 0 0 60px rgba(240, 192, 78, .18); }
+.stage.pro .media.on { opacity: 1; }
+.stage.pro .media video, .stage.pro .media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.stage.pro .media img { animation: kenburns 18s ease-in-out infinite alternate; }
+@keyframes kenburns { from { transform: scale(1.02) translate(0, 0); } to { transform: scale(1.14) translate(-2.5%, -2%); } }
+.stage.pro .media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 55%, rgba(10, 4, 6, .7)), radial-gradient(circle at 50% 40%, transparent 55%, rgba(0, 0, 0, .45)); pointer-events: none; }
+.stage.pro .media .sweep { position: absolute; inset: 0; z-index: 2; background: linear-gradient(105deg, transparent 40%, rgba(255, 245, 210, .35) 50%, transparent 60%); transform: translateX(-120%); animation: glint 6s ease-in-out infinite; mix-blend-mode: overlay; pointer-events: none; }
+
+/* rendered fallback scene */
+.stage.pro .scene { position: absolute; inset: 0; z-index: 1; transition: opacity 1s; transform-style: preserve-3d; }
+.stage.pro .media.on ~ .scene { opacity: 0; pointer-events: none; }
+.stage.pro .floor { position: absolute; left: 4%; right: 4%; bottom: 14%; height: 12%; border-radius: 50%; background: radial-gradient(ellipse, rgba(0, 0, 0, .75), transparent 70%); filter: blur(6px); }
+.stage.pro .stack { position: absolute; left: 4%; right: 4%; top: 22%; transform: translate3d(var(--px, 0), var(--py, 0), 0); transition: transform .25s ease-out; }
+.stage.pro .stack svg { width: 100%; height: auto; display: block; overflow: visible; filter: drop-shadow(0 30px 28px rgba(0, 0, 0, .55)); }
+.stage.pro .reflect { position: absolute; left: 4%; right: 4%; top: calc(22% + 63%); transform: scaleY(-1); opacity: .22; pointer-events: none; -webkit-mask-image: linear-gradient(180deg, #000, transparent 55%); mask-image: linear-gradient(180deg, #000, transparent 55%); }
+.stage.pro .reflect svg { width: 100%; height: auto; display: block; filter: blur(1.5px); }
+
+/* spinning 3D coins */
+.coinwrap { position: absolute; z-index: 3; aspect-ratio: 1; perspective: 700px; filter: drop-shadow(0 18px 18px rgba(0, 0, 0, .55)); animation: coinBob 5s ease-in-out infinite; }
+.coin3d { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; animation: coinSpin 7s linear infinite; }
+.coin3d .face, .coin3d .edge { position: absolute; inset: 0; border-radius: 50%; backface-visibility: hidden; }
+.coin3d .face { background:
+    radial-gradient(circle at 30% 25%, #fffbe2 0, #ffe58f 18%, #f0c04e 45%, #b9801f 75%, #8a5a10 100%); box-shadow: inset 0 0 0 3px rgba(122, 77, 12, .55), inset 0 0 0 7px rgba(255, 243, 196, .35), inset 0 0 18px rgba(80, 45, 0, .6); display: grid; place-items: center; }
+.coin3d .face::before { content: ""; position: absolute; inset: 11%; border-radius: 50%; border: 2px dashed rgba(122, 77, 12, .55); }
+.coin3d .face b { font-family: var(--serif, 'Playfair Display', serif); font-weight: 800; font-size: clamp(18px, 4.6vw, 40px); color: #7a4d0c; text-shadow: 0 1px 0 rgba(255, 243, 196, .8), 0 -1px 1px rgba(80, 45, 0, .6); position: relative; }
+.coin3d .face::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: linear-gradient(115deg, transparent 38%, rgba(255, 255, 255, .75) 48%, transparent 58%); background-size: 250% 100%; animation: coinGlint 3.5s ease-in-out infinite; mix-blend-mode: soft-light; }
+.coin3d .back { transform: rotateY(180deg); } .coin3d .back b { font-size: clamp(11px, 2.6vw, 22px); letter-spacing: .04em; }
+.coin3d .edge { background: linear-gradient(90deg, #8a5a10, #f6d77a, #8a5a10); transform: rotateY(90deg) scaleX(.06); backface-visibility: visible; }
+.coinwrap.c1 { width: 24%; left: 3%; top: 6%; } .coinwrap.c1 .coin3d { animation-duration: 8s; }
+.coinwrap.c2 { width: 17%; right: 5%; top: 3%; animation-duration: 7s; } .coinwrap.c2 .coin3d { animation-duration: 6s; animation-direction: reverse; }
+.coinwrap.c3 { width: 13%; right: 10%; bottom: 17%; animation-duration: 5.5s; } .coinwrap.c3 .coin3d { animation-duration: 5s; }
+@keyframes coinSpin { to { transform: rotateY(360deg); } }
+@keyframes coinBob { 0%, 100% { margin-top: 0; } 50% { margin-top: -18px; } }
+@keyframes coinGlint { 0%, 30% { background-position: 150% 0; } 70%, 100% { background-position: -150% 0; } }
+
+/* gold dust canvas */
+.stage.pro canvas.dust { position: absolute; inset: -10%; width: 120%; height: 120%; z-index: 4; pointer-events: none; }
+.stage.pro .chip { z-index: 6; animation: chipIn 1s .6s both cubic-bezier(.2, .8, .2, 1); }
+@keyframes chipIn { from { opacity: 0; transform: translateY(24px); } }
+.stage.pro .chip::before { content: ""; position: absolute; inset: 0; border-radius: 18px; padding: 1px; background: linear-gradient(120deg, transparent 30%, rgba(255, 240, 184, .9), transparent 70%); background-size: 250% 100%; animation: sheen 4s linear infinite; -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+
+/* bar shine (stronger, real metal feel) */
+.stage.pro .bar-shine { animation: barshine 4.5s ease-in-out infinite; }
+.stage.pro .bar2 .bar-shine { animation-delay: .6s; } .stage.pro .bar3 .bar-shine { animation-delay: 1.2s; }
+@media (max-width: 900px) { .stage.pro { max-width: 420px; } }

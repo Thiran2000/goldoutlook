@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Playfair+Display:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Noto+Sans+Sinhala:wght@400;600&family=Noto+Sans+Tamil:wght@400;600&display=swap">
 <link rel="stylesheet" href="site.css">
 <link rel="stylesheet" href="header.css">
+<link rel="stylesheet" href="hero.css">
 <style>
 .hero { padding-block: 56px 40px; overflow: hidden; }
 .hero .container { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: 40px; align-items: center; }
@@ -82,13 +83,7 @@
       </div>
       <div class="trust reveal" style="--d:.32s"><span data-i="h_t1">Buying and selling rates</span><span data-i="h_t2">Updated through the day</span><span data-i="h_t3">English, Sinhala, Tamil</span></div>
     </div>
-    <div class="stage reveal zoom" style="--d:.2s">
-      <div class="glow"></div>
-      <div class="c1 float" data-art="coin"></div>
-      <div class="c2 float b" data-art="coin"></div>
-      <div class="c3 float c" data-art="coin"></div>
-      <div class="bars art" data-art="bars" data-par="-.04"></div>
-      <div class="jw art float b" data-art="ring"></div>
+    <div class="stage pro reveal zoom" style="--d:.2s">
       <div class="chip"><div class="k" data-i="h_chip">22K sovereign &middot; selling</div><div class="v" id="chip-v">Rs ---,---</div></div>
     </div>
   </div>
@@ -172,6 +167,7 @@
 <div id="site-footer"></div>
 <script src="config.js"></script>
 <script src="site.js"></script>
+<script src="hero.js"></script>
 <script>
 (function () {
   var G = window.GoldData, $ = function (i) { return document.getElementById(i); }, rs = G.rs, nf = G.nf;
