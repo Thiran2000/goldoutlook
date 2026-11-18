@@ -209,6 +209,8 @@ main > section, .wrap > section { animation: rise .9s cubic-bezier(.2, .7, .2, 1
 .wrap > section:nth-of-type(2) { animation-delay: .08s; } .wrap > section:nth-of-type(3) { animation-delay: .16s; } .wrap > section:nth-of-type(n+4) { animation-delay: .22s; }
 .kcard.k22 { border-color: rgba(240, 192, 78, .7); }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+.btn-link { display: inline-block; padding: 12px 22px; border-radius: 999px; font-weight: 700; text-decoration: none; color: #2a1804; background: linear-gradient(135deg, #fff0b8, #f0c04e); }
+.btn-link:hover { filter: brightness(1.06); }
 </style>
 <link rel="stylesheet" href="header.css">
 
@@ -272,31 +274,9 @@ main > section, .wrap > section { animation: rise .9s cubic-bezier(.2, .7, .2, 1
   </section>
 
   <section id="forecast" class="panel" aria-labelledby="h-fc">
-    <h2 id="h-fc" data-i="ol_title"></h2>
-    <p class="lead" data-i="ol_lead"></p>
-    <div class="seg" id="mk-seg" role="group" aria-label="Market">
-      <button type="button" data-mk="sl" aria-pressed="true" data-i="mk_sl"></button>
-      <button type="button" data-mk="world" aria-pressed="false" data-i="mk_world"></button>
-    </div>
-    <div class="optrow" id="fc-opts"></div>
-    <div class="hz" id="hz"></div>
-    <p class="exnote" id="fc-stale" hidden></p>
-    <p class="sentence" id="fc-sentence"></p>
-    <div class="chartbox"><svg id="chart" viewBox="0 0 720 320" role="img" aria-label="Chart"></svg></div>
-    <div class="legend">
-      <span><i style="background:var(--fg)"></i><span data-i="lg_past"></span></span>
-      <span><i style="background:var(--accent)"></i><span data-i="lg_mid"></span></span>
-      <span><i style="background:var(--accent-soft)"></i><span data-i="lg_50"></span></span>
-      <span><i style="background:var(--accent-softer);border:1px solid var(--accent-soft)"></i><span data-i="lg_90"></span></span>
-    </div>
-    <h3 style="margin-top:22px" data-i="ol_drv"></h3>
-    <div class="drv" id="drivers"></div>
-    <h3 id="ft-h" data-i="ol_tbl"></h3>
-    <div class="tablewrap"><table><thead id="ft-head"></thead><tbody id="ft-body"></tbody></table></div>
-    <p class="note" id="fc-method"></p>
-    <h3 style="margin-top:22px" data-i="bt_title"></h3>
-    <div class="tablewrap"><table><thead><tr><th data-i="bt_method"></th><th class="num" data-i="bt_miss"></th></tr></thead><tbody id="bt-body"></tbody></table></div>
-    <p class="note" id="bt-verdict"></p>
+    <h2 id="h-fc" data-i="pt_title"></h2>
+    <p class="lead" data-i="pt_lead"></p>
+    <p><a class="btn-link" href="predict.html" data-i="pt_btn"></a></p>
   </section>
 
   <section id="rl" class="panel" aria-labelledby="h-rl" hidden>
@@ -457,7 +437,7 @@ ol_m_w: "How this is worked out: from the daily gold price in dollars. The range
 ol_ex: "Example data is showing, so these numbers are not real yet.",
 sl_na: "No Sri Lanka shop price yet", dr_nodata: "Not enough history", ol_stale: "The price history file is {n} days old, so the ranges lean on fewer recent days and the past-month figures are blank. In GitHub, open Actions and run \u201cUpdate gold data\u201d to refresh it.", up_word: "higher", pm: "past month", ytd: "",
 sl_tag: "What you pay in Sri Lanka", sl_title: "Sri Lanka market price", sl_sov: "22K sovereign (8 g), Colombo market", w_tag: "World gold, converted", sl_buy: "Dealers buy back at", sl_g22: "22K, per gram", sl_s24: "24K sovereign", sl_med: "Median of {n} shops, 22K sovereign", sl_pri: "{n} rate, 22K sovereign", sl_upd: "Updated {a} ago", sl_src: "Source: {s}", sl_old: "This price is older than a day. Ask a shop for today's price.", sl_none: "No Sri Lanka market price has been posted yet. The world-price value is shown on the right. Approved shops' prices appear in the shop list below.", sl_gap: "The Sri Lanka price is {d} ({p}%) above the world-price value. This difference is the dealer margin, making charges and local costs.", sl_gap_lo: "The Sri Lanka price is {d} ({p}%) below the world-price value.", sl_by: "Posted by the site owner from Colombo dealer prices.", sl_spread: "Gap between buying and selling, 22K sovereign", sl_by_src: "Rates from {s}", sl_est_note: "~ Estimate: only the 22K buying price is posted. Other karats use the same buy/sell ratio.",
-nav_price: "Price now", nav_lookup: "By weight", nav_forecast: "Forecast", nav_buy: "Buying guide", nav_alerts: "Alerts", nav_learn: "Learn",
+nav_price: "Price now", nav_lookup: "By weight", nav_forecast: "Prediction", pt_title: "Gold price prediction", pt_lead: "Likely price ranges for Sri Lanka and the world, with odds, scenarios and trend signals, now has its own page.", pt_btn: "Open the prediction page \u2192", nav_buy: "Buying guide", nav_alerts: "Alerts", nav_learn: "Learn",
 d_title: "Today, tomorrow and the day after", d_lead: "The 22K sovereign at the world-price value. Tomorrow and the day after show a likely range, not a promise.", d_today: "Today", d_tom: "Tomorrow", d_dat: "Day after tomorrow", d_now: "Price now", d_range: "9 in 10 range", d_mid: "Middle guess",
 d_note: "One day's move is usually small next to a shop's margin. Whether the price goes up or down is close to a coin flip.",
 tag: "Gold prices for Sri Lanka, in plain language",
@@ -508,7 +488,7 @@ foot: "Not financial advice. Prices are worked out from public sources and may d
 },
 si: {
 sl_tag: "ශ්‍රී ලංකාවේ ඔබ ගෙවන මිල", sl_title: "ශ්‍රී ලංකා වෙළඳපොළ මිල", sl_sov: "22K පවුම (8 g), කොළඹ වෙළඳපොළ", w_tag: "ලෝක රන් මිල, රුපියල්වලට", sl_buy: "වෙළෙන්දන් ආපසු මිලදී ගන්නා මිල", sl_g22: "22K, ග්‍රෑම් එකක්", sl_s24: "24K පවුම", sl_med: "වෙළඳසැල් {n}ක මධ්‍යස්ථ මිල, 22K පවුම", sl_pri: "{n} මිල, 22K පවුම", sl_upd: "{a} කට පෙර යාවත්කාලීන කළා", sl_src: "මූලාශ්‍රය: {s}", sl_old: "මෙම මිල දිනකට වඩා පැරණියි. අද මිල වෙළඳසැලෙන් අසන්න.", sl_none: "ශ්‍රී ලංකා වෙළඳපොළ මිලක් තවම පළ කර නැත. දකුණු පස ලෝක මිල අගය පෙන්වයි. අනුමත වෙළඳසැල් මිල පහත ලැයිස්තුවේ ඇත.", sl_gap: "ශ්‍රී ලංකා මිල ලෝක මිල අගයට වඩා {d} ({p}%) ක් වැඩිය. මෙම වෙනස වෙළෙන්දාගේ ලාභය, රන් වැඩ කුලිය සහ දේශීය වියදම්වලට අයත් වේ.", sl_gap_lo: "ශ්‍රී ලංකා මිල ලෝක මිල අගයට වඩා {d} ({p}%) ක් අඩුය.", sl_by: "කොළඹ වෙළෙන්දන්ගේ මිල අනුව අඩවි හිමිකරු පළ කළා.", sl_spread: "මිලදී ගැනීම සහ විකිණීම අතර වෙනස, 22K පවුම", sl_by_src: "{s} මිල", sl_est_note: "~ ඇස්තමේන්තුව: පළ කර ඇත්තේ 22K මිලදී ගැනීමේ මිල පමණි. අනෙක් කැරට් සඳහා එම අනුපාතයම භාවිත කළා.",
-nav_price: "දැන් මිල", nav_lookup: "බර අනුව", nav_forecast: "අනාවැකිය", nav_buy: "මිලදී ගැනීමේ උපදෙස්", nav_alerts: "ඇඟවීම්", nav_learn: "ඉගෙන ගන්න",
+nav_price: "දැන් මිල", nav_lookup: "බර අනුව", nav_forecast: "අනාවැකිය", pt_title: "රන් මිල අනාවැකිය", pt_lead: "ශ්‍රී ලංකාවේ සහ ලෝකයේ සිදුවිය හැකි මිල පරාස, ඉඩකඩ, අවස්ථා සහ ප්‍රවණතා සංඥා සමඟ දැන් තමන්ගේම පිටුවක ඇත.", pt_btn: "අනාවැකි පිටුව විවෘත කරන්න \u2192", nav_buy: "මිලදී ගැනීමේ උපදෙස්", nav_alerts: "ඇඟවීම්", nav_learn: "ඉගෙන ගන්න",
 d_title: "අද, හෙට සහ අනිද්දා", d_lead: "ලෝක මිල අගයට 22K පවුම. හෙට සහ අනිද්දා පෙන්වන්නේ පොරොන්දුවක් නොව ඉඩ ඇති පරාසයකි.", d_today: "අද", d_tom: "හෙට", d_dat: "අනිද්දා", d_now: "දැන් මිල", d_range: "10න් 9ක පරාසය", d_mid: "මැද අනුමානය",
 d_note: "එක් දිනක චලනය සාමාන්‍යයෙන් වෙළඳසැල් ලාභයට වඩා කුඩාය. මිල ඉහළ යයිද පහළ යයිද යන්න කාසියක් උඩ දැමීමක් හා ආසන්නයි.",
 tag: "ශ්‍රී ලංකාවේ රන් මිල, සරල භාෂාවෙන්",
@@ -559,7 +539,7 @@ foot: "මෙය මූල්‍ය උපදෙස් නොවේ. මිල �
 },
 ta: {
 sl_tag: "இலங்கையில் நீங்கள் செலுத்தும் விலை", sl_title: "இலங்கை சந்தை விலை", sl_sov: "22K பவுன் (8 g), கொழும்பு சந்தை", w_tag: "உலக தங்கம், ரூபாயில்", sl_buy: "கடைகள் திரும்ப வாங்கும் விலை", sl_g22: "22K, ஒரு கிராம்", sl_s24: "24K பவுன்", sl_med: "{n} கடைகளின் நடுநிலை விலை, 22K பவுன்", sl_pri: "{n} விலை, 22K பவுன்", sl_upd: "{a} முன் புதுப்பிக்கப்பட்டது", sl_src: "மூலம்: {s}", sl_old: "இந்த விலை ஒரு நாளுக்கு மேல் பழையது. இன்றைய விலையை கடையில் கேளுங்கள்.", sl_none: "இலங்கை சந்தை விலை இன்னும் பதிவிடப்படவில்லை. வலப்புறம் உலக விலை மதிப்பு காட்டப்படுகிறது. அங்கீகரிக்கப்பட்ட கடை விலைகள் கீழே உள்ளன.", sl_gap: "இலங்கை விலை உலக விலை மதிப்பை விட {d} ({p}%) அதிகம். இந்த வேறுபாடு கடையின் லாபம், செய்கூலி மற்றும் உள்ளூர் செலவுகள்.", sl_gap_lo: "இலங்கை விலை உலக விலை மதிப்பை விட {d} ({p}%) குறைவு.", sl_by: "கொழும்பு கடை விலைகளின் அடிப்படையில் தள உரிமையாளர் பதிவிட்டது.", sl_spread: "வாங்கும் - விற்கும் விலை வேறுபாடு, 22K பவுன்", sl_by_src: "{s} விலைகள்", sl_est_note: "~ மதிப்பீடு: 22K வாங்கும் விலை மட்டுமே வெளியிடப்பட்டுள்ளது. மற்ற காரட்டுகளுக்கு அதே விகிதம் பயன்படுத்தப்பட்டது.",
-nav_price: "இப்போதைய விலை", nav_lookup: "எடை வாரியாக", nav_forecast: "கணிப்பு", nav_buy: "வாங்கும் வழிகாட்டி", nav_alerts: "எச்சரிக்கைகள்", nav_learn: "கற்றுக்கொள்ள",
+nav_price: "இப்போதைய விலை", nav_lookup: "எடை வாரியாக", nav_forecast: "கணிப்பு", pt_title: "தங்க விலைக் கணிப்பு", pt_lead: "இலங்கை மற்றும் உலகிற்கான சாத்தியமான விலை வரம்புகள், வாய்ப்புகள், சூழ்நிலைகள் மற்றும் போக்கு சமிக்ஞைகள் இப்போது தனிப் பக்கத்தில் உள்ளன.", pt_btn: "கணிப்புப் பக்கத்தைத் திற \u2192", nav_buy: "வாங்கும் வழிகாட்டி", nav_alerts: "எச்சரிக்கைகள்", nav_learn: "கற்றுக்கொள்ள",
 d_title: "இன்று, நாளை, நாளை மறுநாள்", d_lead: "உலக விலை மதிப்பில் 22K பவுன். நாளையும் நாளை மறுநாளும் காட்டுவது உறுதிமொழி அல்ல, சாத்தியமான வரம்பு.", d_today: "இன்று", d_tom: "நாளை", d_dat: "நாளை மறுநாள்", d_now: "இப்போதைய விலை", d_range: "10 இல் 9 வரம்பு", d_mid: "நடுத்தர கணிப்பு",
 d_note: "ஒரு நாளின் மாற்றம் பொதுவாக கடையின் லாபத்தை விடச் சிறியது. ஏறுமா இறங்குமா என்பது கிட்டத்தட்ட சுண்டிவிடும் நாணயம் போன்றது.",
 tag: "இலங்கையின் தங்க விலை, எளிய மொழியில்",
@@ -650,7 +630,6 @@ foot: "இது நிதி ஆலோசனை அல்ல. விலைக�
     Array.prototype.forEach.call(document.querySelectorAll('[data-lang]'), function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-lang') === lang ? 'true' : 'false'); });
     $('tips').innerHTML = (I[lang].tips || I.en.tips).map(function (x) { return '<li>' + x + '</li>'; }).join('');
     $('faq').innerHTML = (I[lang].learn || I.en.learn).map(function (qa) { return '<details><summary>' + qa[0] + '</summary><p>' + qa[1] + '</p></details>'; }).join('');
-    $('chart').setAttribute('aria-label', t('fc_title'));
     $('p-note').textContent = t('info_note');
   }
   $('p-info').addEventListener('click', function () { var n = $('p-note'); n.hidden = !n.hidden; $('p-info').setAttribute('aria-expanded', n.hidden ? 'false' : 'true'); });
@@ -741,27 +720,8 @@ foot: "இது நிதி ஆலோசனை அல்ல. விலைக�
     sub.textContent = t('lk_res', { n: w.n, u: w.unit, g: nf(w.grams, w.grams < 100 ? 2 : 1), k: karat, o: other(val) });
   }
 
-  function chart(S, fc, h, dates, axf) {
-    var W = 720, H = 320, L = 66, R = 14, T = 12, B = 30, hist = Math.min(90, S.length), hs = S.slice(S.length - hist), bands = [], k, lo = Infinity, hi = -Infinity, i;
-    for (k = 1; k <= h; k++) bands.push(bandAt(fc, k));
-    hs.forEach(function (v) { lo = Math.min(lo, v); hi = Math.max(hi, v); });
-    bands.forEach(function (b) { lo = Math.min(lo, b.q05); hi = Math.max(hi, b.q95); });
-    var pad = (hi - lo) * 0.06; lo -= pad; hi += pad;
-    var total = hist - 1 + h, x = function (j) { return L + (W - L - R) * j / total; }, y = function (v) { return T + (H - T - B) * (1 - (v - lo) / (hi - lo)); }, s = '';
-    for (i = 0; i <= 4; i++) { var tv = lo + (hi - lo) * i / 4, ty = y(tv); s += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + ty + '" y2="' + ty + '" stroke="var(--line)" stroke-width="1"/><text x="' + (L - 8) + '" y="' + (ty + 4) + '" text-anchor="end">' + (axf ? axf(tv) : nf(tv / 1000, 0) + 'k') + '</text>'; }
-    var x0 = x(hist - 1);
-    function poly(a, b) { var up = [x0 + ',' + y(fc.last)], dn = [x0 + ',' + y(fc.last)]; bands.forEach(function (bd, j) { up.push(x(hist + j) + ',' + y(bd[b])); dn.push(x(hist + j) + ',' + y(bd[a])); }); return up.concat(dn.reverse()).join(' '); }
-    s += '<polygon points="' + poly('q05', 'q95') + '" fill="var(--accent-softer)" stroke="var(--accent-soft)" stroke-width="1"/><polygon points="' + poly('q25', 'q75') + '" fill="var(--accent-soft)" stroke="none"/>';
-    s += '<line x1="' + x0 + '" x2="' + x0 + '" y1="' + T + '" y2="' + (H - B) + '" stroke="var(--line)" stroke-dasharray="3 3"/>';
-    s += '<polyline fill="none" stroke="var(--fg)" stroke-width="1.6" points="' + hs.map(function (v, j) { return x(j) + ',' + y(v); }).join(' ') + '"/>';
-    s += '<polyline fill="none" stroke="var(--accent)" stroke-width="2" stroke-dasharray="5 3" points="' + [x0 + ',' + y(fc.last)].concat(bands.map(function (b, j) { return x(hist + j) + ',' + y(b.m); })).join(' ') + '"/>';
-    s += '<circle cx="' + x0 + '" cy="' + y(fc.last) + '" r="3.5" fill="var(--fg)"/>';
-    s += '<text x="' + L + '" y="' + (H - 8) + '" text-anchor="start">' + dates[dates.length - hist] + '</text><text x="' + (W - R) + '" y="' + (H - 8) + '" text-anchor="end">+' + h + 'd</text>';
-    $('chart').innerHTML = s;
-  }
-
   /* ---------- outlook: two separate markets ---------- */
-  var FC = { mk: 'sl', karat: 22, unit: 'sov', wunit: 'oz', h: 21 }, HZ = [1, 5, 21, 63], PREM_SD = 0.012;
+  /* the price outlook now lives on predict.html */
   var pct = function (v, d) { return (v >= 0 ? '+' : '') + nf(v * 100, d === undefined ? 1 : d) + '%'; };
   var KARATS = [24, 22, 21, 18];
 
@@ -796,81 +756,6 @@ foot: "இது நிதி ஆலோசனை அல்ல. விலைக�
     $('kgrid').innerHTML = html; $('kg-note').textContent = sl ? t('kg_note_src') : '';
   }
 
-  /* Everything the outlook needs for the chosen market: the series, a scale factor and a formatter. */
-  function outlookSetup(sr, sl) {
-    if (FC.mk === 'sl') {
-      var S = sr.S, last = S[S.length - 1], k = FC.karat, price = sl ? sl.p[k] : toSov(live.spot, live.fx, k), div = FC.unit === 'g' ? 8 : 1;
-      return { S: S, D: sr.D, dates: sr.dates, f: price / last / div, extra: sl ? PREM_SD : 0, fmt: rs, ax: function (v) { return nf(v / 1000, div > 1 ? 1 : 0) + 'k'; },
-        what: t('ol_what_sl', { k: k, u: t(FC.unit === 'g' ? 'ol_u_gram' : 'ol_u_sov') }), karatScale: function (kk) { return (sl ? sl.p[kk] : toSov(live.spot, live.fx, kk)) / last / div; } };
-    }
-    var g = FC.wunit === 'g', f = g ? 1 / KG : 1;
-    return { S: sr.gold, D: sr.D, dates: sr.dates, f: f, extra: 0, fmt: function (v) { return '$' + nf(v, g ? 2 : 0); }, ax: function (v) { return '$' + nf(v, g ? 0 : 0); },
-      what: t('ol_what_w', { u: t(g ? 'ol_u_g24' : 'ol_u_oz') }) };
-  }
-
-  function chip(label, attr, on) { return '<button type="button" class="chip" data-fc="' + attr + '" aria-pressed="' + (on ? 'true' : 'false') + '">' + label + '</button>'; }
-
-  function renderForecast() {
-    var sr = series(), sl = slPrices(), isSL = FC.mk === 'sl', o = outlookSetup(sr, sl), h = FC.h;
-    Array.prototype.forEach.call(document.querySelectorAll('#mk-seg button'), function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-mk') === FC.mk ? 'true' : 'false'); });
-    /* option chips */
-    $('fc-opts').innerHTML = isSL
-      ? '<div class="chips"><span class="ol">' + t('ol_karat') + '</span>' + KARATS.map(function (k) { return chip(k + 'K', 'karat:' + k, FC.karat === k); }).join('') + '</div><div class="chips"><span class="ol">' + t('ol_unit') + '</span>' + chip(t('ol_sov'), 'unit:sov', FC.unit === 'sov') + chip(t('ol_gram'), 'unit:g', FC.unit === 'g') + '</div>'
-      : '<div class="chips"><span class="ol">' + t('ol_unit') + '</span>' + chip(t('ol_oz'), 'wunit:oz', FC.wunit === 'oz') + chip(t('ol_g24'), 'wunit:g', FC.wunit === 'g') + '</div>';
-    /* horizon cards with a shared range axis */
-    var fcs = HZ.map(function (x) { return forecast(o.S, x, o.extra, o.f, o.D); }), lo = Infinity, hi = -Infinity;
-    fcs.forEach(function (f) { lo = Math.min(lo, f.q05, f.last); hi = Math.max(hi, f.q95, f.last); });
-    var pos = function (v) { return Math.max(0, Math.min(100, (v - lo) / (hi - lo) * 100)); };
-    $('hz').innerHTML = fcs.map(function (f, i) {
-      var x = HZ[i], ch = f.median / f.last - 1, cls = f.pUp > 0.55 ? 'up' : f.pUp < 0.45 ? 'down' : '';
-      return '<button type="button" class="hzc" data-h="' + x + '" aria-pressed="' + (x === h ? 'true' : 'false') + '"><span class="k">' + (x === 1 ? t('d_tom') : t('h' + x)) + '</span>' +
-        '<span class="v">' + o.fmt(f.median) + ' <span class="chgp chg ' + (ch >= 0 ? 'up' : 'down') + '" style="display:inline;margin:0">' + pct(ch, 2) + '</span></span>' +
-        '<span class="rbar"><i class="fill" style="left:' + pos(f.q05) + '%;width:' + Math.max(1, pos(f.q95) - pos(f.q05)) + '%"></i><i class="mid" style="left:' + pos(f.median) + '%"></i><i class="now" style="left:' + pos(f.last) + '%"></i></span>' +
-        '<span class="dr">' + o.fmt(f.q05) + ' - ' + o.fmt(f.q95) + '</span>' +
-        '<span class="pill ' + cls + '" style="margin-top:8px;display:inline-block">' + nf(f.pUp * 100, 0) + '% ' + t('up_word') + '</span></button>';
-    }).join('');
-    /* sentence and chart for the chosen period */
-    var fc = fcs[HZ.indexOf(h)], hl = t('h' + h);
-    $('fc-sentence').innerHTML = t('ol_sentence', { h: hl, what: o.what, lo: '<b>' + o.fmt(fc.q05) + '</b>', hi: '<b>' + o.fmt(fc.q95) + '</b>', mid: '<b>' + o.fmt(fc.median) + '</b>' }) + (live.example || live.histExample ? ' ' + t('ol_ex') : '');
-    chart(o.S.map(function (v) { return v * o.f; }), fc, h, o.dates, o.ax);
-    /* drivers */
-    var n = sr.gold.length, pm = ago(sr.gold, sr.dates, 30), p3 = ago(sr.gold, sr.dates, 91), fm = ago(sr.fx, sr.dates, 30);
-    var g1 = pm ? sr.gold[n - 1] / pm - 1 : null, g3 = p3 ? sr.gold[n - 1] / p3 - 1 : null, fxc = fm ? sr.fx[n - 1] / fm - 1 : null;
-    var pctn = function (v) { return v === null ? 'n/a' : pct(v, 1); };
-    var gfc = forecast(sr.gold, h, 0, 1, sr.D), vol = prep(sr.gold, sr.D).v, yr = Math.sqrt(vol[vol.length - 1] * 252);
-    var tile = function (k, v, sb) { return '<div class="tile"><div class="k">' + k + '</div><div class="v">' + v + '</div><div class="sb">' + sb + '</div></div>'; };
-    var drv;
-    if (isSL) {
-      var fair22 = toSov(live.spot, live.fx, 22), prem = sl ? sl.p[22] / fair22 - 1 : null;
-      drv = tile(t('dr_world'), '$' + nf(live.spot, 0), t('dr_world_sub', { p: nf(gfc.pUp * 100, 0) + '%', h: hl, c: pctn(g3) })) +
-        tile(t('dr_fx'), 'Rs ' + nf(live.fx, 2), t('dr_fx_sub', { c: pctn(fxc) })) +
-        tile(t('dr_prem'), prem === null ? '-' : pct(prem, 1), prem === null ? t('sl_na') : t('dr_prem_sub', { s: nf(PREM_SD * 100, 1) }));
-    } else {
-      drv = tile(t('dr_m1'), pctn(g1), pm ? '$' + nf(pm, 0) + ' to $' + nf(live.spot, 0) : t('dr_nodata')) + tile(t('dr_m3'), pctn(g3), p3 ? '$' + nf(p3, 0) + ' to $' + nf(live.spot, 0) : t('dr_nodata')) + tile(t('dr_vol'), nf(yr * 100, 0) + '%', t('dr_vol_sub'));
-    }
-    $('drivers').innerHTML = drv;
-    /* details table */
-    var head = '<tr><th>' + t('ol_col_k') + '</th><th class="num">' + t('ol_col_now') + '</th><th class="num">' + t('ol_col_mid') + '</th><th class="num">' + t('ol_col_rng') + '</th><th class="num">' + t('ol_col_up') + '</th></tr>', rows;
-    $('ft-h').textContent = t(isSL ? 'ol_tbl_sl' : 'ol_tbl_w'); $('ft-head').innerHTML = head;
-    var line = function (label, f, fmt) { return '<tr><td>' + label + '</td><td class="num">' + fmt(f.last) + '</td><td class="num">' + fmt(f.median) + '</td><td class="num">' + fmt(f.q05) + ' - ' + fmt(f.q95) + '</td><td class="num">' + nf(f.pUp * 100, 0) + '%</td></tr>'; };
-    if (isSL) rows = KARATS.map(function (k) { return line(k + 'K ' + t(FC.unit === 'g' ? 'ol_u_gram' : 'ol_u_sov'), forecast(sr.S, h, o.extra, o.karatScale(k), sr.D), rs); }).join('');
-    else rows = [['ol_oz', 1, function (v) { return '$' + nf(v, 0); }], ['ol_g24', 1 / KG, function (v) { return '$' + nf(v, 2); }], ['ol_g24', live.fx / KG, function (v) { return 'Rs ' + nf(v, 0); }]].map(function (r, i) { return line(t(r[0]) + (i === 2 ? ' (LKR)' : ' (USD)'), forecast(sr.gold, h, 0, r[1], sr.D), r[2]); }).join('').replace(' (USD)', '');
-    $('ft-body').innerHTML = rows;
-    $('fc-method').textContent = isSL ? t('ol_m_sl', { p: sl ? pct(sl.p[22] / toSov(live.spot, live.fx, 22) - 1, 1) : '-', s: nf(PREM_SD * 100, 1) }) : t('ol_m_w');
-    /* honest test on past prices (5 days ahead) for the series being forecast */
-    var st = $('fc-stale'); st.hidden = !(sr.stale > 7); st.textContent = sr.stale > 7 ? t('ol_stale', { n: sr.stale }) : '';
-    var bt = backtest(isSL ? sr.S : sr.gold, 5, sr.D), body = $('bt-body');
-    if (!bt) { body.innerHTML = ''; $('bt-verdict').textContent = ''; return; }
-    body.innerHTML = [['bt_naive', bt.naive], ['bt_model', bt.model], ['bt_trend', bt.trend]].map(function (r) { return '<tr><td>' + t(r[0]) + '</td><td class="num">' + nf(r[1] * 100, 2) + '%</td></tr>'; }).join('');
-    $('bt-verdict').textContent = t('bt_v', { n: bt.n, cmp: bt.model < bt.naive * 0.98 ? t('bt_better') : t('bt_same'), c: nf(bt.coverage * 100, 0) }) + (live.example || live.histExample ? t('bt_ex') : '');
-  }
-  $('mk-seg').addEventListener('click', function (e) { var b = e.target.closest ? e.target.closest('button[data-mk]') : null; if (!b) return; FC.mk = b.getAttribute('data-mk'); renderForecast(); });
-  $('fc-opts').addEventListener('click', function (e) {
-    var b = e.target.closest ? e.target.closest('button[data-fc]') : null; if (!b) return;
-    var kv = b.getAttribute('data-fc').split(':'); if (kv[0] === 'karat') FC.karat = parseInt(kv[1], 10); else FC[kv[0]] = kv[1]; renderForecast();
-  });
-  $('hz').addEventListener('click', function (e) { var b = e.target.closest ? e.target.closest('button[data-h]') : null; if (!b) return; FC.h = parseInt(b.getAttribute('data-h'), 10); renderForecast(); });
-
   function renderShop() {
     var v = parseFloat($('shop').value), out = $('shop-out');
     if (!(v > 0)) { out.textContent = ''; return; }
@@ -885,7 +770,7 @@ foot: "இது நிதி ஆலோசனை அல்ல. விலைக�
     if (hit.length && lastFair > 0) { b.hidden = false; b.textContent = hit.map(function (a) { return t('al_hit', { p: rs(lastFair), d: t(a.dir === 'below' ? 'al_below' : 'al_above'), v: rs(a.val) }); }).join('  '); } else b.hidden = true;
   }
 
-  function renderAll() { renderPrice(); renderKarats(); renderLookup(); renderForecast(); renderRL(); renderShops(); renderShop(); renderAlerts(); renderBot(); }
+  function renderAll() { renderPrice(); renderKarats(); renderLookup(); renderRL(); renderShops(); renderShop(); renderAlerts(); renderBot(); }
 
   ['q', 'karat', 'cur'].forEach(function (id) { $(id).addEventListener('input', renderLookup); });
   $('shop').addEventListener('input', renderShop);

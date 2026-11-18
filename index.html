@@ -29,6 +29,10 @@
 .chip { position: absolute; right: 0; bottom: -7%; z-index: 3; padding: 14px 18px; border-radius: 18px; background: rgba(20, 8, 12, .8); border: 1px solid var(--line); backdrop-filter: blur(10px); box-shadow: 0 16px 40px rgba(0, 0, 0, .5); }
 .chip .k { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
 .chip .v { font-family: var(--num); font-size: 24px; color: var(--gold1); }
+.g5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+@media (max-width: 1060px) { .g5 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .g5 { grid-template-columns: minmax(0, 1fr); } }
+.g5 .card { padding: 22px; } .g5 .card h3 { font-size: 20px; }
 .kcards .card { overflow: hidden; }
 .kcards .k { font-family: var(--serif); font-size: 52px; font-weight: 800; line-height: 1; }
 .kcards .pur { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin-top: 4px; }
@@ -73,6 +77,7 @@
       <p class="lead reveal" style="--d:.16s" data-i="h_lead">Today’s buying and selling rates for 24K, 22K, 21K and 18K gold, compared with the world price, in plain language. Free, with no sign-up.</p>
       <div class="btns reveal" style="--d:.24s">
         <a class="btn gold" href="prices.html" data-i="h_b1">See live prices</a>
+        <a class="btn ghost" href="predict.html" data-i="h_b3">See price prediction</a>
         <a class="btn ghost" href="calculator.html" data-i="h_b2">Calculate my gold</a>
       </div>
       <div class="trust reveal" style="--d:.32s"><span data-i="h_t1">Buying and selling rates</span><span data-i="h_t2">Updated through the day</span><span data-i="h_t3">English, Sinhala, Tamil</span></div>
@@ -132,8 +137,9 @@
 <section>
   <div class="container">
     <div class="sec-head center"><span class="eyebrow reveal" data-i="h_e5">Explore</span><h2 class="reveal" style="--d:.06s" data-i="h_h5">Everything in <span class="gold-text">one place</span></h2></div>
-    <div class="grid g4">
-      <a class="card hover reveal" href="prices.html" style="--d:.0s;text-decoration:none;color:inherit" data-tilt><div class="icon">📈</div><h3 data-i="m_live">Live prices</h3><p data-i="c_p1">Today, tomorrow and the day after, shop prices, alerts and the full forecast.</p><span class="more" data-i="c_open">Open</span></a>
+    <div class="grid g5">
+      <a class="card hover reveal" href="predict.html" style="--d:0s;text-decoration:none;color:inherit;border-color:rgba(240,192,78,.55)" data-tilt><div class="icon">🔮</div><h3 data-i="c_pred">Prediction</h3><p data-i="c_pp">Where could gold go next in Sri Lanka and worldwide? Odds, scenarios and trend signals.</p><span class="more" data-i="c_open">Open</span></a>
+      <a class="card hover reveal" href="prices.html" style="--d:.0s;text-decoration:none;color:inherit" data-tilt><div class="icon">📈</div><h3 data-i="m_live">Live prices</h3><p data-i="c_p1">Today’s world and Sri Lanka prices, shop prices and price alerts.</p><span class="more" data-i="c_open">Open</span></a>
       <a class="card hover reveal" href="calculator.html" style="--d:.08s;text-decoration:none;color:inherit" data-tilt><div class="icon">⚖️</div><h3 data-i="c_calc">Calculator</h3><p data-i="c_p2">Type a weight, pick a karat and see what to pay or what you will get.</p><span class="more" data-i="c_open">Open</span></a>
       <a class="card hover reveal" href="karats.html" style="--d:.16s;text-decoration:none;color:inherit" data-tilt><div class="icon">💍</div><h3 data-i="m_karat">Karat guide</h3><p data-i="c_p3">24K, 22K, 21K or 18K? Purity, strength and what each is best for.</p><span class="more" data-i="c_open">Open</span></a>
       <a class="card hover reveal" href="learn.html" style="--d:.24s;text-decoration:none;color:inherit" data-tilt><div class="icon">📘</div><h3 data-i="c_learn">Learn</h3><p data-i="c_p4">What a sovereign is, how shops set prices, and a checklist before you buy.</p><span class="more" data-i="c_open">Open</span></a>
@@ -200,6 +206,7 @@
  "h_lead": "24K, 22K, 21K සහ 18K රන් සඳහා අද මිලදී ගැනීමේ සහ විකිණීමේ මිල, ලෝක මිලත් සමඟ සසඳා, සරල භාෂාවෙන්. නොමිලේ, ලියාපදිංචි වීමක් අවශ්‍ය නැත.",
  "h_b1": "සජීවී මිල බලන්න",
  "h_b2": "මගේ රන් ගණනය කරන්න",
+ "h_b3": "මිල අනාවැකිය බලන්න",
  "h_t1": "මිලදී ගැනීමේ සහ විකිණීමේ මිල",
  "h_t2": "දවස පුරා යාවත්කාලීන වේ",
  "h_t3": "ඉංග්‍රීසි, සිංහල, දෙමළ",
@@ -231,7 +238,9 @@
  "h_h5": "සියල්ල <span class=\"gold-text\">එකම තැනක</span>",
  "c_calc": "ගණකය",
  "c_learn": "දැනගන්න",
- "c_p1": "අද, හෙට සහ අනිද්දා, වෙළඳසැල් මිල, ඇඟවීම් සහ සම්පූර්ණ අනාවැකිය.",
+ "c_p1": "අද ලෝක සහ ශ්\u200dරී ලංකා මිල, වෙළඳසැල් මිල සහ මිල ඇඟවීම්.",
+ "c_pred": "අනාවැකිය",
+ "c_pp": "ශ්\u200dරී ලංකාවේ සහ ලෝකයේ රන් මිල ඊළඟට කොහාටද? ඉඩකඩ, අවස්ථා සහ ප්\u200dරවණතා සංඥා.",
  "c_p2": "බරක් ටයිප් කර, කැරට් එකක් තෝරා ගෙවිය යුතු හෝ ලැබෙන මුදල බලන්න.",
  "c_p3": "24K, 22K, 21K හෝ 18K? පිරිසිදුකම, ශක්තිය සහ එක් එක් එකට සුදුසු දේ.",
  "c_p4": "පවුමක් යනු කුමක්ද, වෙළඳසැල් මිල නියම කරන ආකාරය සහ මිලදී ගැනීමට පෙර පරීක්ෂා ලැයිස්තුවක්.",
@@ -275,6 +284,7 @@
  "h_lead": "24K, 22K, 21K, 18K தங்கத்திற்கான இன்றைய வாங்கும் மற்றும் விற்கும் விலைகள், உலக விலையுடன் ஒப்பிடப்பட்டு, எளிய மொழியில். இலவசம், பதிவு தேவையில்லை.",
  "h_b1": "நேரடி விலைகளைப் பார்க்க",
  "h_b2": "என் தங்கத்தைக் கணக்கிடு",
+ "h_b3": "விலைக் கணிப்பைப் பார்க்க",
  "h_t1": "வாங்கும் மற்றும் விற்கும் விலைகள்",
  "h_t2": "நாள் முழுவதும் புதுப்பிக்கப்படும்",
  "h_t3": "ஆங்கிலம், சிங்களம், தமிழ்",
@@ -306,7 +316,9 @@
  "h_h5": "அனைத்தும் <span class=\"gold-text\">ஒரே இடத்தில்</span>",
  "c_calc": "கணிப்பான்",
  "c_learn": "அறிய",
- "c_p1": "இன்று, நாளை, நாளை மறுநாள், கடை விலைகள், எச்சரிக்கைகள், முழு கணிப்பு.",
+ "c_p1": "இன்றைய உலக மற்றும் இலங்கை விலைகள், கடை விலைகள், விலை எச்சரிக்கைகள்.",
+ "c_pred": "கணிப்பு",
+ "c_pp": "இலங்கையிலும் உலகிலும் தங்க விலை அடுத்து எங்கே? வாய்ப்புகள், சூழ்நிலைகள், போக்கு சமிக்ஞைகள்.",
  "c_p2": "எடையை உள்ளிட்டு, காரட்டைத் தேர்ந்தெடுத்து, செலுத்த வேண்டியதை அல்லது கிடைப்பதைப் பாருங்கள்.",
  "c_p3": "24K, 22K, 21K அல்லது 18K? தூய்மை, உறுதி, ஒவ்வொன்றும் எதற்குச் சிறந்தது.",
  "c_p4": "பவுன் என்றால் என்ன, கடைகள் விலையை எப்படி நிர்ணயிக்கின்றன, வாங்கும் முன் சரிபார்ப்புப் பட்டியல்.",

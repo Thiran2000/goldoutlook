@@ -1,0 +1,558 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gold price prediction for Sri Lanka and the world | Gold Outlook LK</title>
+<meta name="description" content="Gold price prediction for Sri Lanka (22K, 24K, 21K, 18K per sovereign) and the world price in dollars. Likely price ranges, odds, scenarios and trend signals for tomorrow, next week, next month and 3 months.">
+<meta name="theme-color" content="#0c0608">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Playfair+Display:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Noto+Sans+Sinhala:wght@400;600;700&family=Noto+Sans+Tamil:wght@400;600;700&family=Noto+Serif+Sinhala:wght@600;700&display=swap">
+<link rel="stylesheet" href="site.css">
+<link rel="stylesheet" href="header.css">
+<style>
+.phero { padding-block: 48px 8px; }
+.phero h1 { margin: 14px 0 0; max-width: 18ch; }
+.controls { display: grid; gap: 14px; margin-top: 30px; }
+.crow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+.crow .cl { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); min-width: 92px; }
+.seg { display: inline-flex; padding: 4px; gap: 4px; border-radius: 999px; border: 1px solid var(--line); background: rgba(0, 0, 0, .3); }
+.seg button, .pill { white-space: nowrap; font: 700 14px var(--sans); color: var(--muted); background: transparent; border: 0; border-radius: 999px; padding: 10px 20px; cursor: pointer; transition: color .2s, background .2s; }
+.seg button:hover, .pill:hover { color: var(--cream); }
+.seg button[aria-pressed="true"] { color: #2a1804; background: linear-gradient(135deg, var(--gold1), var(--gold2)); box-shadow: 0 6px 20px rgba(240, 192, 78, .25); }
+.pill { border: 1px solid var(--line); background: var(--glass); padding: 8px 16px; }
+.pill[aria-pressed="true"] { color: #2a1804; border-color: var(--gold2); background: linear-gradient(135deg, var(--gold1), var(--gold2)); }
+section.ps { padding-block: 34px; }
+.sechead { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; margin-bottom: 18px; }
+.sechead h2 { font-size: clamp(24px, 3.4vw, 34px); }
+.sechead p { margin: 0; color: var(--muted); font-size: 14px; max-width: 60ch; }
+.glance { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+@media (max-width: 720px) { .glance { grid-template-columns: minmax(0, 1fr); } }
+.gcard { text-align: left; cursor: pointer; font: inherit; color: inherit; border: 1px solid var(--line); border-radius: 22px; padding: 22px; background: linear-gradient(160deg, rgba(255, 244, 214, .08), rgba(255, 244, 214, .025)); transition: border-color .25s, transform .25s, box-shadow .25s; }
+.gcard:hover { transform: translateY(-3px); border-color: rgba(240, 192, 78, .6); }
+.gcard.on { border-color: var(--gold2); box-shadow: 0 0 0 1px var(--gold2), 0 18px 44px rgba(240, 192, 78, .12); }
+.gcard .gt { display: flex; justify-content: space-between; gap: 10px; align-items: center; font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.gcard .gp { font-family: var(--num); font-size: 15px; color: var(--muted); margin-top: 10px; }
+.gcard .gm { font-family: var(--num); font-size: clamp(26px, 4vw, 34px); color: var(--gold1); margin: 2px 0 4px; line-height: 1.15; }
+.gcard .gr { font-size: 13.5px; color: var(--muted); }
+.tag-up, .tag-dn, .tag-fl { display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: .06em; padding: 4px 10px; border-radius: 999px; text-transform: none; }
+.tag-up { color: #04271c; background: var(--up); } .tag-dn { color: #3a0b04; background: var(--down); } .tag-fl { color: #2a1804; background: var(--gold2); }
+.board { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: 20px; align-items: stretch; }
+@media (max-width: 900px) { .board { grid-template-columns: minmax(0, 1fr); } }
+.big .what { font-size: 13px; color: var(--muted); font-weight: 600; }
+.big .now { font-family: var(--num); font-size: 15px; color: var(--muted); margin-top: 14px; }
+.big .mid { font-family: var(--num); font-size: clamp(34px, 5.4vw, 52px); line-height: 1.1; color: var(--gold1); margin: 4px 0; }
+.big .chg { font-family: var(--num); font-size: 17px; font-weight: 500; }
+.up { color: var(--up); } .down { color: var(--down); }
+.gauge { margin-top: 18px; }
+.gauge svg { width: 100%; max-width: 280px; display: block; margin-inline: auto; }
+.gauge .gl { text-align: center; margin-top: -6px; }
+.gauge .gl b { font-family: var(--num); font-size: 26px; color: var(--cream); font-weight: 500; }
+.gauge .gl span { display: block; font-size: 12.5px; color: var(--muted); }
+.sentence { margin: 16px 0 0; padding: 14px 16px; border-radius: 14px; border: 1px dashed var(--line); background: rgba(240, 192, 78, .05); color: var(--text); font-size: 15px; }
+.sentence b { color: var(--gold1); font-weight: 700; }
+.chartwrap { padding: 20px; }
+.chartwrap h3 { font-size: 18px; margin-bottom: 8px; }
+.chartwrap svg { width: 100%; height: auto; display: block; overflow: visible; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 12.5px; color: var(--muted); margin-top: 8px; }
+.legend i { display: inline-block; width: 18px; height: 8px; border-radius: 4px; margin-right: 7px; vertical-align: 1px; }
+.ladder { position: relative; height: 70px; margin: 30px 6px 8px; }
+.ladder .rail { position: absolute; left: 0; right: 0; top: 24px; height: 12px; border-radius: 999px; background: rgba(0, 0, 0, .4); border: 1px solid var(--line); }
+.ladder .b90 { position: absolute; top: 24px; height: 12px; border-radius: 999px; background: rgba(240, 192, 78, .22); }
+.ladder .b50 { position: absolute; top: 24px; height: 12px; border-radius: 999px; background: linear-gradient(90deg, var(--gold3), var(--gold2)); }
+.ladder .mk { position: absolute; top: 14px; width: 2px; height: 32px; background: var(--cream); transform: translateX(-1px); }
+.ladder .mk span { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); white-space: nowrap; font-size: 11px; letter-spacing: .06em; color: var(--cream); font-weight: 700; margin-bottom: 2px; }
+.ladder .mk.m { background: var(--gold1); }
+.ladder .mk.m span { bottom: auto; top: 100%; margin: 2px 0 0; color: var(--gold1); }
+.scen { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 720px) { .scen { grid-template-columns: minmax(0, 1fr); } }
+.sc { border-radius: 20px; padding: 20px; border: 1px solid var(--line); background: var(--glass); position: relative; overflow: hidden; }
+.sc.lo { border-top: 3px solid var(--down); } .sc.md { border-top: 3px solid var(--gold2); } .sc.hi { border-top: 3px solid var(--up); }
+.sc .sn { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.sc .sv { font-family: var(--num); font-size: 24px; color: var(--cream); margin: 6px 0 2px; }
+.sc .sd { font-size: 13.5px; color: var(--muted); }
+.sc .sx { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-family: var(--num); }
+.tw { overflow-x: auto; }
+table.pt { width: 100%; border-collapse: collapse; font-size: 14.5px; min-width: 620px; }
+table.pt th { text-align: left; font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 10px 12px; border-bottom: 1px solid var(--line); }
+table.pt td { padding: 12px; border-bottom: 1px solid rgba(240, 192, 78, .1); vertical-align: middle; }
+table.pt td.n, table.pt th.n { text-align: right; font-family: var(--num); }
+table.pt tr.sel td { background: rgba(240, 192, 78, .07); }
+table.pt tr { cursor: pointer; }
+.mini { position: relative; height: 10px; min-width: 150px; border-radius: 999px; background: rgba(0, 0, 0, .35); }
+.mini i { position: absolute; top: 0; bottom: 0; border-radius: 999px; background: linear-gradient(90deg, rgba(240, 192, 78, .35), rgba(240, 192, 78, .8)); }
+.mini u { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--cream); }
+.two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+@media (max-width: 900px) { .two { grid-template-columns: minmax(0, 1fr); } }
+.tgt { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 14px 0; }
+.tgt input { font: 500 18px var(--num); color: var(--cream); background: rgba(0, 0, 0, .35); border: 1px solid var(--line); border-radius: 14px; padding: 12px 16px; width: 210px; max-width: 100%; }
+.tgt input:focus { outline: 2px solid var(--gold2); outline-offset: 1px; }
+.tres { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
+.tres div { border-radius: 16px; border: 1px solid var(--line); padding: 14px 16px; background: rgba(0, 0, 0, .22); }
+.tres b { display: block; font-family: var(--num); font-size: 28px; font-weight: 500; color: var(--gold1); }
+.tres span { font-size: 12.5px; color: var(--muted); }
+.bar { height: 8px; border-radius: 999px; background: rgba(0, 0, 0, .4); margin-top: 8px; overflow: hidden; }
+.bar i { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--gold3), var(--gold1)); transition: width .8s var(--ease); }
+.srow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; padding: 11px 0; border-top: 1px solid rgba(240, 192, 78, .12); align-items: center; font-size: 14.5px; }
+.srow:first-of-type { border-top: 0; }
+.srow small { grid-column: 1 / -1; color: var(--muted); font-size: 12.5px; font-family: var(--num); }
+.badge { font-size: 11.5px; font-weight: 800; padding: 4px 11px; border-radius: 999px; letter-spacing: .04em; white-space: nowrap; }
+.badge.u { color: #04271c; background: var(--up); } .badge.d { color: #3a0b04; background: var(--down); } .badge.f { color: #2a1804; background: var(--gold2); } .badge.n { color: var(--muted); border: 1px solid var(--line); }
+.meter { margin: 14px 0 4px; height: 12px; border-radius: 999px; background: linear-gradient(90deg, var(--down), var(--gold2) 50%, var(--up)); position: relative; }
+.meter u { position: absolute; top: -5px; width: 6px; height: 22px; border-radius: 3px; background: var(--cream); box-shadow: 0 0 0 2px #0c0608; transform: translateX(-3px); transition: left .8s var(--ease); }
+.score { font-size: 14px; color: var(--cream); font-weight: 700; margin-top: 12px; }
+.drv .dl { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-top: 1px solid rgba(240, 192, 78, .12); font-size: 14.5px; color: var(--muted); }
+.drv .dl:first-of-type { border-top: 0; }
+.drv .dl b { font-family: var(--num); color: var(--cream); font-weight: 500; text-align: right; }
+.drv h4 { margin: 18px 0 4px; font-family: var(--sans); font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--gold2); }
+.drv h4:first-child { margin-top: 0; }
+.note { margin: 14px 0 0; color: var(--muted); font-size: 13.5px; }
+.warn { margin-top: 12px; padding: 10px 14px; border-radius: 12px; border: 1px solid rgba(255, 125, 107, .45); background: rgba(255, 125, 107, .08); color: var(--text); font-size: 14px; }
+.upd { font-size: 13px; color: var(--muted); font-family: var(--num); margin-top: 18px; }
+.state { padding: 40px 20px; text-align: center; color: var(--muted); }
+.disc { margin-top: 10px; padding: 18px 20px; border-radius: 16px; border: 1px solid var(--line); background: rgba(0, 0, 0, .25); color: var(--muted); font-size: 14px; }
+.disc b { color: var(--gold1); }
+.menu a.hot::after { content: ""; display: inline-block; width: 7px; height: 7px; margin-left: 7px; border-radius: 50%; background: var(--gold2); box-shadow: 0 0 10px var(--gold2); vertical-align: 2px; }
+</style>
+</head>
+<body data-live>
+<div id="site-header"></div>
+
+<header class="phero">
+  <div class="container">
+    <span class="eyebrow" data-i="p_eyebrow">Price prediction</span>
+    <h1 class="gold-text" data-i="p_h1">Where could gold go next?</h1>
+    <p class="lead" data-i="p_lead">Likely price ranges for gold in Sri Lanka and around the world, worked out from the daily price history. Nobody can know the future, so every number here is a range with odds, not a promise.</p>
+    <div class="controls">
+      <div class="crow"><span class="cl" data-i="p_market">Market</span>
+        <div class="seg" id="mk" role="group" aria-label="Market">
+          <button type="button" data-mk="sl" aria-pressed="true" data-i="p_mk_sl">🇱🇰 Sri Lanka</button>
+          <button type="button" data-mk="world" aria-pressed="false" data-i="p_mk_w">🌍 Global</button>
+        </div>
+      </div>
+      <div class="crow"><span class="cl" data-i="p_hz">Look ahead</span><div class="crow" id="hz"></div></div>
+      <div class="crow" id="opts"></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <section class="ps"><div class="container"><div class="card state" id="loading" data-i="p_loading">Loading prices…</div></div></section>
+</main>
+
+<div id="site-footer"></div>
+<script src="config.js"></script>
+<script src="site.js"></script>
+<script>
+(function () {
+  'use strict';
+  var G = window.GoldData, t = G.t, nf = G.nf, rs = G.rs;
+  var KG = 31.1035, LAMBDA = 0.94, PREM_SD = 0.012, KARATS = [24, 22, 21, 18];
+  var HZ = [1, 5, 10, 21, 63];
+  var ST = { mk: 'sl', h: 21, karat: 22, unit: 'sov', wunit: 'oz', target: '' };
+  var HIST = null, histErr = false, DATA = null;
+
+  /* ---------- text in three languages ---------- */
+  G.add({
+    en: {
+      p_eyebrow: 'Price prediction', p_h1: 'Where could gold go next?',
+      p_lead: 'Likely price ranges for gold in Sri Lanka and around the world, worked out from the daily price history. Nobody can know the future, so every number here is a range with odds, not a promise.',
+      p_market: 'Market', p_mk_sl: '🇱🇰 Sri Lanka', p_mk_w: '🌍 Global', p_hz: 'Look ahead',
+      p_h1d: 'Tomorrow', p_h5: '1 week', p_h10: '2 weeks', p_h21: '1 month', p_h63: '3 months',
+      p_karat: 'Karat', p_unit: 'Unit', p_sov: 'Per sovereign (8 g)', p_gram: 'Per gram', p_oz: 'Per ounce', p_g24: 'Per gram (24K)',
+      p_loading: 'Loading prices…', p_err: 'Could not load the price history. Please check your connection and try again.',
+      p_glance: 'Both markets at a glance', p_glance_lead: 'Tap a card to open that market in full below.',
+      p_g_sl: 'Sri Lanka · {k}K sovereign', p_g_w: 'World · gold per ounce', p_range: '9 in 10 outcomes: {lo} to {hi}',
+      p_now: 'Price now', p_mid: 'Middle guess', p_chance: 'Chance of a higher price',
+      p_lean_up: 'Leans up', p_lean_dn: 'Leans down', p_lean_flat: 'Evenly balanced',
+      p_what_sl: 'Sri Lanka · {k}K gold {u}', p_what_w: 'World gold price · {u}',
+      p_by: 'around {d}',
+      p_sent: '<b>{when}</b>, the price most likely sits near <b>{mid}</b>. About 9 in 10 outcomes fall between <b>{lo}</b> and <b>{hi}</b>.',
+      p_chart: 'Past price and the range ahead', p_lg_past: 'Past price', p_lg_mid: 'Middle guess', p_lg_50: 'Half of outcomes', p_lg_90: '9 in 10 outcomes',
+      p_ladder: 'Where the price could land', p_l_now: 'NOW', p_l_mid: 'MIDDLE',
+      p_scen: 'Three ways it could go', p_scen_lead: 'Picked from the same range, for the period you chose.',
+      p_sc_lo: 'Softer case', p_sc_lo_d: 'Only 1 in 4 outcomes end lower than this.',
+      p_sc_md: 'Middle case', p_sc_md_d: 'The single most likely level.',
+      p_sc_hi: 'Stronger case', p_sc_hi_d: 'Only 1 in 4 outcomes end higher than this.',
+      p_sc_x: 'Extremes (1 in 20 each side): {lo} / {hi}',
+      p_tbl: 'Every look-ahead at once', p_tbl_lead: 'Tap a row to switch the whole page to that period.',
+      p_c_when: 'Period', p_c_mid: 'Middle', p_c_chg: 'Change', p_c_rng: '9 in 10 range', p_c_up: 'Higher?',
+      p_tgt: 'Will gold reach my price?', p_tgt_lead: 'Type a price to see the chance gold finishes above or below it at the end of the period you chose.',
+      p_tgt_lbl: 'Your price', p_tgt_ab: 'Chance above {x}', p_tgt_be: 'Chance below {x}', p_tgt_bad: 'Type a price to see the odds.',
+      p_sig: 'What the signals say', p_sig_lead: 'Simple readings of recent price movement. They describe what has already happened, not what comes next.',
+      p_s_30: 'Last month', p_s_90: 'Last 3 months', p_s_180: 'Last 6 months', p_s_50: 'Versus 50-day average', p_s_200: 'Versus 200-day average',
+      p_s_rsi: 'Heat check (RSI)', p_s_vol: 'Size of price swings', p_s_hi: 'Distance from 1-year high',
+      p_up: 'Rising', p_dn: 'Falling', p_flat: 'Flat', p_above: 'Above', p_below: 'Below', p_hot: 'Heated', p_cold: 'Oversold', p_ok: 'Normal', p_calm: 'Calm', p_wild: 'Choppy', p_nd: 'Not enough data',
+      p_score: '{n} of {m} trend signals point up', p_rsi_note: 'Above 70 means a very fast rise, below 30 a very fast fall.', p_vol_note: '{v}% a year, versus {a}% on average over the last year.',
+      p_drv: 'What moves the Sri Lanka price', p_drv_lead: 'The Sri Lanka price has two parts: gold in dollars, and the dollar-rupee rate. A weaker rupee lifts the price even when world gold is flat.',
+      p_d_gold: 'World gold (USD per ounce)', p_d_fx: 'Rupee (LKR per 1 USD)', p_d_30: '30-day change', p_d_rng: 'Likely range, 1 month', p_d_both: 'Together, in rupees',
+      p_d_prem: 'Shop price versus world value', p_d_premv: '{p} above the world-price value', p_d_premn: 'No shop price yet',
+      p_acc: 'How good is this method?', p_acc_lead: 'A test on past prices, {h} trading days ahead, over {n} past days.',
+      p_a_m: 'Method', p_a_miss: 'Average miss', p_a_model: 'This prediction', p_a_naive: 'Assume no change', p_a_trend: 'Follow the last 4 weeks',
+      p_a_cov: 'The 9-in-10 range held the real price {c}% of the time.', p_a_na: 'Not enough history for a fair test yet.',
+      p_meth: 'How it works', p_meth_t: 'The method reads the daily gold price, and the dollar-rupee rate for Sri Lanka. It measures how much the price has been swinging lately, gives more weight to recent days, adds a small nudge from the longer trend, and turns that into a range of likely prices. Sri Lanka shop prices get a little extra room because shops add their own margin.',
+      p_disc: '<b>For information only.</b> This is not financial advice and not a promise. Gold can move further than any range shown. Always confirm the price with your jeweller before you buy or sell.',
+      p_upd: 'Prices updated {t}', p_stale: 'The price history file is {n} days old, so ranges lean on fewer recent days.'
+    },
+    si: {
+      p_eyebrow: 'මිල අනාවැකිය', p_h1: 'රන් මිල ඊළඟට කොහාටද?',
+      p_lead: 'ශ්‍රී ලංකාවේ සහ ලෝකයේ රන් මිල සඳහා සිදුවිය හැකි මිල පරාස, දෛනික මිල ඉතිහාසයෙන් ගණනය කර ඇත. අනාගතය කිසිවෙකුට නොදන්නා නිසා මෙහි සෑම අගයක්ම ඉඩකඩ සහිත පරාසයක් මිස පොරොන්දුවක් නොවේ.',
+      p_market: 'වෙළඳපොළ', p_mk_sl: '🇱🇰 ශ්‍රී ලංකාව', p_mk_w: '🌍 ගෝලීය', p_hz: 'ඉදිරිය බලන්න',
+      p_h1d: 'හෙට', p_h5: 'සතියක්', p_h10: 'සති 2ක්', p_h21: 'මාසයක්', p_h63: 'මාස 3ක්',
+      p_karat: 'කැරට්', p_unit: 'ඒකකය', p_sov: 'පවුමකට (ග්‍රෑම් 8)', p_gram: 'ග්‍රෑමයකට', p_oz: 'අවුන්සයකට', p_g24: 'ග්‍රෑමයකට (24K)',
+      p_loading: 'මිල ගණන් පූරණය වෙමින්…', p_err: 'මිල ඉතිහාසය පූරණය කළ නොහැකි විය. ඔබේ සම්බන්ධතාව පරීක්ෂා කර නැවත උත්සාහ කරන්න.',
+      p_glance: 'වෙළඳපොළ දෙකම එක බැල්මකින්', p_glance_lead: 'පහතින් සම්පූර්ණයෙන් බැලීමට කාඩ්පතක් ඔබන්න.',
+      p_g_sl: 'ශ්‍රී ලංකාව · {k}K පවුම', p_g_w: 'ලෝකය · අවුන්සයක රන්', p_range: 'ප්‍රතිඵල 10කින් 9ක්: {lo} සිට {hi} දක්වා',
+      p_now: 'දැන් මිල', p_mid: 'මධ්‍යම අනුමානය', p_chance: 'මිල ඉහළ යාමේ ඉඩකඩ',
+      p_lean_up: 'ඉහළට නැඹුරුයි', p_lean_dn: 'පහළට නැඹුරුයි', p_lean_flat: 'සමතුලිතයි',
+      p_what_sl: 'ශ්‍රී ලංකාව · {k}K රන් {u}', p_what_w: 'ලෝක රන් මිල · {u}',
+      p_by: '{d} පමණ',
+      p_sent: '<b>{when}</b>, මිල බොහෝවිට <b>{mid}</b> ආසන්නයේ පවතී. ප්‍රතිඵල 10කින් 9ක්ම <b>{lo}</b> සහ <b>{hi}</b> අතර වේ.',
+      p_chart: 'අතීත මිල සහ ඉදිරි පරාසය', p_lg_past: 'අතීත මිල', p_lg_mid: 'මධ්‍යම අනුමානය', p_lg_50: 'ප්‍රතිඵලවලින් භාගයක්', p_lg_90: 'ප්‍රතිඵල 10කින් 9ක්',
+      p_ladder: 'මිල පැමිණිය හැකි තැන', p_l_now: 'දැන්', p_l_mid: 'මධ්‍යම',
+      p_scen: 'සිදුවිය හැකි ක්‍රම තුනක්', p_scen_lead: 'ඔබ තෝරාගත් කාලය සඳහා එම පරාසයෙන්ම ගන්නා ලදී.',
+      p_sc_lo: 'මෘදු අවස්ථාව', p_sc_lo_d: 'ප්‍රතිඵල 4කින් 1ක් පමණක් මීට වඩා පහළින් අවසන් වේ.',
+      p_sc_md: 'මධ්‍යම අවස්ථාව', p_sc_md_d: 'වඩාත්ම සිදුවිය හැකි මට්ටම.',
+      p_sc_hi: 'ශක්තිමත් අවස්ථාව', p_sc_hi_d: 'ප්‍රතිඵල 4කින් 1ක් පමණක් මීට වඩා ඉහළින් අවසන් වේ.',
+      p_sc_x: 'අන්ත අගයන් (පැත්තකට 20න් 1): {lo} / {hi}',
+      p_tbl: 'සියලු කාල එකවර', p_tbl_lead: 'මුළු පිටුවම එම කාලයට මාරු කිරීමට පේළියක් ඔබන්න.',
+      p_c_when: 'කාලය', p_c_mid: 'මධ්‍යම', p_c_chg: 'වෙනස', p_c_rng: '10න් 9 පරාසය', p_c_up: 'ඉහළද?',
+      p_tgt: 'රන් මා කැමති මිලට ළඟා වේද?', p_tgt_lead: 'ඔබ තෝරාගත් කාලය අවසානයේ රන් මිල ඔබ දෙන මිලට වඩා ඉහළ හෝ පහළ වීමේ ඉඩකඩ බැලීමට මිලක් ටයිප් කරන්න.',
+      p_tgt_lbl: 'ඔබේ මිල', p_tgt_ab: '{x} ට වඩා ඉහළ ඉඩකඩ', p_tgt_be: '{x} ට වඩා පහළ ඉඩකඩ', p_tgt_bad: 'ඉඩකඩ බැලීමට මිලක් ටයිප් කරන්න.',
+      p_sig: 'සංඥා පවසන දේ', p_sig_lead: 'මෑත මිල චලනයේ සරල කියවීම්. ඒවා සිදුවූ දේ පෙන්වයි, ඊළඟට සිදුවන දේ නොවේ.',
+      p_s_30: 'පසුගිය මාසය', p_s_90: 'පසුගිය මාස 3', p_s_180: 'පසුගිය මාස 6', p_s_50: 'දින 50 සාමාන්‍යයට සාපේක්ෂව', p_s_200: 'දින 200 සාමාන්‍යයට සාපේක්ෂව',
+      p_s_rsi: 'උණුසුම් පරීක්ෂාව (RSI)', p_s_vol: 'මිල දෝලනයේ ප්‍රමාණය', p_s_hi: 'වසරක ඉහළම මිලට දුර',
+      p_up: 'ඉහළ යයි', p_dn: 'පහළ යයි', p_flat: 'තිරයි', p_above: 'ඉහළින්', p_below: 'පහළින්', p_hot: 'උණුසුම්', p_cold: 'අධික ලෙස පහළ', p_ok: 'සාමාන්‍ය', p_calm: 'සන්සුන්', p_wild: 'අස්ථායී', p_nd: 'දත්ත ප්‍රමාණවත් නැත',
+      p_score: 'ප්‍රවණතා සංඥා {m}න් {n}ක් ඉහළට පෙන්වයි', p_rsi_note: '70ට වැඩි නම් ඉතා වේගවත් ඉහළ යාමක්, 30ට අඩු නම් ඉතා වේගවත් පහළ යාමක්.', p_vol_note: 'වසරකට {v}%, පසුගිය වසරේ සාමාන්‍යය {a}%.',
+      p_drv: 'ශ්‍රී ලංකා මිල චලනය කරන දේ', p_drv_lead: 'ශ්‍රී ලංකා මිලට කොටස් දෙකක් ඇත: ඩොලරයෙන් රන් මිල සහ ඩොලර්-රුපියල් අනුපාතය. ලෝක රන් මිල නොවෙනස්ව තිබුණත් රුපියල දුර්වල වීමෙන් මිල ඉහළ යයි.',
+      p_d_gold: 'ලෝක රන් (අවුන්සයකට USD)', p_d_fx: 'රුපියල (USD 1කට LKR)', p_d_30: 'දින 30 වෙනස', p_d_rng: 'මාසයක සිදුවිය හැකි පරාසය', p_d_both: 'එකට, රුපියල්වලින්',
+      p_d_prem: 'වෙළඳසැල් මිල ලෝක වටිනාකමට සාපේක්ෂව', p_d_premv: 'ලෝක මිල වටිනාකමට වඩා {p} ඉහළයි', p_d_premn: 'තවමත් වෙළඳසැල් මිලක් නැත',
+      p_acc: 'මෙම ක්‍රමය කොතරම් හොඳද?', p_acc_lead: 'අතීත මිල මත පරීක්ෂාවක්, වෙළඳ දින {h}ක් ඉදිරියට, අතීත දින {n}ක් පුරා.',
+      p_a_m: 'ක්‍රමය', p_a_miss: 'සාමාන්‍ය වැරැද්ද', p_a_model: 'මෙම අනාවැකිය', p_a_naive: 'වෙනසක් නැතැයි උපකල්පනය', p_a_trend: 'පසුගිය සති 4 අනුගමනය',
+      p_a_cov: '10න් 9 පරාසය තුළ සැබෑ මිල {c}% වතාවක් පැවතුණි.', p_a_na: 'සාධාරණ පරීක්ෂාවකට ඉතිහාසය තවම ප්‍රමාණවත් නැත.',
+      p_meth: 'මෙය ක්‍රියා කරන ආකාරය', p_meth_t: 'මෙම ක්‍රමය දෛනික රන් මිල සහ ශ්‍රී ලංකාව සඳහා ඩොලර්-රුපියල් අනුපාතය කියවයි. මිල මෑතදී කොතරම් දෝලනය වූයේදැයි මැන, මෑත දිනවලට වැඩි බරක් දී, දීර්ඝ ප්‍රවණතාවෙන් කුඩා තල්ලුවක් එක්කර, එය සිදුවිය හැකි මිල පරාසයක් බවට හරවයි. වෙළඳසැල් තමන්ගේ ලාභය එක් කරන නිසා ශ්‍රී ලංකා වෙළඳසැල් මිලට තරමක් වැඩි ඉඩක් ලැබේ.',
+      p_disc: '<b>තොරතුරු සඳහා පමණි.</b> මෙය මූල්‍ය උපදෙසක් හෝ පොරොන්දුවක් නොවේ. රන් මිල පෙන්වා ඇති ඕනෑම පරාසයකට වඩා වෙනස් විය හැක. මිලදී ගැනීමට හෝ විකිණීමට පෙර ඔබේ ජුවලර්ගෙන් මිල තහවුරු කරගන්න.',
+      p_upd: 'මිල යාවත්කාලීන කළේ {t}', p_stale: 'මිල ඉතිහාස ගොනුව දින {n}ක් පැරණියි, එබැවින් පරාස මෑත දින අඩුවක් මත රඳා පවතී.'
+    },
+    ta: {
+      p_eyebrow: 'விலைக் கணிப்பு', p_h1: 'தங்கம் அடுத்து எங்கே போகலாம்?',
+      p_lead: 'இலங்கையிலும் உலகிலும் தங்க விலை எந்த வரம்பில் இருக்கலாம் என்பதை தினசரி விலை வரலாற்றிலிருந்து கணக்கிட்டுள்ளோம். எதிர்காலத்தை யாராலும் அறிய முடியாது, எனவே இங்குள்ள ஒவ்வொரு எண்ணும் வாய்ப்புடன் கூடிய வரம்பே தவிர வாக்குறுதி அல்ல.',
+      p_market: 'சந்தை', p_mk_sl: '🇱🇰 இலங்கை', p_mk_w: '🌍 உலகம்', p_hz: 'எதிர்காலம்',
+      p_h1d: 'நாளை', p_h5: '1 வாரம்', p_h10: '2 வாரங்கள்', p_h21: '1 மாதம்', p_h63: '3 மாதங்கள்',
+      p_karat: 'காரட்', p_unit: 'அலகு', p_sov: 'பவுனுக்கு (8 கி)', p_gram: 'கிராமுக்கு', p_oz: 'அவுன்சுக்கு', p_g24: 'கிராமுக்கு (24K)',
+      p_loading: 'விலைகள் ஏற்றப்படுகின்றன…', p_err: 'விலை வரலாற்றை ஏற்ற முடியவில்லை. இணைப்பைச் சரிபார்த்து மீண்டும் முயலுங்கள்.',
+      p_glance: 'இரு சந்தைகளும் ஒரே பார்வையில்', p_glance_lead: 'கீழே முழுமையாகப் பார்க்க ஒரு அட்டையைத் தட்டுங்கள்.',
+      p_g_sl: 'இலங்கை · {k}K பவுன்', p_g_w: 'உலகம் · ஒரு அவுன்ஸ் தங்கம்', p_range: '10 இல் 9 முடிவுகள்: {lo} முதல் {hi} வரை',
+      p_now: 'இப்போதைய விலை', p_mid: 'நடுத்தர மதிப்பீடு', p_chance: 'விலை உயரும் வாய்ப்பு',
+      p_lean_up: 'ஏற்றம் நோக்கி', p_lean_dn: 'இறக்கம் நோக்கி', p_lean_flat: 'சமநிலை',
+      p_what_sl: 'இலங்கை · {k}K தங்கம் {u}', p_what_w: 'உலக தங்க விலை · {u}',
+      p_by: '{d} அளவில்',
+      p_sent: '<b>{when}</b>, விலை பெரும்பாலும் <b>{mid}</b> அருகே இருக்கும். 10 இல் 9 முடிவுகள் <b>{lo}</b> மற்றும் <b>{hi}</b> இடையே அமையும்.',
+      p_chart: 'கடந்த விலையும் எதிர்கால வரம்பும்', p_lg_past: 'கடந்த விலை', p_lg_mid: 'நடுத்தர மதிப்பீடு', p_lg_50: 'பாதி முடிவுகள்', p_lg_90: '10 இல் 9 முடிவுகள்',
+      p_ladder: 'விலை எங்கே வந்து நிற்கலாம்', p_l_now: 'இப்போது', p_l_mid: 'நடுத்தரம்',
+      p_scen: 'நடக்கக்கூடிய மூன்று வழிகள்', p_scen_lead: 'நீங்கள் தேர்ந்த காலத்திற்கான அதே வரம்பிலிருந்து எடுக்கப்பட்டவை.',
+      p_sc_lo: 'மென்மையான நிலை', p_sc_lo_d: '4 இல் 1 முடிவு மட்டுமே இதைவிடக் குறைவாக முடியும்.',
+      p_sc_md: 'நடுத்தர நிலை', p_sc_md_d: 'அதிக வாய்ப்புள்ள ஒற்றை மட்டம்.',
+      p_sc_hi: 'வலுவான நிலை', p_sc_hi_d: '4 இல் 1 முடிவு மட்டுமே இதைவிட அதிகமாக முடியும்.',
+      p_sc_x: 'எல்லை மதிப்புகள் (ஒவ்வொரு பக்கமும் 20 இல் 1): {lo} / {hi}',
+      p_tbl: 'எல்லா காலங்களும் ஒரே நேரத்தில்', p_tbl_lead: 'முழுப் பக்கத்தையும் அந்தக் காலத்திற்கு மாற்ற ஒரு வரியைத் தட்டுங்கள்.',
+      p_c_when: 'காலம்', p_c_mid: 'நடுத்தரம்', p_c_chg: 'மாற்றம்', p_c_rng: '10 இல் 9 வரம்பு', p_c_up: 'உயருமா?',
+      p_tgt: 'தங்கம் என் விலையை எட்டுமா?', p_tgt_lead: 'நீங்கள் தேர்ந்த காலத்தின் முடிவில் தங்கம் உங்கள் விலைக்கு மேல் அல்லது கீழ் இருக்கும் வாய்ப்பைக் காண ஒரு விலையை உள்ளிடுங்கள்.',
+      p_tgt_lbl: 'உங்கள் விலை', p_tgt_ab: '{x} க்கு மேல் இருக்கும் வாய்ப்பு', p_tgt_be: '{x} க்குக் கீழ் இருக்கும் வாய்ப்பு', p_tgt_bad: 'வாய்ப்பைக் காண ஒரு விலையை உள்ளிடுங்கள்.',
+      p_sig: 'சமிக்ஞைகள் சொல்வது', p_sig_lead: 'சமீபத்திய விலை நகர்வின் எளிய வாசிப்புகள். இவை நடந்ததைச் சொல்கின்றன, அடுத்து நடப்பதை அல்ல.',
+      p_s_30: 'கடந்த மாதம்', p_s_90: 'கடந்த 3 மாதங்கள்', p_s_180: 'கடந்த 6 மாதங்கள்', p_s_50: '50 நாள் சராசரியுடன்', p_s_200: '200 நாள் சராசரியுடன்',
+      p_s_rsi: 'வெப்பச் சோதனை (RSI)', p_s_vol: 'விலை அலைவின் அளவு', p_s_hi: '1 ஆண்டு உச்சத்திலிருந்து தூரம்',
+      p_up: 'உயர்கிறது', p_dn: 'குறைகிறது', p_flat: 'நிலையானது', p_above: 'மேலே', p_below: 'கீழே', p_hot: 'சூடானது', p_cold: 'அதிகமாக இறங்கியது', p_ok: 'இயல்பு', p_calm: 'அமைதி', p_wild: 'ஏற்றத்தாழ்வு', p_nd: 'போதிய தரவு இல்லை',
+      p_score: '{m} போக்கு சமிக்ஞைகளில் {n} உயர்வைக் காட்டுகின்றன', p_rsi_note: '70க்கு மேல் மிக வேகமான ஏற்றம், 30க்குக் கீழ் மிக வேகமான இறக்கம்.', p_vol_note: 'ஆண்டுக்கு {v}%, கடந்த ஆண்டின் சராசரி {a}%.',
+      p_drv: 'இலங்கை விலையை நகர்த்துவது', p_drv_lead: 'இலங்கை விலைக்கு இரண்டு பகுதிகள்: டாலரில் தங்க விலை, மற்றும் டாலர்-ரூபாய் விகிதம். உலக தங்க விலை மாறாவிட்டாலும் ரூபாய் பலவீனமானால் விலை உயரும்.',
+      p_d_gold: 'உலக தங்கம் (அவுன்சுக்கு USD)', p_d_fx: 'ரூபாய் (1 USD க்கு LKR)', p_d_30: '30 நாள் மாற்றம்', p_d_rng: 'ஒரு மாதத்தில் வரக்கூடிய வரம்பு', p_d_both: 'இரண்டும் சேர்ந்து, ரூபாயில்',
+      p_d_prem: 'கடை விலை, உலக மதிப்புடன் ஒப்பிடுகையில்', p_d_premv: 'உலக விலை மதிப்பைவிட {p} அதிகம்', p_d_premn: 'இன்னும் கடை விலை இல்லை',
+      p_acc: 'இந்த முறை எவ்வளவு நம்பகமானது?', p_acc_lead: 'கடந்த விலைகளில் ஒரு சோதனை, {h} வர்த்தக நாட்கள் முன்னோக்கி, கடந்த {n} நாட்களில்.',
+      p_a_m: 'முறை', p_a_miss: 'சராசரி தவறு', p_a_model: 'இந்தக் கணிப்பு', p_a_naive: 'மாற்றமில்லை எனக் கொள்ளுதல்', p_a_trend: 'கடந்த 4 வாரங்களைப் பின்பற்றுதல்',
+      p_a_cov: '10 இல் 9 வரம்பு உண்மையான விலையை {c}% நேரம் உள்ளடக்கியது.', p_a_na: 'நியாயமான சோதனைக்கு வரலாறு இன்னும் போதாது.',
+      p_meth: 'இது எப்படி வேலை செய்கிறது', p_meth_t: 'இந்த முறை தினசரி தங்க விலையையும், இலங்கைக்கு டாலர்-ரூபாய் விகிதத்தையும் படிக்கிறது. சமீபத்தில் விலை எவ்வளவு அலைந்தது என்பதை அளந்து, சமீபத்திய நாட்களுக்கு அதிக எடை கொடுத்து, நீண்ட போக்கிலிருந்து சிறு தூண்டுதல் சேர்த்து, அதை சாத்தியமான விலை வரம்பாக மாற்றுகிறது. கடைகள் தங்கள் இலாபத்தைச் சேர்ப்பதால் இலங்கை கடை விலைக்கு சற்று கூடுதல் இடம் தரப்படுகிறது.',
+      p_disc: '<b>தகவலுக்காக மட்டுமே.</b> இது நிதி ஆலோசனையோ வாக்குறுதியோ அல்ல. தங்கம் காட்டப்பட்ட எந்த வரம்பையும் விட அதிகமாக நகரலாம். வாங்கும் அல்லது விற்கும் முன் உங்கள் நகைக்கடையில் விலையை உறுதிப்படுத்துங்கள்.',
+      p_upd: 'விலைகள் புதுப்பிக்கப்பட்டது {t}', p_stale: 'விலை வரலாற்றுக் கோப்பு {n} நாட்கள் பழையது, எனவே வரம்புகள் குறைவான சமீபத்திய நாட்களை நம்பியுள்ளன.'
+    }
+  });
+
+  /* ---------- model: same method as the old forecast, now the heart of this page ---------- */
+  function cdf(x) { var s = x < 0 ? -1 : 1; x = Math.abs(x) / Math.SQRT2; var u = 1 / (1 + 0.3275911 * x); var y = 1 - (((((1.061405429 * u - 1.453152027) * u) + 1.421413741) * u - 0.284496736) * u + 0.254829592) * u * Math.exp(-x * x); return 0.5 * (1 + s * y); }
+  function toSov(gold, fx, k) { return gold / KG * fx * 8 * k / 24; }
+  function prep(S, D) {
+    var n = S.length, r = [0], P = [0], v = [], q = [0], j;
+    for (j = 1; j < n; j++) { var g = D ? Math.max(1, D[j] - D[j - 1]) : 1; r.push(Math.log(S[j] / S[j - 1])); P.push(P[j - 1] + r[j]); q.push(r[j] * r[j] / g); }
+    var init = 0, m = Math.min(30, n - 1); for (j = 1; j <= m; j++) init += q[j]; init /= Math.max(1, m);
+    for (j = 0; j < n; j++) v.push(j <= m ? init : LAMBDA * v[j - 1] + (1 - LAMBDA) * q[j]);
+    return { r: r, P: P, v: v };
+  }
+  function trailMean(P, tt, w, D) { var a = Math.max(0, tt - w), span = D ? D[tt] - D[a] : tt - a; return span > 0 ? (P[tt] - P[a]) / span : 0; }
+  var Z = { q05: -1.6449, q25: -0.6745, q75: 0.6745, q95: 1.6449 };
+  function forecast(S, h, extra, f, D) {
+    extra = extra || 0; f = f || 1;
+    var p = prep(S, D), tt = S.length - 1, sig = Math.sqrt(p.v[tt]), mu = 0.25 * trailMean(p.P, tt, 120, D);
+    var last = S[tt] * f, sh = Math.sqrt(sig * sig * h + extra * extra), median = last * Math.exp(mu * h);
+    return { last: last, mu: mu, sigma: sig, extra: extra, sh: sh, median: median, q05: median * Math.exp(Z.q05 * sh), q25: median * Math.exp(Z.q25 * sh), q75: median * Math.exp(Z.q75 * sh), q95: median * Math.exp(Z.q95 * sh), pUp: cdf(mu * h / sh) };
+  }
+  function bandAt(fc, k) { var sk = Math.sqrt(fc.sigma * fc.sigma * k + fc.extra * fc.extra), m = fc.last * Math.exp(fc.mu * k); return { m: m, q05: m * Math.exp(Z.q05 * sk), q25: m * Math.exp(Z.q25 * sk), q75: m * Math.exp(Z.q75 * sk), q95: m * Math.exp(Z.q95 * sk) }; }
+  function probAbove(fc, x) { return 1 - cdf(Math.log(x / fc.median) / fc.sh); }
+  function backtest(S, H, D) {
+    var p = prep(S, D), n = S.length, start = Math.max(60, n - 300 - H), c = 0, hit = 0, e = { naive: 0, model: 0, trend: 0 };
+    for (var i = start; i <= n - 1 - H; i++) {
+      var a = S[i + H], last = S[i], sh = Math.sqrt(p.v[i]) * Math.sqrt(H);
+      var pm = last * Math.exp(0.25 * trailMean(p.P, i, 120, D) * H), pt = last * Math.exp(trailMean(p.P, i, 20, D) * H);
+      e.naive += Math.abs(a - last) / a; e.model += Math.abs(a - pm) / a; e.trend += Math.abs(a - pt) / a;
+      if (Math.abs(Math.log(a / pm)) <= 1.6449 * sh) hit++; c++;
+    }
+    return c ? { n: c, naive: e.naive / c, model: e.model / c, trend: e.trend / c, coverage: hit / c } : null;
+  }
+
+  /* ---------- history ---------- */
+  function parseCsv(text) {
+    var lines = text.replace(/\r/g, '').split('\n').filter(function (l) { return l.trim(); });
+    var head = lines[0].split(',').map(function (s) { return s.trim().toLowerCase(); }), rows = [];
+    var di = head.indexOf('date'), gi = head.indexOf('gold_usd'), fi = head.indexOf('usdlkr');
+    if (di < 0 || gi < 0 || fi < 0) throw new Error('cols');
+    lines.slice(1).forEach(function (l) { var c = l.split(','), g = parseFloat(c[gi]), f = parseFloat(c[fi]); if (!isNaN(Date.parse(c[di])) && g > 0 && f > 0) rows.push({ d: c[di].slice(0, 10), g: g, f: f }); });
+    rows.sort(function (a, b) { return a.d < b.d ? -1 : a.d > b.d ? 1 : 0; });
+    if (rows.length < 60) throw new Error('short');
+    return { dates: rows.map(function (r) { return r.d; }), gold: rows.map(function (r) { return r.g; }), fx: rows.map(function (r) { return r.f; }) };
+  }
+  function series(d) {
+    var g = HIST.gold.slice(), f = HIST.fx.slice(), dt = HIST.dates.slice(), today = new Date().toISOString().slice(0, 10), i;
+    if (dt[dt.length - 1] === today) { g[g.length - 1] = d.spot; f[f.length - 1] = d.fx; } else { g.push(d.spot); f.push(d.fx); dt.push(today); }
+    var D = [0]; for (i = 1; i < dt.length; i++) { var cg = (Date.parse(dt[i]) - Date.parse(dt[i - 1])) / 864e5; D.push(D[i - 1] + Math.max(1, Math.round(cg * 5 / 7))); }
+    var stale = Math.max(0, Math.round((Date.parse(today) - Date.parse(HIST.dates[HIST.dates.length - 1])) / 864e5));
+    return { gold: g, fx: f, dates: dt, D: D, stale: stale, S: g.map(function (x, k) { return toSov(x, f[k], 22); }) };
+  }
+  /* index of the point about n calendar days back, or -1 */
+  function idxAgo(dates, n) {
+    var tg = Date.parse(dates[dates.length - 1]) - n * 864e5, i = dates.length - 1;
+    while (i > 0 && Date.parse(dates[i]) > tg) i--;
+    return (tg - Date.parse(dates[i]) <= Math.max(5, n * 0.3) * 864e5 && Date.parse(dates[i]) <= tg) ? i : -1;
+  }
+
+  /* ---------- the market being shown ---------- */
+  function market(sr, d, mk, h, o) {
+    o = o || ST;
+    if (mk === 'sl') {
+      var S = sr.S, last = S[S.length - 1], k = o.karat, div = o.unit === 'g' ? 8 : 1;
+      var price = d.hasRetail ? d.sells[k] : d.worldSov(k);
+      var sc = function (kk) { return (d.hasRetail ? d.sells[kk] : d.worldSov(kk)) / last / div; };
+      return { S: S, D: sr.D, dates: sr.dates, f: sc(k), extra: d.hasRetail ? PREM_SD : 0, fmt: rs, ax: function (v) { return nf(v / 1000, div > 1 ? 1 : 0) + 'k'; },
+        what: t('p_what_sl', { k: k, u: t(div > 1 ? 'p_sov' : 'p_gram').toLowerCase() }), price: price, sc: sc, div: div };
+    }
+    var gm = o.wunit === 'g', f = gm ? 1 / KG : 1;
+    return { S: sr.gold, D: sr.D, dates: sr.dates, f: f, extra: 0, fmt: function (v) { return '$' + nf(v, gm ? 2 : 0); }, ax: function (v) { return '$' + nf(v, gm ? 0 : 0); },
+      what: t('p_what_w', { u: t(gm ? 'p_g24' : 'p_oz').toLowerCase() }), price: sr.gold[sr.gold.length - 1] * f };
+  }
+  var LOC = { en: 'en-GB', si: 'si-LK', ta: 'ta-LK' };
+  function whenText(h) {
+    var dt = new Date(Date.now() + Math.ceil(h * 7 / 5) * 864e5), s;
+    try { s = dt.toLocaleDateString(LOC[G.lang()] || 'en-GB', { day: 'numeric', month: 'short' }); } catch (e) { s = dt.toISOString().slice(5, 10); }
+    return t('p_h' + (h === 1 ? '1d' : h)) + ' (' + t('p_by', { d: s }) + ')';
+  }
+  var pct = function (v, dd) { return (v >= 0 ? '+' : '') + nf(v * 100, dd === undefined ? 1 : dd) + '%'; };
+  function lean(p) { return p > 0.545 ? ['up', t('p_lean_up')] : p < 0.455 ? ['dn', t('p_lean_dn')] : ['fl', t('p_lean_flat')]; }
+  function tagHTML(l) { return '<span class="tag-' + l[0] + '">' + (l[0] === 'up' ? '▲ ' : l[0] === 'dn' ? '▼ ' : '● ') + l[1] + '</span>'; }
+
+  /* ---------- drawing ---------- */
+  function gaugeSVG(p) {
+    var cx = 140, cy = 130, r = 105, a = Math.PI * (1 - p), nx = cx + (r - 14) * Math.cos(a), ny = cy - (r - 14) * Math.sin(a);
+    return '<svg viewBox="0 0 280 150" role="img" aria-label="' + Math.round(p * 100) + '%"><defs><linearGradient id="gg" x1="0" x2="1"><stop offset="0" stop-color="#ff7d6b"/><stop offset=".5" stop-color="#f0c04e"/><stop offset="1" stop-color="#38d9a4"/></linearGradient></defs>' +
+      '<path d="M35 130 A105 105 0 0 1 245 130" fill="none" stroke="rgba(0,0,0,.45)" stroke-width="20" stroke-linecap="round"/>' +
+      '<path d="M35 130 A105 105 0 0 1 245 130" fill="none" stroke="url(#gg)" stroke-width="14" stroke-linecap="round"/>' +
+      '<line x1="' + cx + '" y1="' + cy + '" x2="' + nx.toFixed(1) + '" y2="' + ny.toFixed(1) + '" stroke="#fff7e2" stroke-width="4" stroke-linecap="round"/><circle cx="' + cx + '" cy="' + cy + '" r="8" fill="#fff0b8" stroke="#0c0608" stroke-width="3"/></svg>';
+  }
+  function chartSVG(M, fc, h) {
+    var W = 720, H = 320, pl = 62, pr = 14, pt = 16, pb = 30, pw = W - pl - pr, ph = H - pt - pb, split = pl + pw * 0.64;
+    var n = M.S.length, i0 = idxAgo(M.dates, 120); if (i0 < 0 || n - i0 < 15) i0 = Math.max(0, n - 60);
+    var t0 = Date.parse(M.dates[i0]), t1 = Date.parse(M.dates[n - 1]), span = Math.max(1, t1 - t0), i, k, past = [], fut = [];
+    for (i = i0; i < n; i++) past.push({ x: pl + (Date.parse(M.dates[i]) - t0) / span * (split - pl), y: M.S[i] * M.f });
+    for (k = 0; k <= h; k++) { var b = bandAt(fc, k); b.x = split + k / h * (pl + pw - split); fut.push(b); }
+    var lo = Infinity, hi = -Infinity; past.forEach(function (p) { lo = Math.min(lo, p.y); hi = Math.max(hi, p.y); }); fut.forEach(function (b) { lo = Math.min(lo, b.q05); hi = Math.max(hi, b.q95); });
+    var pad = (hi - lo) * 0.06 || hi * 0.01; lo -= pad; hi += pad;
+    var Y = function (v) { return pt + (1 - (v - lo) / (hi - lo)) * ph; };
+    var s = '<rect x="' + split + '" y="' + pt + '" width="' + (pl + pw - split) + '" height="' + ph + '" fill="rgba(240,192,78,.04)"/>';
+    for (i = 0; i <= 4; i++) { var v = lo + (hi - lo) * i / 4, y = Y(v); s += '<line x1="' + pl + '" x2="' + (W - pr) + '" y1="' + y.toFixed(1) + '" y2="' + y.toFixed(1) + '" stroke="rgba(240,192,78,.12)"/><text x="' + (pl - 8) + '" y="' + (y + 4).toFixed(1) + '" text-anchor="end" font-size="11" fill="#b9a98a" font-family="IBM Plex Mono,monospace">' + M.ax(v) + '</text>'; }
+    var poly = function (a, b) { var up = fut.map(function (q) { return q.x.toFixed(1) + ',' + Y(q[a]).toFixed(1); }), dn = fut.slice().reverse().map(function (q) { return q.x.toFixed(1) + ',' + Y(q[b]).toFixed(1); }); return up.concat(dn).join(' '); };
+    s += '<polygon points="' + poly('q95', 'q05') + '" fill="rgba(240,192,78,.14)" stroke="rgba(240,192,78,.35)" stroke-width="1"/>';
+    s += '<polygon points="' + poly('q75', 'q25') + '" fill="rgba(240,192,78,.34)"/>';
+    s += '<polyline points="' + fut.map(function (q) { return q.x.toFixed(1) + ',' + Y(q.m).toFixed(1); }).join(' ') + '" fill="none" stroke="#f0c04e" stroke-width="2.6" stroke-dasharray="6 4" stroke-linecap="round"/>';
+    s += '<polyline points="' + past.map(function (p) { return p.x.toFixed(1) + ',' + Y(p.y).toFixed(1); }).join(' ') + '" fill="none" stroke="#fff7e2" stroke-width="2.2" stroke-linejoin="round"/>';
+    s += '<line x1="' + split + '" x2="' + split + '" y1="' + pt + '" y2="' + (pt + ph) + '" stroke="rgba(255,247,226,.35)" stroke-dasharray="3 4"/>';
+    var lp = past[past.length - 1], lf = fut[fut.length - 1];
+    s += '<circle cx="' + lp.x.toFixed(1) + '" cy="' + Y(lp.y).toFixed(1) + '" r="5" fill="#fff0b8" stroke="#0c0608" stroke-width="2"/>';
+    s += '<circle cx="' + lf.x.toFixed(1) + '" cy="' + Y(lf.m).toFixed(1) + '" r="5" fill="#f0c04e" stroke="#0c0608" stroke-width="2"/>';
+    s += '<text x="' + (W - pr) + '" y="' + (Y(lf.q95) - 7).toFixed(1) + '" text-anchor="end" font-size="11.5" fill="#fff0b8" font-family="IBM Plex Mono,monospace">' + M.fmt(lf.q95) + '</text>';
+    s += '<text x="' + (W - pr) + '" y="' + (Y(lf.q05) + 15).toFixed(1) + '" text-anchor="end" font-size="11.5" fill="#fff0b8" font-family="IBM Plex Mono,monospace">' + M.fmt(lf.q05) + '</text>';
+    return s;
+  }
+  function ladderHTML(M, fc) {
+    var lo = Math.min(fc.q05, fc.last) * 0.998, hi = Math.max(fc.q95, fc.last) * 1.002, X = function (v) { return ((v - lo) / (hi - lo) * 100).toFixed(2); };
+    return '<div class="ladder"><div class="rail"></div><div class="b90" style="left:' + X(fc.q05) + '%;width:' + (X(fc.q95) - X(fc.q05)).toFixed(2) + '%"></div><div class="b50" style="left:' + X(fc.q25) + '%;width:' + (X(fc.q75) - X(fc.q25)).toFixed(2) + '%"></div>' +
+      '<div class="mk" style="left:' + X(fc.last) + '%"><span>' + t('p_l_now') + '</span></div><div class="mk m" style="left:' + X(fc.median) + '%;top:8px;height:44px"><span>' + t('p_l_mid') + '</span></div></div>' +
+      '<div class="legend" style="justify-content:space-between"><span>' + M.fmt(fc.q05) + '</span><span>' + M.fmt(fc.q95) + '</span></div>';
+  }
+
+  /* ---------- signals ---------- */
+  function sma(M, days) {
+    var tl = Date.parse(M.dates[M.dates.length - 1]) - days * 864e5, s = 0, c = 0;
+    for (var i = M.dates.length - 1; i >= 0 && Date.parse(M.dates[i]) >= tl; i--) { s += M.S[i]; c++; }
+    return c >= 8 ? s / c : null;
+  }
+  function signalsHTML(M, fc) {
+    var S = M.S, n = S.length, last = S[n - 1], rows = [], up = 0, tot = 0;
+    var ret = function (days, thr, key) {
+      var i = idxAgo(M.dates, days);
+      if (i < 0) { rows.push([t(key), 'n', t('p_nd'), '']); return; }
+      var r = last / S[i] - 1; tot++;
+      var c = r > thr ? 'u' : r < -thr ? 'd' : 'f'; if (c === 'u') up++;
+      rows.push([t(key), c, t(c === 'u' ? 'p_up' : c === 'd' ? 'p_dn' : 'p_flat'), pct(r)]);
+    };
+    ret(30, 0.015, 'p_s_30'); ret(90, 0.035, 'p_s_90'); ret(180, 0.06, 'p_s_180');
+    [[70, 'p_s_50'], [280, 'p_s_200']].forEach(function (x) {
+      var a = sma(M, x[0]); if (a === null) { rows.push([t(x[1]), 'n', t('p_nd'), '']); return; }
+      tot++; var above = last >= a; if (above) up++;
+      rows.push([t(x[1]), above ? 'u' : 'd', t(above ? 'p_above' : 'p_below'), pct(last / a - 1)]);
+    });
+    var j0 = n - 15, rsiOk = j0 >= 0 && (Date.parse(M.dates[n - 1]) - Date.parse(M.dates[j0])) <= 26 * 864e5;
+    if (rsiOk) {
+      var gn = 0, ls = 0; for (var j = j0 + 1; j < n; j++) { var df = S[j] - S[j - 1]; if (df > 0) gn += df; else ls -= df; }
+      var rsi = ls === 0 ? 100 : 100 - 100 / (1 + gn / ls), c = rsi > 70 ? 'd' : rsi < 30 ? 'u' : 'f';
+      rows.push([t('p_s_rsi'), c, t(rsi > 70 ? 'p_hot' : rsi < 30 ? 'p_cold' : 'p_ok'), nf(rsi, 0) + ' / 100 · ' + t('p_rsi_note')]);
+    } else rows.push([t('p_s_rsi'), 'n', t('p_nd'), '']);
+    var pr = prep(S, M.D), vNow = Math.sqrt(pr.v[n - 1] * 252), i1 = Math.max(1, idxAgo(M.dates, 365)), av = 0, ac = 0;
+    for (var q = Math.max(1, i1); q < n; q++) { av += pr.v[q]; ac++; }
+    if (ac > 30) { av = Math.sqrt(av / ac * 252); var ratio = vNow / av, c2 = ratio > 1.3 ? 'd' : ratio < 0.8 ? 'u' : 'f'; rows.push([t('p_s_vol'), c2 === 'd' ? 'd' : c2 === 'u' ? 'u' : 'f', t(ratio > 1.3 ? 'p_wild' : ratio < 0.8 ? 'p_calm' : 'p_ok'), t('p_vol_note', { v: nf(vNow * 100, 0), a: nf(av * 100, 0) })]); }
+    else rows.push([t('p_s_vol'), 'n', t('p_nd'), '']);
+    var yi = Math.max(0, idxAgo(M.dates, 365)), mx = 0; for (var z = yi; z < n; z++) mx = Math.max(mx, S[z]);
+    var dh = last / mx - 1; rows.push([t('p_s_hi'), dh > -0.03 ? 'u' : dh > -0.1 ? 'f' : 'd', pct(dh), '']);
+    var share = tot ? up / tot : 0.5;
+    return '<div>' + rows.map(function (r) { return '<div class="srow"><span>' + r[0] + '</span><span class="badge ' + r[1] + '">' + r[2] + (r[3] && r[3].length < 12 ? ' · ' + r[3] : '') + '</span>' + (r[3] && r[3].length >= 12 ? '<small>' + r[3] + '</small>' : '') + '</div>'; }).join('') + '</div>' +
+      '<div class="meter" aria-hidden="true"><u style="left:' + (share * 100).toFixed(0) + '%"></u></div><div class="score">' + t('p_score', { n: up, m: tot }) + '</div>';
+  }
+
+  /* ---------- page ---------- */
+  var $ = function (id) { return document.getElementById(id); };
+  function chip(label, attr, on) { return '<button type="button" class="pill" data-o="' + attr + '" aria-pressed="' + on + '">' + label + '</button>'; }
+
+  function render() {
+    if (histErr) { $('main').innerHTML = '<section class="ps"><div class="container"><div class="card state">' + t('p_err') + '</div></div></section>'; return; }
+    if (!DATA || !HIST) return;
+    var d = DATA, sr = series(d), h = ST.h, isSL = ST.mk === 'sl';
+    /* controls */
+    Array.prototype.forEach.call(document.querySelectorAll('#mk button'), function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-mk') === ST.mk ? 'true' : 'false'); });
+    $('hz').innerHTML = HZ.map(function (x) { return chip(t('p_h' + (x === 1 ? '1d' : x)), 'h:' + x, ST.h === x); }).join('');
+    $('opts').innerHTML = isSL
+      ? '<span class="cl">' + t('p_karat') + '</span>' + KARATS.map(function (k) { return chip(k + 'K', 'karat:' + k, ST.karat === k); }).join('') + '<span class="cl" style="min-width:0;margin-left:14px">' + t('p_unit') + '</span>' + chip(t('p_sov'), 'unit:sov', ST.unit === 'sov') + chip(t('p_gram'), 'unit:g', ST.unit === 'g')
+      : '<span class="cl">' + t('p_unit') + '</span>' + chip(t('p_oz'), 'wunit:oz', ST.wunit === 'oz') + chip(t('p_g24'), 'wunit:g', ST.wunit === 'g');
+
+    var M = market(sr, d, ST.mk, h), fc = forecast(M.S, h, M.extra, M.f, M.D), chg = fc.median / fc.last - 1, ln = lean(fc.pUp);
+    /* both markets glance (always karat 22 sovereign and gold per ounce) */
+    var slM = market(sr, d, 'sl', h, { karat: 22, unit: 'sov' }), gSL = forecast(slM.S, h, slM.extra, slM.f, slM.D), gW = forecast(sr.gold, h, 0, 1, sr.D);
+    function gcard(key, title, f, fmt, on) {
+      var l = lean(f.pUp);
+      return '<button type="button" class="gcard' + (on ? ' on' : '') + '" data-gc="' + key + '"><div class="gt"><span>' + title + '</span>' + tagHTML(l) + '</div><div class="gp">' + t('p_now') + ': ' + fmt(f.last) + '</div><div class="gm">' + fmt(f.median) + '</div><div class="gr">' + pct(f.median / f.last - 1) + ' · ' + t('p_range', { lo: fmt(f.q05), hi: fmt(f.q95) }) + '</div></button>';
+    }
+    var slLabel = t('p_g_sl', { k: 22 });
+    var html = '';
+    html += '<section class="ps"><div class="container"><div class="sechead"><h2>' + t('p_glance') + '</h2><p>' + whenText(h) + ' · ' + t('p_glance_lead') + '</p></div><div class="glance">' +
+      gcard('sl', slLabel, gSL, rs, isSL) + gcard('world', t('p_g_w'), gW, function (v) { return '$' + nf(v, 0); }, !isSL) + '</div></div></section>';
+
+    var sentence = t('p_sent', { when: whenText(h), mid: M.fmt(fc.median), lo: M.fmt(fc.q05), hi: M.fmt(fc.q95) });
+    html += '<section class="ps"><div class="container"><div class="board">' +
+      '<div class="card big"><div class="what">' + M.what + '</div><div class="now">' + t('p_now') + ': ' + M.fmt(fc.last) + '</div>' +
+      '<div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-top:10px">' + t('p_mid') + ' · ' + t('p_h' + (h === 1 ? '1d' : h)) + '</div>' +
+      '<div class="mid">' + M.fmt(fc.median) + '</div><div class="chg ' + (chg >= 0 ? 'up' : 'down') + '">' + pct(chg, 2) + '</div>' +
+      '<div class="gauge">' + gaugeSVG(fc.pUp) + '<div class="gl"><b>' + Math.round(fc.pUp * 100) + '%</b><span>' + t('p_chance') + '</span><div style="margin-top:8px">' + tagHTML(ln) + '</div></div></div>' +
+      '<p class="sentence">' + sentence + '</p></div>' +
+      '<div class="card chartwrap"><h3>' + t('p_chart') + '</h3><svg viewBox="0 0 720 320" role="img" aria-label="' + t('p_chart') + '">' + chartSVG(M, fc, h) + '</svg>' +
+      '<div class="legend"><span><i style="background:#fff7e2"></i>' + t('p_lg_past') + '</span><span><i style="background:#f0c04e"></i>' + t('p_lg_mid') + '</span><span><i style="background:rgba(240,192,78,.5)"></i>' + t('p_lg_50') + '</span><span><i style="background:rgba(240,192,78,.2);border:1px solid rgba(240,192,78,.5)"></i>' + t('p_lg_90') + '</span></div>' +
+      '<h3 style="margin-top:20px;font-size:16px">' + t('p_ladder') + '</h3>' + ladderHTML(M, fc) + '</div></div>';
+    if (sr.stale > 7) html += '<div class="warn">' + t('p_stale', { n: sr.stale }) + '</div>';
+    html += '</div></section>';
+
+    /* scenarios */
+    html += '<section class="ps"><div class="container"><div class="sechead"><h2>' + t('p_scen') + '</h2><p>' + t('p_scen_lead') + '</p></div><div class="scen">' +
+      '<div class="sc lo"><div class="sn">' + t('p_sc_lo') + '</div><div class="sv">' + M.fmt(fc.q25) + '</div><div class="sd">' + t('p_sc_lo_d') + '</div><div class="sx">' + pct(fc.q25 / fc.last - 1) + ' · ' + M.fmt(fc.q05) + '</div></div>' +
+      '<div class="sc md"><div class="sn">' + t('p_sc_md') + '</div><div class="sv">' + M.fmt(fc.median) + '</div><div class="sd">' + t('p_sc_md_d') + '</div><div class="sx">' + pct(chg) + '</div></div>' +
+      '<div class="sc hi"><div class="sn">' + t('p_sc_hi') + '</div><div class="sv">' + M.fmt(fc.q75) + '</div><div class="sd">' + t('p_sc_hi_d') + '</div><div class="sx">' + pct(fc.q75 / fc.last - 1) + ' · ' + M.fmt(fc.q95) + '</div></div>' +
+      '</div></div></section>';
+
+    /* all horizons */
+    var fcs = HZ.map(function (x) { return forecast(M.S, x, M.extra, M.f, M.D); }), glo = Infinity, ghi = -Infinity;
+    fcs.forEach(function (f) { glo = Math.min(glo, f.q05); ghi = Math.max(ghi, f.q95); }); glo *= 0.999; ghi *= 1.001;
+    var X = function (v) { return ((v - glo) / (ghi - glo) * 100).toFixed(1); };
+    html += '<section class="ps"><div class="container"><div class="sechead"><h2>' + t('p_tbl') + '</h2><p>' + t('p_tbl_lead') + '</p></div><div class="card tw"><table class="pt"><thead><tr><th>' + t('p_c_when') + '</th><th class="n">' + t('p_c_mid') + '</th><th class="n">' + t('p_c_chg') + '</th><th>' + t('p_c_rng') + '</th><th class="n">' + t('p_c_up') + '</th></tr></thead><tbody>' +
+      fcs.map(function (f, i) { var x = HZ[i]; return '<tr data-h="' + x + '" class="' + (x === h ? 'sel' : '') + '"><td>' + t('p_h' + (x === 1 ? '1d' : x)) + '</td><td class="n">' + M.fmt(f.median) + '</td><td class="n ' + (f.median >= f.last ? 'up' : 'down') + '">' + pct(f.median / f.last - 1) + '</td><td><div class="mini"><i style="left:' + X(f.q05) + '%;width:' + (X(f.q95) - X(f.q05)).toFixed(1) + '%"></i><u style="left:' + X(f.last) + '%"></u></div><div style="font-size:12px;color:var(--muted);font-family:var(--num);margin-top:4px">' + M.fmt(f.q05) + ' – ' + M.fmt(f.q95) + '</div></td><td class="n">' + Math.round(f.pUp * 100) + '%</td></tr>'; }).join('') +
+      '</tbody></table></div></div></section>';
+
+    /* target tool + signals */
+    var tv = ST.target;
+    html += '<section class="ps"><div class="container"><div class="two">' +
+      '<div class="card"><h3>' + t('p_tgt') + '</h3><p class="note" style="margin-top:6px">' + t('p_tgt_lead') + '</p>' +
+      '<div class="tgt"><label for="tg" style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700">' + t('p_tgt_lbl') + '</label><input id="tg" type="text" inputmode="decimal" autocomplete="off" value="' + tv + '" placeholder="' + nf(fc.median * 1.03, isSL ? 0 : 0) + '">' +
+      [-0.05, -0.03, 0.03, 0.05].map(function (p) { return '<button type="button" class="pill" data-tp="' + p + '">' + (p > 0 ? '+' : '') + (p * 100) + '%</button>'; }).join('') + '</div><div id="tres"></div></div>' +
+      '<div class="card"><h3>' + t('p_sig') + '</h3><p class="note" style="margin:6px 0 10px">' + t('p_sig_lead') + '</p>' + signalsHTML(M, fc) + '</div></div></div></section>';
+
+    /* Sri Lanka drivers, or global equivalents */
+    if (isSL) {
+      var ig = idxAgo(sr.dates, 30), gc = ig >= 0 ? sr.gold[sr.gold.length - 1] / sr.gold[ig] - 1 : null, fxc = ig >= 0 ? sr.fx[sr.fx.length - 1] / sr.fx[ig] - 1 : null;
+      var fG = forecast(sr.gold, 21, 0, 1, sr.D), fF = forecast(sr.fx, 21, 0, 1, sr.D);
+      var prem = d.hasRetail ? d.sells[22] / d.worldSov(22) - 1 : null;
+      var pc = function (v) { return v === null ? '-' : '<span class="' + (v >= 0 ? 'up' : 'down') + '">' + pct(v) + '</span>'; };
+      html += '<section class="ps"><div class="container"><div class="sechead"><h2>' + t('p_drv') + '</h2><p>' + t('p_drv_lead') + '</p></div><div class="two">' +
+        '<div class="card drv"><h4>' + t('p_d_gold') + '</h4><div class="dl"><span>' + t('p_now') + '</span><b>$' + nf(sr.gold[sr.gold.length - 1], 0) + '</b></div><div class="dl"><span>' + t('p_d_30') + '</span><b>' + pc(gc) + '</b></div><div class="dl"><span>' + t('p_d_rng') + '</span><b>$' + nf(fG.q05, 0) + ' – $' + nf(fG.q95, 0) + '</b></div>' +
+        '<h4>' + t('p_d_fx') + '</h4><div class="dl"><span>' + t('p_now') + '</span><b>Rs ' + nf(sr.fx[sr.fx.length - 1], 2) + '</b></div><div class="dl"><span>' + t('p_d_30') + '</span><b>' + pc(fxc) + '</b></div><div class="dl"><span>' + t('p_d_rng') + '</span><b>Rs ' + nf(fF.q05, 1) + ' – ' + nf(fF.q95, 1) + '</b></div></div>' +
+        '<div class="card drv"><h4>' + t('p_d_both') + '</h4><div class="dl"><span>' + t('p_d_30') + '</span><b>' + pc(gc === null ? null : (1 + gc) * (1 + fxc) - 1) + '</b></div>' +
+        '<h4>' + t('p_d_prem') + '</h4><div class="dl"><span>' + (prem === null ? t('p_d_premn') : t('p_d_premv', { p: nf(prem * 100, 1) + '%' })) + '</span><b>' + (prem === null ? '-' : '22K · ' + rs(d.sells[22])) + '</b></div>' +
+        (d.hasRetail && d.retail ? '<p class="note">' + d.retail.name + '</p>' : '') + '</div></div></div></section>';
+    }
+
+    /* accuracy + method */
+    var bt = backtest(M.S, 5, M.D);
+    html += '<section class="ps"><div class="container"><div class="two"><div class="card"><h3>' + t('p_acc') + '</h3>' + (bt ?
+      '<p class="note" style="margin:6px 0 12px">' + t('p_acc_lead', { h: 5, n: bt.n }) + '</p><div class="tw"><table class="pt" style="min-width:0"><thead><tr><th>' + t('p_a_m') + '</th><th class="n">' + t('p_a_miss') + '</th></tr></thead><tbody>' +
+      [['p_a_model', bt.model], ['p_a_naive', bt.naive], ['p_a_trend', bt.trend]].map(function (r) { return '<tr style="cursor:default"><td>' + t(r[0]) + '</td><td class="n">' + nf(r[1] * 100, 2) + '%</td></tr>'; }).join('') + '</tbody></table></div>' +
+      '<p class="note">' + t('p_a_cov', { c: nf(bt.coverage * 100, 0) }) + '</p>' : '<p class="note">' + t('p_a_na') + '</p>') + '</div>' +
+      '<div class="card"><h3>' + t('p_meth') + '</h3><p class="note" style="margin-top:8px">' + t('p_meth_t') + '</p></div></div>' +
+      '<p class="upd">' + t('p_upd', { t: G.ago(d.updated) }) + '</p><div class="disc">' + t('p_disc') + '</div></div></section>';
+
+    $('main').innerHTML = html;
+    G.enhance($('main'));
+    ST._fc = fc; ST._M = M;
+    renderTarget();
+  }
+
+  function renderTarget() {
+    var el = $('tres'); if (!el || !ST._fc) return;
+    var x = parseFloat(String(ST.target).replace(/[, ]/g, '')), fc = ST._fc, M = ST._M;
+    if (!(x > 0)) { el.innerHTML = '<p class="note" style="margin:0">' + t('p_tgt_bad') + '</p>'; return; }
+    var a = probAbove(fc, x), b = 1 - a;
+    el.innerHTML = '<div class="tres"><div><b>' + nf(a * 100, a < 0.1 || a > 0.9 ? 1 : 0) + '%</b><span>' + t('p_tgt_ab', { x: M.fmt(x) }) + '</span><div class="bar"><i style="width:' + (a * 100).toFixed(1) + '%"></i></div></div><div><b>' + nf(b * 100, b < 0.1 || b > 0.9 ? 1 : 0) + '%</b><span>' + t('p_tgt_be', { x: M.fmt(x) }) + '</span><div class="bar"><i style="width:' + (b * 100).toFixed(1) + '%"></i></div></div></div>';
+  }
+
+  /* ---------- events ---------- */
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest ? e.target : null; if (!el) return;
+    var b;
+    if ((b = el.closest('#mk button[data-mk]'))) { ST.mk = b.getAttribute('data-mk'); ST.target = ''; render(); return; }
+    if ((b = el.closest('button[data-gc]'))) { ST.mk = b.getAttribute('data-gc'); ST.target = ''; render(); var bd = document.querySelector('.board'); if (bd && bd.scrollIntoView) bd.scrollIntoView({ behavior: G.reduce ? 'auto' : 'smooth', block: 'start' }); return; }
+    if ((b = el.closest('button[data-o]'))) { var kv = b.getAttribute('data-o').split(':'); if (kv[0] === 'karat' || kv[0] === 'h') ST[kv[0]] = parseInt(kv[1], 10); else ST[kv[0]] = kv[1]; ST.target = ''; render(); return; }
+    if ((b = el.closest('tr[data-h]'))) { ST.h = parseInt(b.getAttribute('data-h'), 10); ST.target = ''; render(); return; }
+    if ((b = el.closest('button[data-tp]'))) { var p = parseFloat(b.getAttribute('data-tp')); if (ST._fc) { var raw = ST._fc.last * (1 + p); ST.target = String(ST.mk === 'sl' ? Math.round(raw / 100) * 100 / (ST.unit === 'g' ? 1 : 1) : Math.round(raw * 100) / 100); var inp = $('tg'); if (inp) inp.value = ST.target; renderTarget(); } return; }
+  });
+  document.addEventListener('input', function (e) { if (e.target && e.target.id === 'tg') { ST.target = e.target.value; renderTarget(); } });
+  window.addEventListener('gollk-lang', render);
+
+  /* ---------- start ---------- */
+  fetch('data/prices.csv', { cache: 'no-store' }).then(function (r) { return r.ok ? r.text() : Promise.reject(); }).then(function (tx) { HIST = parseCsv(tx); render(); }).catch(function () { histErr = true; render(); });
+  G.on(function (d) {
+    var same = DATA && DATA.spot === d.spot && DATA.fx === d.fx && DATA.hasRetail === d.hasRetail && (!d.hasRetail || DATA.sells[22] === d.sells[22]);
+    DATA = d; if (!same) render();
+  });
+})();
+</script>
+</body>
+</html>

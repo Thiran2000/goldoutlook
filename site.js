@@ -6,13 +6,13 @@
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
 
   /* ---------- header and footer ---------- */
-  var PAGES = [['index.html', 'home'], ['prices.html', 'prices'], ['calculator.html', 'calc'], ['karats.html', 'karat'], ['learn.html', 'learn']];
+  var PAGES = [['index.html', 'home'], ['prices.html', 'prices'], ['predict.html', 'predict', 1], ['calculator.html', 'calc'], ['karats.html', 'karat'], ['learn.html', 'learn']];
   var T = {
-    en: { home: 'Home', prices: 'Live prices', calc: 'Calculator', karat: 'Karat guide', learn: 'Learn', tag: 'Gold prices for Sri Lanka, in plain language', pages: 'Pages', shops: 'Shops', shopnow: 'Shop prices today', post: 'Jewellers: post your price',
+    en: { home: 'Home', predict: 'Prediction', prices: 'Live prices', calc: 'Calculator', karat: 'Karat guide', learn: 'Learn', tag: 'Gold prices for Sri Lanka, in plain language', pages: 'Pages', shops: 'Shops', shopnow: 'Shop prices today', post: 'Jewellers: post your price',
       fine: 'Prices are for information only and are not financial advice. Shop prices come from jewellers’ own rate pages and change through the day, so always confirm the price, the purity and the making charges with your jeweller before you buy or sell.' },
-    si: { home: 'මුල් පිටුව', prices: 'සජීවී මිල', calc: 'ගණකය', karat: 'කැරට් මාර්ගෝපදේශය', learn: 'දැනගන්න', tag: 'ශ්‍රී ලංකාවේ රන් මිල, සරල භාෂාවෙන්', pages: 'පිටු', shops: 'වෙළඳසැල්', shopnow: 'අද වෙළඳසැල් මිල', post: 'ජුවලර්ස්: ඔබේ මිල පළ කරන්න',
+    si: { home: 'මුල් පිටුව', predict: 'අනාවැකිය', prices: 'සජීවී මිල', calc: 'ගණකය', karat: 'කැරට් මාර්ගෝපදේශය', learn: 'දැනගන්න', tag: 'ශ්‍රී ලංකාවේ රන් මිල, සරල භාෂාවෙන්', pages: 'පිටු', shops: 'වෙළඳසැල්', shopnow: 'අද වෙළඳසැල් මිල', post: 'ජුවලර්ස්: ඔබේ මිල පළ කරන්න',
       fine: 'මිල ගණන් තොරතුරු සඳහා පමණි, මූල්‍ය උපදෙස් නොවේ. වෙළඳසැල් මිල ජුවලර්වරුන්ගේ මිල පිටුවලින් ලබාගන්නා අතර දවස පුරා වෙනස් වේ. මිලදී ගැනීමට හෝ විකිණීමට පෙර මිල, සංශුද්ධතාව සහ මැදීමේ ගාස්තු ඔබේ ජුවලර්ගෙන් තහවුරු කරගන්න.' },
-    ta: { home: 'முகப்பு', prices: 'நேரடி விலை', calc: 'கணிப்பான்', karat: 'காரட் வழிகாட்டி', learn: 'அறிய', tag: 'இலங்கைக்கான தங்க விலை, எளிய மொழியில்', pages: 'பக்கங்கள்', shops: 'கடைகள்', shopnow: 'இன்றைய கடை விலைகள்', post: 'நகைக்கடைக்காரர்கள்: உங்கள் விலையைப் பதிவிடுங்கள்',
+    ta: { home: 'முகப்பு', predict: 'கணிப்பு', prices: 'நேரடி விலை', calc: 'கணிப்பான்', karat: 'காரட் வழிகாட்டி', learn: 'அறிய', tag: 'இலங்கைக்கான தங்க விலை, எளிய மொழியில்', pages: 'பக்கங்கள்', shops: 'கடைகள்', shopnow: 'இன்றைய கடை விலைகள்', post: 'நகைக்கடைக்காரர்கள்: உங்கள் விலையைப் பதிவிடுங்கள்',
       fine: 'விலைகள் தகவலுக்காக மட்டுமே, நிதி ஆலோசனை அல்ல. கடை விலைகள் நகைக்கடைகளின் சொந்த விலைப் பக்கங்களிலிருந்து எடுக்கப்படுகின்றன, நாள் முழுவதும் மாறும். வாங்கும் அல்லது விற்கும் முன் விலை, தூய்மை, செய்கூலி ஆகியவற்றை உங்கள் நகைக்கடையில் உறுதிப்படுத்துங்கள்.' }
   };
   var LANGS = [['en', 'EN'], ['si', 'සිං'], ['ta', 'தமி']];
@@ -42,7 +42,7 @@
   var here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
   function headerHTML() {
     return '<header class="site-header"><div class="container"><a class="logo" href="index.html"><i>Au</i>Gold Outlook LK</a>' +
-      '<nav class="menu" aria-label="Main">' + PAGES.map(function (p) { return '<a href="' + p[0] + '"' + (p[0] === here ? ' class="on" aria-current="page"' : '') + '>' + T[lang][p[1]] + '</a>'; }).join('') + '</nav>' +
+      '<nav class="menu" aria-label="Main">' + PAGES.map(function (p) { return '<a href="' + p[0] + '"' + (p[0] === here ? ' class="on" aria-current="page"' : (p[2] ? ' class="hot"' : '')) + '>' + T[lang][p[1]] + '</a>'; }).join('') + '</nav>' +
       '<div class="langs" role="group" aria-label="Language">' + LANGS.map(function (l) { return '<button type="button" data-lang="' + l[0] + '" aria-pressed="' + (l[0] === lang) + '">' + l[1] + '</button>'; }).join('') + '</div>' +
       '<button class="burger" type="button" aria-label="Menu" aria-expanded="false">☰</button></div></header>';
   }
