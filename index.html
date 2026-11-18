@@ -30,6 +30,7 @@
 .chip { position: absolute; right: 0; bottom: -7%; z-index: 3; padding: 14px 18px; border-radius: 18px; background: rgba(20, 8, 12, .8); border: 1px solid var(--line); backdrop-filter: blur(10px); box-shadow: 0 16px 40px rgba(0, 0, 0, .5); }
 .chip .k { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
 .chip .v { font-family: var(--num); font-size: 24px; color: var(--gold1); }
+.shopbtn::before { content: "\1F3EA"; margin-right: 8px; }
 .g5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 @media (max-width: 1060px) { .g5 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 640px) { .g5 { grid-template-columns: minmax(0, 1fr); } }
@@ -79,6 +80,7 @@
       <div class="btns reveal" style="--d:.24s">
         <a class="btn gold" href="prices.html" data-i="h_b1">See live prices</a>
         <a class="btn ghost" href="predict.html" data-i="h_b3">See price prediction</a>
+        <a class="btn ghost shopbtn" href="prices.html#shops" data-i="h_b4">Jewellery shop prices</a>
         <a class="btn ghost" href="calculator.html" data-i="h_b2">Calculate my gold</a>
       </div>
       <div class="trust reveal" style="--d:.32s"><span data-i="h_t1">Buying and selling rates</span><span data-i="h_t2">Updated through the day</span><span data-i="h_t3">English, Sinhala, Tamil</span></div>
@@ -159,7 +161,7 @@
       <div class="sparkles" data-n="16"></div>
       <h2 data-i="h_cta">Check today’s price <span class="gold-text">before you buy</span></h2>
       <p class="lead" style="margin-inline:auto" data-i="h_ctap">It takes ten seconds and can save you thousands of rupees.</p>
-      <div class="btns"><a class="btn gold" href="calculator.html" data-i="h_cb1">Open the calculator</a><a class="btn ghost" href="learn.html" data-i="h_cb2">Read the buying guide</a></div>
+      <div class="btns"><a class="btn gold" href="calculator.html" data-i="h_cb1">Open the calculator</a><a class="btn ghost" href="prices.html#shops" data-i="h_b4">Jewellery shop prices</a><a class="btn ghost" href="learn.html" data-i="h_cb2">Read the buying guide</a></div>
     </div>
   </div>
 </section>
@@ -203,6 +205,7 @@
  "h_b1": "සජීවී මිල බලන්න",
  "h_b2": "මගේ රන් ගණනය කරන්න",
  "h_b3": "මිල අනාවැකිය බලන්න",
+ "h_b4": "ස්වර්ණාභරණ වෙළඳසැල් මිල",
  "h_t1": "මිලදී ගැනීමේ සහ විකිණීමේ මිල",
  "h_t2": "දවස පුරා යාවත්කාලීන වේ",
  "h_t3": "ඉංග්‍රීසි, සිංහල, දෙමළ",
@@ -281,6 +284,7 @@
  "h_b1": "நேரடி விலைகளைப் பார்க்க",
  "h_b2": "என் தங்கத்தைக் கணக்கிடு",
  "h_b3": "விலைக் கணிப்பைப் பார்க்க",
+ "h_b4": "நகைக்கடை விலைகள்",
  "h_t1": "வாங்கும் மற்றும் விற்கும் விலைகள்",
  "h_t2": "நாள் முழுவதும் புதுப்பிக்கப்படும்",
  "h_t3": "ஆங்கிலம், சிங்களம், தமிழ்",
