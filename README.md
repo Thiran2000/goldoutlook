@@ -4,7 +4,9 @@ A free public website for Sri Lanka: gold price now (22K sovereign, 24K and 22K 
 
 ## Files
 
-- `index.html` is the whole site.
+- `index.html` is the home page. `prices.html` is the full live dashboard (price, forecast, shop prices, alerts). `calculator.html`, `karats.html` and `learn.html` are the other pages.
+- `site.css` and `site.js` are shared by the home, calculator, karats and learn pages: colours and animations live in `site.css`, the live price loader and the gold artwork live in `site.js`.
+- `images/` is where real photos go. See `images/README.txt`.
 - `data/latest.json` is the live price file. The site reads it every minute and shows its age in seconds.
 - `data/prices.csv` is the daily history used for the forecast.
 - `data/dealer.json` is optional. Put `{"dealer_22k_sovereign_lkr": 330000}` in it to show a Colombo dealer reference price on the page.

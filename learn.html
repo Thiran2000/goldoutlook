@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Learn about gold prices | Gold Outlook LK</title>
+<meta name="description" content="What a sovereign is, how Sri Lankan shops set gold prices, a checklist before you buy, and answers to common questions.">
+<meta name="theme-color" content="#0c0608">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Playfair+Display:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Noto+Sans+Sinhala:wght@400;600&family=Noto+Sans+Tamil:wght@400;600&display=swap">
+<link rel="stylesheet" href="site.css">
+<style>
+.pagehead { padding-block: 56px 8px; position: relative; overflow: hidden; }
+.pagehead h1 { font-size: clamp(34px, 5.4vw, 58px); margin-top: 14px; }
+.sov { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 36px; align-items: center; }
+@media (max-width: 860px) { .sov { grid-template-columns: minmax(0, 1fr); } }
+.coins { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; padding: 26px; }
+.coins .c { aspect-ratio: 1; opacity: 0; transform: translateY(20px) scale(.6) rotate(-30deg); transition: opacity .6s var(--ease), transform .8s var(--ease); transition-delay: calc(var(--i) * .1s); }
+.in .coins .c, .coins.in .c { opacity: 1; transform: none; }
+.coins .lab { grid-column: 1 / -1; text-align: center; font-family: var(--serif); font-size: 22px; color: var(--gold1); margin-top: 6px; }
+.facts { display: grid; gap: 14px; margin-top: 22px; }
+.fact { display: flex; gap: 16px; align-items: center; padding: 16px 18px; border: 1px solid var(--line); border-radius: 18px; background: var(--glass); }
+.fact b { font-family: var(--num); font-size: 24px; color: var(--gold1); font-weight: 500; min-width: 92px; }
+.fact span { color: var(--muted); font-size: 15px; }
+.flow { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; counter-reset: s; }
+@media (max-width: 860px) { .flow { grid-template-columns: minmax(0, 1fr); } }
+.flow .card { counter-increment: s; padding-top: 76px; }
+.flow .card::before { content: counter(s); position: absolute; top: 18px; left: 22px; width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; font: 800 18px var(--serif); color: #2a1804; background: linear-gradient(135deg, var(--gold1), var(--gold2)); box-shadow: 0 0 22px rgba(240, 192, 78, .4); }
+.flow .card::after { content: "\2192"; position: absolute; right: -16px; top: 50%; z-index: 2; font-size: 22px; color: var(--gold2); }
+.flow .card:last-child::after { display: none; }
+@media (max-width: 860px) { .flow .card::after { content: "\2193"; right: auto; left: 50%; top: auto; bottom: -22px; } }
+.flow .big { font-family: var(--num); font-size: 26px; color: var(--gold1); margin: 10px 0 2px; }
+.check { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 760px) { .check { grid-template-columns: minmax(0, 1fr); } }
+.check .item { display: flex; gap: 16px; align-items: flex-start; padding: 20px; border: 1px solid var(--line); border-radius: 20px; background: var(--glass); transition: transform .3s var(--ease), border-color .3s; }
+.check .item:hover { transform: translateY(-4px); border-color: rgba(240, 192, 78, .55); }
+.tick { flex: none; width: 40px; height: 40px; }
+.tick circle { fill: none; stroke: var(--gold2); stroke-width: 3; stroke-dasharray: 126; stroke-dashoffset: 126; }
+.tick path { fill: none; stroke: var(--up); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 34; stroke-dashoffset: 34; }
+.in .tick circle, .item.in .tick circle { animation: draw 1s var(--ease) forwards; } .in .tick path, .item.in .tick path { animation: draw .6s .7s var(--ease) forwards; }
+.check h3 { font-size: 18px; font-family: var(--sans); font-weight: 700; margin-bottom: 4px; } .check p { margin: 0; color: var(--muted); font-size: 14.5px; }
+.faqs { max-width: 820px; margin-inline: auto; }
+.photo.wide { max-width: 1000px; margin-inline: auto; }
+</style>
+</head>
+<body data-live>
+<div id="site-header"></div>
+
+<header class="pagehead">
+  <div class="sparkles" data-n="14"></div>
+  <div class="container">
+    <span class="eyebrow reveal">Learn</span>
+    <h1 class="reveal" style="--d:.06s">Gold prices, <span class="gold-text">made simple</span></h1>
+    <p class="lead reveal" style="--d:.12s">Four minutes to understand what you are paying for, so you can walk into any shop with confidence.</p>
+  </div>
+</header>
+
+<section>
+  <div class="container sov">
+    <div class="card coins reveal zoom" id="coins">
+      <div class="c" style="--i:0" data-art="coin"></div><div class="c" style="--i:1" data-art="coin"></div><div class="c" style="--i:2" data-art="coin"></div><div class="c" style="--i:3" data-art="coin"></div>
+      <div class="c" style="--i:4" data-art="coin"></div><div class="c" style="--i:5" data-art="coin"></div><div class="c" style="--i:6" data-art="coin"></div><div class="c" style="--i:7" data-art="coin"></div>
+      <div class="lab">1 sovereign = 8 grams</div>
+    </div>
+    <div>
+      <span class="eyebrow reveal">The basics</span>
+      <h2 class="reveal" style="--d:.06s">What is a <span class="gold-text">sovereign</span>?</h2>
+      <p class="lead reveal" style="--d:.1s">In Sri Lanka a sovereign (pawn, pavun) is a weight of 8 grams, and most shops quote their price per sovereign. But 22K gold is not all gold, so a 22K sovereign holds a little less than 8 grams of pure gold.</p>
+      <div class="facts">
+        <div class="fact reveal" style="--d:.15s"><b>8 g</b><span>Weight of one sovereign, the unit shops quote.</span></div>
+        <div class="fact reveal" style="--d:.2s"><b>7.33 g</b><span>Pure gold inside a 22K sovereign (22 parts in 24).</span></div>
+        <div class="fact reveal" style="--d:.25s"><b>6 g</b><span>Pure gold inside an 18K sovereign (18 parts in 24).</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="sec-head center"><span class="eyebrow reveal">How the price is made</span><h2 class="reveal" style="--d:.06s">From the <span class="gold-text">world market</span> to your shop</h2><p class="lead reveal" style="--d:.12s">Live numbers, right now.</p></div>
+    <div class="flow">
+      <div class="card hover reveal" style="--d:0s"><h3>World gold price</h3><div class="big" id="f1">-</div><p>Gold is traded around the world in US dollars per ounce (31.1 grams).</p></div>
+      <div class="card hover reveal" style="--d:.1s"><h3>Turned into rupees</h3><div class="big" id="f2">-</div><p>Using today’s dollar rate, this is the value of one sovereign of 22K gold at the world price.</p></div>
+      <div class="card hover reveal" style="--d:.2s"><h3>What the shop charges</h3><div class="big" id="f3">-</div><p id="f3t">The shop adds its margin, making charges and local costs on top.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <figure class="photo wide reveal zoom"><div class="art" data-art="necklace" style="padding:6% 30%"></div><img data-src="images/learn.jpg" alt=""><figcaption>Check before you buy<small>A few minutes of checking can save thousands of rupees</small></figcaption></figure>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="sec-head"><span class="eyebrow reveal">Before you buy</span><h2 class="reveal" style="--d:.06s">Your <span class="gold-text">six-point</span> checklist</h2></div>
+    <div class="check" id="check"></div>
+  </div>
+</section>
+
+<section>
+  <div class="container faqs">
+    <div class="sec-head center"><span class="eyebrow reveal">Questions</span><h2 class="reveal" style="--d:.06s">Common <span class="gold-text">questions</span></h2></div>
+    <div class="stack" id="faq"></div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="container">
+    <div class="card reveal zoom center" style="padding:44px 24px">
+      <h2>See today’s <span class="gold-text">live prices</span></h2>
+      <div class="btns" style="justify-content:center"><a class="btn gold" href="prices.html">Live prices</a><a class="btn ghost" href="calculator.html">Calculator</a></div>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="config.js"></script>
+<script src="site.js"></script>
+<script>
+(function () {
+  var G = window.GoldData, $ = function (i) { return document.getElementById(i); }, rs = G.rs, nf = G.nf;
+  var tick = '<svg class="tick" viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="20"/><path d="M13 23 L19.5 29.5 L31 15"/></svg>';
+  var items = [
+    ['Check today’s price first', 'Look at the rate for your karat on this site. Then you know if the quote is fair before you start talking.'],
+    ['Ask about the making charge', 'Some shops include it in the rate and some add a percentage on top. Always ask, and get it on the bill.'],
+    ['Look for the hallmark', 'Real gold is stamped with its purity: 916 for 22K, 875 for 21K, 750 for 18K. Ask the jeweller to show you.'],
+    ['Weigh it in front of you', 'Ask to see the weight on the scale, in grams, and check that it matches the bill.'],
+    ['Compare two or three shops', 'Prices and making charges differ from shop to shop. A short walk can be worth a lot.'],
+    ['Keep the bill', 'It should show karat, weight, rate and making charge. You will need it if you sell or exchange later.']
+  ];
+  $('check').innerHTML = items.map(function (it, i) { return '<div class="item reveal" style="--d:' + (i % 2) * .08 + 's">' + tick + '<div><h3>' + it[0] + '</h3><p>' + it[1] + '</p></div></div>'; }).join('');
+  var faq = [
+    ['What do 24K and 22K mean?', 'Karat shows how much of the metal is pure gold. 24K is pure gold, about 99.9%. 22K has 22 parts gold in 24, about 91.6%, mixed with other metals so jewellery stays strong. 18K has 18 parts in 24, which is 75%.'],
+    ['Why is the shop price higher than the world price?', 'The world price is for raw gold. A shop has costs and needs to earn a living: the dealer’s margin, the making charge for turning gold into jewellery, and local costs. That is why the price you pay is above the value of the gold itself.'],
+    ['Why does the shop pay me less than it charges?', 'There is always a gap between the price a shop sells at and the price it buys back at. It covers the shop’s costs and the risk of holding gold. The gap is different at different shops, so compare before you sell.'],
+    ['Why do prices differ from shop to shop?', 'Each jeweller sets its own margin and making charge. Some rates also include the making charge and some do not. Two shops with the same gold price can still give you different totals.'],
+    ['Will the price go up or down?', 'Nobody can say. Prices move with the world gold price and the dollar rate. The price outlook on the live prices page shows a likely range, not a promise. Spreading purchases over months and setting a price alert helps more than trying to pick the perfect day.'],
+    ['How do I check that gold is real?', 'Look for the hallmark and ask for a bill that states the karat. For a large purchase, buy from an established jeweller and ask whether they will test the piece in front of you.'],
+    ['Where do the prices on this site come from?', 'The world price and dollar rate come from free market data feeds. Shop rates are read from jewellers’ own rate pages, so the site shows what shops are actually quoting, with how long ago each rate changed.']
+  ];
+  $('faq').innerHTML = faq.map(function (q, i) { return '<details class="faq reveal" style="--d:' + i * .04 + 's"><summary>' + q[0] + '</summary><p>' + q[1] + '</p></details>'; }).join('');
+  G.enhance(document.body);
+  G.on(function (d) {
+    var w = d.worldSov(22);
+    $('f1').textContent = '$' + nf(d.spot, 2) + ' / oz'; $('f2').textContent = rs(w);
+    if (d.hasRetail) { var diff = d.sells[22] - w; G.setNum($('f3'), d.sells[22], rs); $('f3t').textContent = 'The shop adds its margin, making charges and local costs on top: ' + rs(Math.abs(diff)) + ' (' + nf(Math.abs(diff / w * 100), 1) + '%) ' + (diff >= 0 ? 'above' : 'below') + ' the world-price value.'; }
+    else $('f3').textContent = 'Shops charge more';
+  });
+})();
+</script>
+</body>
+</html>
