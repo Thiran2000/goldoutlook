@@ -35,18 +35,21 @@ section.ps { padding-block: 34px; }
 .stack.two { grid-template-columns: 1fr 1fr; }
 .stack .pill { text-align: left; width: 100%; }
 .stack.two .pill { text-align: center; padding-inline: 8px; }
+.sh { display: none; }
 @media (max-width: 1060px) {
-  .shell { display: block; margin-top: 0; }
-  .ctl { top: 68px; margin: 0 -16px 8px; border-radius: 0 0 20px 20px; border-width: 0 0 1px; padding: 0; max-height: none; overflow: visible; background: rgba(12, 6, 8, .92); }
-  .ctl-sum { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 18px; font: 700 14px var(--sans); color: var(--cream); background: transparent; border: 0; cursor: pointer; text-align: left; }
-  .ctl-sum b { color: var(--gold1); font-weight: 700; }
-  .ctl-sum::after { content: "\25BE"; color: var(--gold2); font-size: 16px; transition: transform .25s; }
-  .ctl-sum[aria-expanded="true"]::after { transform: rotate(180deg); }
-  .ctl-body { display: none; padding: 4px 18px 18px; max-height: calc(100vh - 150px); overflow-y: auto; border-top: 1px solid var(--line); }
-  .ctl.open .ctl-body { display: block; padding-top: 16px; }
-  .stack { grid-template-columns: repeat(3, 1fr); } .stack.two { grid-template-columns: repeat(2, 1fr); }
-  .stack .pill { text-align: center; padding-inline: 8px; }
-  .ctl .seg { flex-direction: row; } .ctl .seg button { text-align: center; }
+  .shell { display: block; margin-top: 0; padding-right: 54px; }
+  .ctl { position: fixed; right: 6px; top: 50%; transform: translateY(-50%); width: 44px; z-index: 45; padding: 6px 4px; border-radius: 22px; max-height: calc(100vh - 100px); overflow-y: auto; scrollbar-width: none; background: rgba(12, 6, 8, .9); box-shadow: 0 10px 36px rgba(0, 0, 0, .55); }
+  .ctl::-webkit-scrollbar { display: none; }
+  .ctl-sum { display: none; }
+  .lf { display: none; } .sh { display: inline; }
+  .cg { margin: 0; padding: 5px 0; border-top: 1px solid var(--line); } .cg:first-child { border-top: 0; }
+  #opts .cg { margin: 0; }
+  .cg .cl { display: none; }
+  .stack, .stack.two { grid-template-columns: 1fr; gap: 3px; }
+  .ctl .seg { flex-direction: column; padding: 0; border: 0; background: none; gap: 3px; border-radius: 0; }
+  .ctl .seg button, .ctl .pill { width: 100%; min-height: 32px; padding: 4px 0; text-align: center; font-size: 12.5px; border-radius: 12px; line-height: 1.1; }
+  .ctl .seg button { border: 1px solid var(--line); background: var(--glass); font-size: 16px; }
+  .ctl .seg button[aria-pressed="true"] { border-color: var(--gold2); }
 }
 .sechead { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; margin-bottom: 18px; }
 .sechead h2 { font-size: clamp(24px, 3.4vw, 34px); }
@@ -157,8 +160,8 @@ table.pt tr { cursor: pointer; }
     <div class="ctl-body" id="ctl-body">
       <div class="cg"><span class="cl" data-i="p_market">Market</span>
         <div class="seg" id="mk" role="group" aria-label="Market">
-          <button type="button" data-mk="sl" aria-pressed="true" data-i="p_mk_sl">🇱🇰 Sri Lanka</button>
-          <button type="button" data-mk="world" aria-pressed="false" data-i="p_mk_w">🌍 Global</button>
+          <button type="button" data-mk="sl" aria-pressed="true" aria-label="Sri Lanka"><span class="lf" data-i="p_mk_sl">🇱🇰 Sri Lanka</span><span class="sh">🇱🇰</span></button>
+          <button type="button" data-mk="world" aria-pressed="false" aria-label="Global"><span class="lf" data-i="p_mk_w">🌍 Global</span><span class="sh">🌍</span></button>
         </div>
       </div>
       <div class="cg"><span class="cl" data-i="p_hz">Look ahead</span><div class="stack" id="hz"></div></div>
@@ -465,7 +468,7 @@ table.pt tr { cursor: pointer; }
 
   /* ---------- page ---------- */
   var $ = function (id) { return document.getElementById(id); };
-  function chip(label, attr, on) { return '<button type="button" class="pill" data-o="' + attr + '" aria-pressed="' + on + '">' + label + '</button>'; }
+  function chip(label, attr, on, sh) { return '<button type="button" class="pill" data-o="' + attr + '" aria-pressed="' + on + '" aria-label="' + label + '"><span class="lf">' + label + '</span><span class="sh">' + (sh || label) + '</span></button>'; }
 
   function render() {
     if (histErr) { $('main').innerHTML = '<section class="ps"><div class="container"><div class="card state">' + t('p_err') + '</div></div></section>'; return; }
@@ -473,10 +476,10 @@ table.pt tr { cursor: pointer; }
     var d = DATA, sr = series(d), h = ST.h, isSL = ST.mk === 'sl';
     /* controls */
     Array.prototype.forEach.call(document.querySelectorAll('#mk button'), function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-mk') === ST.mk ? 'true' : 'false'); });
-    $('hz').innerHTML = HZ.map(function (x) { return chip(t('p_h' + (x === 1 ? '1d' : x)), 'h:' + x, ST.h === x); }).join('');
+    $('hz').innerHTML = HZ.map(function (x) { return chip(t('p_h' + (x === 1 ? '1d' : x)), 'h:' + x, ST.h === x, { 1: '1D', 5: '1W', 10: '2W', 21: '1M', 63: '3M' }[x]); }).join('');
     $('opts').innerHTML = isSL
-      ? '<div class="cg"><span class="cl">' + t('p_karat') + '</span><div class="stack two">' + KARATS.map(function (k) { return chip(k + 'K', 'karat:' + k, ST.karat === k); }).join('') + '</div></div><div class="cg"><span class="cl">' + t('p_unit') + '</span><div class="stack">' + chip(t('p_sov'), 'unit:sov', ST.unit === 'sov') + chip(t('p_gram'), 'unit:g', ST.unit === 'g') + '</div></div>'
-      : '<div class="cg"><span class="cl">' + t('p_unit') + '</span><div class="stack">' + chip(t('p_oz'), 'wunit:oz', ST.wunit === 'oz') + chip(t('p_g24'), 'wunit:g', ST.wunit === 'g') + '</div></div>';
+      ? '<div class="cg"><span class="cl">' + t('p_karat') + '</span><div class="stack two">' + KARATS.map(function (k) { return chip(k + 'K', 'karat:' + k, ST.karat === k, k); }).join('') + '</div></div><div class="cg"><span class="cl">' + t('p_unit') + '</span><div class="stack">' + chip(t('p_sov'), 'unit:sov', ST.unit === 'sov', '8g') + chip(t('p_gram'), 'unit:g', ST.unit === 'g', '1g') + '</div></div>'
+      : '<div class="cg"><span class="cl">' + t('p_unit') + '</span><div class="stack">' + chip(t('p_oz'), 'wunit:oz', ST.wunit === 'oz', '1oz') + chip(t('p_g24'), 'wunit:g', ST.wunit === 'g', '1g') + '</div></div>';
     $('ctl-sum').innerHTML = (isSL ? '🇱🇰 ' + ST.karat + 'K · ' + t(ST.unit === 'g' ? 'p_gram' : 'p_sov').split(' (')[0] : '🌍 ' + t(ST.wunit === 'g' ? 'p_g24' : 'p_oz')) + ' · <b>' + t('p_h' + (h === 1 ? '1d' : h)) + '</b>';
 
     var M = market(sr, d, ST.mk, h), fc = forecast(M.S, h, M.extra, M.f, M.D), chg = fc.median / fc.last - 1, ln = lean(fc.pUp);
