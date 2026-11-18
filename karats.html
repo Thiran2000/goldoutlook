@@ -46,9 +46,9 @@ tr.k22 td { background: rgba(240, 192, 78, .07); }
 <header class="pagehead">
   <div class="sparkles" data-n="14"></div>
   <div class="container">
-    <span class="eyebrow reveal">Karat guide</span>
-    <h1 class="reveal" style="--d:.06s">24K, 22K, 21K or 18K: <span class="gold-text">which one?</span></h1>
-    <p class="lead reveal" style="--d:.12s">Karat tells you how much of the metal is pure gold. More gold means a richer colour and a higher price, but also a softer metal.</p>
+    <span class="eyebrow reveal" data-i="k_e">Karat guide</span>
+    <h1 class="reveal" style="--d:.06s" data-i="k_h1">24K, 22K, 21K or 18K: <span class="gold-text">which one?</span></h1>
+    <p class="lead reveal" style="--d:.12s" data-i="k_lead">Karat tells you how much of the metal is pure gold. More gold means a richer colour and a higher price, but also a softer metal.</p>
   </div>
 </header>
 
@@ -58,10 +58,10 @@ tr.k22 td { background: rgba(240, 192, 78, .07); }
 
 <section style="padding-top:0">
   <div class="container">
-    <div class="sec-head"><span class="eyebrow reveal">Side by side</span><h2 class="reveal" style="--d:.06s">Compare <span class="gold-text">at a glance</span></h2></div>
+    <div class="sec-head"><span class="eyebrow reveal" data-i="k_e2">Side by side</span><h2 class="reveal" style="--d:.06s" data-i="k_h2">Compare <span class="gold-text">at a glance</span></h2></div>
     <div class="tablewrap reveal">
       <table>
-        <thead><tr><th>Karat</th><th>Pure gold</th><th>Hallmark</th><th class="n">Shop sells, per gram</th><th class="n">Shop buys, per gram</th></tr></thead>
+        <thead><tr><th data-i="k_th1">Karat</th><th data-i="k_th2">Pure gold</th><th data-i="k_th3">Hallmark</th><th class="n" data-i="k_th4">Shop sells, per gram</th><th class="n" data-i="k_th5">Shop buys, per gram</th></tr></thead>
         <tbody id="cmp"></tbody>
       </table>
     </div>
@@ -72,9 +72,9 @@ tr.k22 td { background: rgba(240, 192, 78, .07); }
 <section style="padding-top:0">
   <div class="container">
     <div class="card reveal zoom center" style="padding:44px 24px">
-      <h2>Ready to <span class="gold-text">work out the cost</span>?</h2>
-      <p class="lead" style="margin-inline:auto">Pick your karat and your weight in the calculator.</p>
-      <div class="btns" style="justify-content:center"><a class="btn gold" href="calculator.html">Open the calculator</a><a class="btn ghost" href="learn.html">Buying checklist</a></div>
+      <h2 data-i="k_cta">Ready to <span class="gold-text">work out the cost</span>?</h2>
+      <p class="lead" style="margin-inline:auto" data-i="k_ctap">Pick your karat and your weight in the calculator.</p>
+      <div class="btns" style="justify-content:center"><a class="btn gold" href="calculator.html" data-i="k_cb1">Open the calculator</a><a class="btn ghost" href="learn.html" data-i="k_cb2">Buying checklist</a></div>
     </div>
   </div>
 </section>
@@ -85,33 +85,137 @@ tr.k22 td { background: rgba(240, 192, 78, .07); }
 <script>
 (function () {
   var G = window.GoldData, $ = function (i) { return document.getElementById(i); }, rs = G.rs, nf = G.nf;
+  G.add({ en: {
+ "gold_k": "{k}K gold",
+ "pure": "Pure gold",
+ "str": "Strength",
+ "ssov": "Shop sells, sovereign",
+ "bsov": "Shop buys, sovereign",
+ "popular": "most popular",
+ "perg": " / g",
+ "rates_from": "Rates from {name}, updated {a}.",
+ "est": " ~ means estimated: only the 22K buying price is posted.",
+ "noretail": "Shop rates are not available right now. The prices shown are world-price values.",
+ "col_24": "Deep, rich yellow",
+ "col_22": "Warm golden yellow",
+ "col_21": "Soft golden yellow",
+ "col_18": "Lighter, slightly rosy",
+ "txt_24": "Pure gold. It is soft and bends easily, so it is made into bars and coins rather than everyday jewellery.",
+ "txt_22": "The Sri Lankan favourite. 22 parts gold in 24, mixed with a little other metal so jewellery stays strong and keeps its rich colour.",
+ "txt_21": "A little stronger than 22K, so it holds its shape better. A good choice for pieces you wear every day.",
+ "txt_18": "The strongest of the four, which makes it the usual choice for pieces set with stones and for modern designs.",
+ "best_24": "Saving|Bars and coins|Investment",
+ "best_22": "Weddings|Necklaces and chains|Family gifts",
+ "best_21": "Bangles|Daily wear|Rings",
+ "best_18": "Stone-set rings|Modern designs|Active wear"
+}, si: {
+ "k_e": "කැරට් මාර්ගෝපදේශය",
+ "k_h1": "24K, 22K, 21K හෝ 18K: <span class=\"gold-text\">කුමක්ද?</span>",
+ "k_lead": "කැරට් මගින් ලෝහයේ පිරිසිදු රන් කොපමණදැයි පෙන්වයි. රන් වැඩි වන තරමට වර්ණය පොහොසත් වන අතර මිලද වැඩි වේ, නමුත් ලෝහය මෘදු වේ.",
+ "k_e2": "එකිනෙක සමඟ",
+ "k_h2": "එක බැල්මකින් <span class=\"gold-text\">සසඳන්න</span>",
+ "k_th1": "කැරට්",
+ "k_th2": "පිරිසිදු රන්",
+ "k_th3": "හෝල්මාර්ක්",
+ "k_th4": "වෙළඳසැල විකුණන මිල, ග්‍රෑමයකට",
+ "k_th5": "වෙළඳසැල ගන්නා මිල, ග්‍රෑමයකට",
+ "k_cta": "මිල <span class=\"gold-text\">ගණනය කිරීමට</span> සූදානම්ද?",
+ "k_ctap": "ගණකයෙන් ඔබේ කැරට් සහ බර තෝරන්න.",
+ "k_cb1": "ගණකය විවෘත කරන්න",
+ "k_cb2": "මිලදී ගැනීමේ පරීක්ෂා ලැයිස්තුව",
+ "gold_k": "{k}K රන්",
+ "pure": "පිරිසිදු රන්",
+ "str": "ශක්තිය",
+ "ssov": "වෙළඳසැල විකුණන මිල, පවුමකට",
+ "bsov": "වෙළඳසැල ගන්නා මිල, පවුමකට",
+ "popular": "වැඩියෙන්ම ජනප්‍රිය",
+ "perg": " / ග්‍රෑ.",
+ "rates_from": "මිල ගණන් {name} වෙතින්, යාවත්කාලීන කළේ {a}.",
+ "est": " ~ යනු ඇස්තමේන්තුවකි: පළ කර ඇත්තේ 22K මිලදී ගැනීමේ මිල පමණි.",
+ "noretail": "වෙළඳසැල් මිල දැනට නොමැත. පෙන්වා ඇත්තේ ලෝක මිල අගයන් ය.",
+ "col_24": "ගැඹුරු, පොහොසත් කහ",
+ "col_22": "උණුසුම් රන් කහ",
+ "col_21": "මෘදු රන් කහ",
+ "col_18": "සැහැල්ලු, තරමක් රෝස",
+ "txt_24": "පිරිසිදු රන්. එය මෘදු වන අතර පහසුවෙන් නැමෙන බැවින් එදිනෙදා ආභරණ වෙනුවට රන් කූරු සහ කාසි සෑදීමට යොදා ගනී.",
+ "txt_22": "ලාංකිකයන්ගේ ප්‍රියතම. 24න් 22ක් රන්, ආභරණ ශක්තිමත්ව සහ පොහොසත් වර්ණයෙන් තබා ගැනීමට වෙනත් ලෝහ ටිකක් මිශ්‍ර කර ඇත.",
+ "txt_21": "22K වලට වඩා ටිකක් ශක්තිමත්, එබැවින් හැඩය හොඳින් රඳවා ගනී. සෑම දිනකම පළඳින ආභරණ සඳහා හොඳ තේරීමකි.",
+ "txt_18": "සතරෙන් ශක්තිමත්ම එක, එබැවින් ගල් බැඳි ආභරණ සහ නවීන මෝස්තර සඳහා සාමාන්‍යයෙන් තෝරා ගනී.",
+ "best_24": "ඉතිරිකිරීම|රන් කූරු සහ කාසි|ආයෝජනය",
+ "best_22": "විවාහ|මාල සහ දම්වැල්|පවුලේ තෑගි",
+ "best_21": "වළලු|දෛනික පැළඳුම්|මුදු",
+ "best_18": "ගල් බැඳි මුදු|නවීන මෝස්තර|ක්‍රියාශීලී භාවිතය"
+}, ta: {
+ "k_e": "காரட் வழிகாட்டி",
+ "k_h1": "24K, 22K, 21K அல்லது 18K: <span class=\"gold-text\">எது?</span>",
+ "k_lead": "காரட் என்பது உலோகத்தில் எவ்வளவு தூய தங்கம் உள்ளது என்பதைக் காட்டுகிறது. தங்கம் அதிகமானால் நிறம் செழிப்பாகவும் விலை அதிகமாகவும் இருக்கும், ஆனால் உலோகம் மென்மையாகும்.",
+ "k_e2": "அருகருகே",
+ "k_h2": "ஒரே பார்வையில் <span class=\"gold-text\">ஒப்பிடுங்கள்</span>",
+ "k_th1": "காரட்",
+ "k_th2": "தூய தங்கம்",
+ "k_th3": "ஹால்மார்க்",
+ "k_th4": "கடை விற்கும் விலை, கிராமுக்கு",
+ "k_th5": "கடை வாங்கும் விலை, கிராமுக்கு",
+ "k_cta": "செலவைக் <span class=\"gold-text\">கணக்கிடத்</span> தயாரா?",
+ "k_ctap": "கணிப்பானில் உங்கள் காரட்டையும் எடையையும் தேர்ந்தெடுங்கள்.",
+ "k_cb1": "கணிப்பானைத் திறக்க",
+ "k_cb2": "வாங்கும் சரிபார்ப்புப் பட்டியல்",
+ "gold_k": "{k}K தங்கம்",
+ "pure": "தூய தங்கம்",
+ "str": "உறுதி",
+ "ssov": "கடை விற்கும் விலை, பவுனுக்கு",
+ "bsov": "கடை வாங்கும் விலை, பவுனுக்கு",
+ "popular": "மிகவும் பிரபலம்",
+ "perg": " / கி",
+ "rates_from": "{name} வழங்கிய விலைகள், புதுப்பிக்கப்பட்டது {a}.",
+ "est": " ~ என்பது மதிப்பீடு: 22K வாங்கும் விலை மட்டுமே வெளியிடப்பட்டுள்ளது.",
+ "noretail": "கடை விலைகள் தற்போது கிடைக்கவில்லை. காட்டப்பட்டவை உலக விலை மதிப்புகள்.",
+ "col_24": "அடர்ந்த, செழிப்பான மஞ்சள்",
+ "col_22": "இளஞ்சூடான தங்க மஞ்சள்",
+ "col_21": "மென்மையான தங்க மஞ்சள்",
+ "col_18": "இலகுவான, சற்று ரோஜா நிறம்",
+ "txt_24": "தூய தங்கம். இது மென்மையானது, எளிதில் வளையும், அதனால் அன்றாட நகைகளுக்குப் பதிலாக கட்டிகளும் நாணயங்களும் செய்யப் பயன்படுகிறது.",
+ "txt_22": "இலங்கையர்களின் விருப்பம். 24-இல் 22 பங்கு தங்கம், நகைகள் உறுதியாகவும் செழிப்பான நிறத்துடனும் இருக்க சிறிதளவு பிற உலோகம் கலக்கப்பட்டுள்ளது.",
+ "txt_21": "22K-ஐ விட சற்று உறுதியானது, அதனால் வடிவத்தை நன்றாகத் தக்கவைக்கும். தினமும் அணியும் நகைகளுக்கு நல்ல தேர்வு.",
+ "txt_18": "நான்கில் மிக உறுதியானது, அதனால் கற்கள் பதித்த நகைகளுக்கும் நவீன வடிவமைப்புகளுக்கும் பொதுவாகத் தேர்ந்தெடுக்கப்படுகிறது.",
+ "best_24": "சேமிப்பு|கட்டிகளும் நாணயங்களும்|முதலீடு",
+ "best_22": "திருமணங்கள்|மாலைகளும் சங்கிலிகளும்|குடும்பப் பரிசுகள்",
+ "best_21": "வளையல்கள்|தினசரி அணிவது|மோதிரங்கள்",
+ "best_18": "கல் பதித்த மோதிரங்கள்|நவீன வடிவமைப்புகள்|சுறுசுறுப்பான பயன்பாடு"
+} });
+  var t = G.t;
   var K = {
-    24: { pur: 99.9, hall: '999', art: 'bars', img: 'bars', swatch: 'linear-gradient(135deg,#ffe27a,#e8a812)', dur: 1, colour: 'Deep, rich yellow', text: 'Pure gold. It is soft and bends easily, so it is made into bars and coins rather than everyday jewellery.', best: ['Saving', 'Bars and coins', 'Investment'] },
-    22: { pur: 91.6, hall: '916', art: 'necklace', img: 'jewellery', swatch: 'linear-gradient(135deg,#ffd873,#e0a323)', dur: 3, colour: 'Warm golden yellow', text: 'The Sri Lankan favourite. 22 parts gold in 24, mixed with a little other metal so jewellery stays strong and keeps its rich colour.', best: ['Weddings', 'Necklaces and chains', 'Family gifts'] },
-    21: { pur: 87.5, hall: '875', art: 'bangle', img: 'bangle', swatch: 'linear-gradient(135deg,#ffd06a,#d49a28)', dur: 4, colour: 'Soft golden yellow', text: 'A little stronger than 22K, so it holds its shape better. A good choice for pieces you wear every day.', best: ['Bangles', 'Daily wear', 'Rings'] },
-    18: { pur: 75, hall: '750', art: 'ring', img: 'ring', swatch: 'linear-gradient(135deg,#f5cf8a,#c9954a)', dur: 5, colour: 'Lighter, slightly rosy', text: 'The strongest of the four, which makes it the usual choice for pieces set with stones and for modern designs.', best: ['Stone-set rings', 'Modern designs', 'Active wear'] }
+    24: { pur: 99.9, hall: '999', art: 'bars', img: 'bars', swatch: 'linear-gradient(135deg,#ffe27a,#e8a812)', dur: 1 },
+    22: { pur: 91.6, hall: '916', art: 'necklace', img: 'jewellery', swatch: 'linear-gradient(135deg,#ffd873,#e0a323)', dur: 3 },
+    21: { pur: 87.5, hall: '875', art: 'bangle', img: 'bangle', swatch: 'linear-gradient(135deg,#ffd06a,#d49a28)', dur: 4 },
+    18: { pur: 75, hall: '750', art: 'ring', img: 'ring', swatch: 'linear-gradient(135deg,#f5cf8a,#c9954a)', dur: 5 }
   };
   var ks = [24, 22, 21, 18];
+  function build() {
   $('kwrap').innerHTML = ks.map(function (k) {
     var o = K[k];
     return '<div class="krow">' +
-      '<figure class="photo reveal ' + (k % 2 ? 'left' : 'right') + '" style="aspect-ratio:1/1"><span class="swatch" style="background:' + o.swatch + '"></span><div class="art" data-art="' + o.art + '"></div><img data-src="images/' + o.img + '.jpg" alt="' + k + 'K gold"><figcaption>' + k + 'K gold<small>' + o.colour + '</small></figcaption></figure>' +
-      '<div class="reveal" style="--d:.1s"><div><span class="bigk gold-text">' + k + 'K</span><span class="hall">' + o.hall + '</span></div><p>' + o.text + '</p>' +
-      '<div class="meters"><div class="meter"><span>Pure gold</span><div class="tr"><div class="fl" style="--w:' + (o.pur / 100) + '"></div></div><b>' + o.pur + '%</b></div><div class="meter"><span>Strength</span><div class="tr"><div class="fl" style="--w:' + (o.dur / 5) + '"></div></div><b>' + o.dur + ' / 5</b></div></div>' +
-      '<div class="best">' + o.best.map(function (b) { return '<span>' + b + '</span>'; }).join('') + '</div>' +
-      '<div class="pricebox"><div><div class="k">Shop sells, sovereign</div><div class="v" id="s' + k + '">-</div><small id="sg' + k + '"></small></div><div><div class="k">Shop buys, sovereign</div><div class="v" id="b' + k + '">-</div><small id="bg' + k + '"></small></div></div></div></div>';
+      '<figure class="photo reveal ' + (k % 2 ? 'left' : 'right') + '" style="aspect-ratio:1/1"><span class="swatch" style="background:' + o.swatch + '"></span><div class="art" data-art="' + o.art + '"></div><img data-src="images/' + o.img + '.jpg" alt="' + t('gold_k', { k: k }) + '"><figcaption>' + t('gold_k', { k: k }) + '<small>' + t('col_' + k) + '</small></figcaption></figure>' +
+      '<div class="reveal" style="--d:.1s"><div><span class="bigk gold-text">' + k + 'K</span><span class="hall">' + o.hall + '</span></div><p>' + t('txt_' + k) + '</p>' +
+      '<div class="meters"><div class="meter"><span>' + t('pure') + '</span><div class="tr"><div class="fl" style="--w:' + (o.pur / 100) + '"></div></div><b>' + o.pur + '%</b></div><div class="meter"><span>' + t('str') + '</span><div class="tr"><div class="fl" style="--w:' + (o.dur / 5) + '"></div></div><b>' + o.dur + ' / 5</b></div></div>' +
+      '<div class="best">' + t('best_' + k).split('|').map(function (b) { return '<span>' + b + '</span>'; }).join('') + '</div>' +
+      '<div class="pricebox"><div><div class="k">' + t('ssov') + '</div><div class="v" id="s' + k + '">-</div><small id="sg' + k + '"></small></div><div><div class="k">' + t('bsov') + '</div><div class="v" id="b' + k + '">-</div><small id="bg' + k + '"></small></div></div></div></div>';
   }).join('');
   G.enhance($('kwrap'));
-  $('cmp').innerHTML = ks.map(function (k) { return '<tr' + (k === 22 ? ' class="k22"' : '') + '><td><b>' + k + 'K</b>' + (k === 22 ? ' <span style="color:var(--gold2);font-size:12px">most popular</span>' : '') + '</td><td>' + K[k].pur + '%</td><td>' + K[k].hall + '</td><td class="n" id="cs' + k + '">-</td><td class="n" id="cb' + k + '">-</td></tr>'; }).join('');
-  G.on(function (d) {
+  $('cmp').innerHTML = ks.map(function (k) { return '<tr' + (k === 22 ? ' class="k22"' : '') + '><td><b>' + k + 'K</b>' + (k === 22 ? ' <span style="color:var(--gold2);font-size:12px">' + t('popular') + '</span>' : '') + '</td><td>' + K[k].pur + '%</td><td>' + K[k].hall + '</td><td class="n" id="cs' + k + '">-</td><td class="n" id="cb' + k + '">-</td></tr>'; }).join('');
+  }
+  build();
+  function paint(d) {
     ks.forEach(function (k) {
       var s = d.hasRetail ? d.sells[k] : d.worldSov(k), b = d.hasRetail ? d.buys[k] : 0, e = d.estBuy[k] ? '~' : '';
-      G.setNum($('s' + k), s, rs); $('sg' + k).textContent = rs(s / 8) + ' / g';
-      G.setNum($('b' + k), b > 0 ? b : -1, function (v) { return e + rs(v); }); $('bg' + k).textContent = b > 0 ? e + rs(b / 8) + ' / g' : '';
+      G.setNum($('s' + k), s, rs); $('sg' + k).textContent = rs(s / 8) + t('perg');
+      G.setNum($('b' + k), b > 0 ? b : -1, function (v) { return e + rs(v); }); $('bg' + k).textContent = b > 0 ? e + rs(b / 8) + t('perg') : '';
       $('cs' + k).textContent = rs(s / 8); $('cb' + k).textContent = b > 0 ? e + rs(b / 8) : '-';
     });
-    $('note').textContent = d.hasRetail ? 'Rates from ' + d.retail.name + ', updated ' + G.ageText(d.retail.at) + ' ago.' + (d.estBuy[24] ? ' ~ means estimated: only the 22K buying price is posted.' : '') : 'Shop rates are not available right now. The prices shown are world-price values.';
-  });
+    $('note').textContent = d.hasRetail ? t('rates_from', { name: d.retail.name, a: G.ago(d.retail.at) }) + (d.estBuy[24] ? t('est') : '') : t('noretail');
+  }
+  G.on(paint);
+  window.addEventListener('gollk-lang', function () { build(); if (G.d) paint(G.d); });
 })();
 </script>
 </body>

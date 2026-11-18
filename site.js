@@ -18,6 +18,27 @@
   var LANGS = [['en', 'EN'], ['si', 'සිං'], ['ta', 'தமி']];
   var lang = 'en';
   try { var sv = localStorage.getItem('gollk-lang'); if (sv && T[sv]) lang = sv; else { var nl = (navigator.language || '').slice(0, 2); if (T[nl]) lang = nl; } } catch (e) {}
+  /* ---------- page text in 3 languages ----------
+     Static text: put data-i="key" on an element. Its English text stays in the HTML; GoldData.add({ si: {key: '...'}, ta: {key: '...'} }) supplies the others.
+     Text built by script: GoldData.t('key', {n: 5}) with en/si/ta entries. Pages redraw on the "gollk-lang" event. */
+  var DICT = { en: {}, si: {}, ta: {} };
+  function t(k, v) { var s = DICT[lang][k]; if (s === undefined) s = DICT.en[k]; if (s === undefined) s = k; if (v) Object.keys(v).forEach(function (n) { s = s.split('{' + n + '}').join(v[n]); }); return s; }
+  function applyStatic() {
+    $$('[data-i]').forEach(function (el) {
+      var k = el.getAttribute('data-i'); if (el._en === undefined) el._en = el.innerHTML;
+      var s = lang === 'en' ? el._en : DICT[lang][k]; el.innerHTML = s !== undefined ? s : el._en;
+    });
+    $$('[data-ia]').forEach(function (el) {
+      var p = el.getAttribute('data-ia').split(':'), a = p[0], k = p[1]; if (el._ea === undefined) el._ea = el.getAttribute(a) || '';
+      var s = lang === 'en' ? el._ea : DICT[lang][k]; el.setAttribute(a, s !== undefined ? s : el._ea);
+    });
+  }
+  function addText(d) { ['en', 'si', 'ta'].forEach(function (l) { if (d[l]) Object.keys(d[l]).forEach(function (k) { DICT[l][k] = d[l][k]; }); }); applyStatic(); }
+  addText({
+    en: { ago_min: '{n} min ago', ago_h: '{n} h ago', ago_d: '{n} days ago' },
+    si: { ago_min: 'මිනිත්තු {n}කට පෙර', ago_h: 'පැය {n}කට පෙර', ago_d: 'දින {n}කට පෙර' },
+    ta: { ago_min: '{n} நிமிடங்களுக்கு முன்', ago_h: '{n} மணி நேரத்திற்கு முன்', ago_d: '{n} நாட்களுக்கு முன்' }
+  });
   var here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
   function headerHTML() {
     return '<header class="site-header"><div class="container"><a class="logo" href="index.html"><i>Au</i>Gold Outlook LK</a>' +
@@ -52,6 +73,7 @@
     var hd = $('.site-header'), ft = $('.site-footer');
     if (hd) { var open = $('.menu', hd).classList.contains('open'); hd.outerHTML = headerHTML(); wireHeader(); if (open) { $('.menu').classList.add('open'); $('.burger').setAttribute('aria-expanded', true); $('.burger').textContent = '✕'; } }
     if (ft) ft.outerHTML = footerHTML();
+    applyStatic();
     window.dispatchEvent(new CustomEvent('gollk-lang', { detail: { lang: l } }));
   }
   document.documentElement.lang = lang;
@@ -127,6 +149,7 @@
   /* ---------- number helpers ---------- */
   var nf = function (v, d) { return Number(v).toLocaleString('en-US', { maximumFractionDigits: d || 0, minimumFractionDigits: d || 0 }); };
   var rs = function (v) { return 'Rs ' + nf(v, 0); };
+  function ago(d) { var m = Math.max(0, Math.round((Date.now() - d.getTime()) / 60000)); return m < 60 ? t('ago_min', { n: m }) : m < 2880 ? t('ago_h', { n: Math.floor(m / 60) }) : t('ago_d', { n: Math.floor(m / 1440) }); }
   function ageText(d) { var m = Math.max(0, Math.round((Date.now() - d.getTime()) / 60000)); return m < 60 ? m + ' min' : m < 2880 ? Math.floor(m / 60) + ' h' : Math.floor(m / 1440) + ' days'; }
   /* animate a number up or down: set(el, 327928, rs) */
   function setNum(el, to, fmt) {
@@ -180,7 +203,7 @@
     p.catch(function () {}).then(done, done);
   }
   var GoldData = window.GoldData = {
-    d: null, enhance: enhance, nf: nf, rs: rs, ageText: ageText, setNum: setNum, KARATS: KARATS, reduce: reduce,
+    d: null, t: t, add: addText, lang: function () { return lang; }, ago: ago, enhance: enhance, nf: nf, rs: rs, ageText: ageText, setNum: setNum, KARATS: KARATS, reduce: reduce,
     on: function (fn) { subs.push(fn); if (last) fn(last); },
     start: function () { load(); setInterval(load, Math.max(10, CFG.LIVE_EVERY_SECONDS || 15) * 1000 * 2); }
   };

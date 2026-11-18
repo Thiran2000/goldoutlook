@@ -41,31 +41,31 @@ input[type=range] { width: 100%; accent-color: #f0c04e; height: 28px; }
 <header class="pagehead">
   <div class="sparkles" data-n="14"></div>
   <div class="container">
-    <span class="eyebrow reveal">Calculator</span>
-    <h1 class="reveal" style="--d:.06s">What is your gold <span class="gold-text">worth</span>?</h1>
-    <p class="lead reveal" style="--d:.12s">Buying jewellery or selling old gold, see the price at today’s shop rates before you talk to the jeweller.</p>
+    <span class="eyebrow reveal" data-i="c_e">Calculator</span>
+    <h1 class="reveal" style="--d:.06s" data-i="c_h1">What is your gold <span class="gold-text">worth</span>?</h1>
+    <p class="lead reveal" style="--d:.12s" data-i="c_lead">Buying jewellery or selling old gold, see the price at today’s shop rates before you talk to the jeweller.</p>
   </div>
 </header>
 
 <section style="padding-top:36px">
   <div class="container calc">
     <div class="card form reveal left">
-      <div class="field"><span class="lbl">I am</span>
-        <div class="seg" id="mode" role="group" aria-label="Buying or selling"><button type="button" data-m="buy" aria-pressed="true">Buying gold</button><button type="button" data-m="sell" aria-pressed="false">Selling gold</button></div>
+      <div class="field"><span class="lbl" data-i="c_iam">I am</span>
+        <div class="seg" id="mode" role="group" aria-label="Buying or selling"><button type="button" data-m="buy" aria-pressed="true" data-i="c_buy">Buying gold</button><button type="button" data-m="sell" aria-pressed="false" data-i="c_sell">Selling gold</button></div>
       </div>
-      <div class="field"><span class="lbl">Karat</span>
+      <div class="field"><span class="lbl" data-i="c_karat">Karat</span>
         <div class="chips" id="karat" role="group" aria-label="Karat"><button type="button" data-k="24" aria-pressed="false">24K</button><button type="button" data-k="22" aria-pressed="true">22K</button><button type="button" data-k="21" aria-pressed="false">21K</button><button type="button" data-k="18" aria-pressed="false">18K</button></div>
       </div>
-      <div class="field"><label for="w">Weight</label>
+      <div class="field"><label for="w" data-i="c_w">Weight</label>
         <div class="wrow">
           <input id="w" type="number" inputmode="decimal" min="0" step="any" value="1">
-          <select id="u" aria-label="Unit"><option value="8" selected>Sovereign (8 g)</option><option value="1">Grams</option><option value="11.6638">Tola (11.66 g)</option><option value="31.1035">Ounce (31.1 g)</option><option value="1000">Kilogram</option></select>
+          <select id="u" aria-label="Unit"><option value="8" selected data-i="c_u8">Sovereign (8 g)</option><option value="1" data-i="c_u1">Grams</option><option value="11.6638" data-i="c_ut">Tola (11.66 g)</option><option value="31.1035" data-i="c_uo">Ounce (31.1 g)</option><option value="1000" data-i="c_uk">Kilogram</option></select>
         </div>
-        <div class="chips quick" id="quick" style="margin-top:6px"><button type="button" data-w="0.5" data-u="8">½ sovereign</button><button type="button" data-w="1" data-u="8">1 sovereign</button><button type="button" data-w="2" data-u="8">2 sovereigns</button><button type="button" data-w="5" data-u="1">5 g</button><button type="button" data-w="10" data-u="1">10 g</button></div>
+        <div class="chips quick" id="quick" style="margin-top:6px"><button type="button" data-w="0.5" data-u="8" data-i="c_q1">½ sovereign</button><button type="button" data-w="1" data-u="8" data-i="c_q2">1 sovereign</button><button type="button" data-w="2" data-u="8" data-i="c_q3">2 sovereigns</button><button type="button" data-w="5" data-u="1" data-i="c_q4">5 g</button><button type="button" data-w="10" data-u="1" data-i="c_q5">10 g</button></div>
       </div>
-      <div class="field" id="mkf"><label for="mk">Making charge (jewellery only)</label>
+      <div class="field" id="mkf"><label for="mk" data-i="c_mk">Making charge (jewellery only)</label>
         <div class="mk"><input id="mk" type="range" min="0" max="30" step="0.5" value="0"><output id="mko" for="mk">0%</output></div>
-        <span class="note">Ask your jeweller. Some include it in the price, some add it on top. Leave at 0% if it is already included.</span>
+        <span class="note" data-i="c_mkn">Ask your jeweller. Some include it in the price, some add it on top. Leave at 0% if it is already included.</span>
       </div>
     </div>
 
@@ -76,7 +76,7 @@ input[type=range] { width: 100%; accent-color: #f0c04e; height: 28px; }
       <div class="visual art" id="visual"><div data-art="bars"></div></div>
       <div class="lines" id="lines"></div>
       <p class="warn" id="warn" hidden></p>
-      <p class="note" style="margin-top:14px">Estimates only. The real price depends on the shop, the item and the making charges.</p>
+      <p class="note" style="margin-top:14px" data-i="c_est">Estimates only. The real price depends on the shop, the item and the making charges.</p>
     </div>
   </div>
 </section>
@@ -87,6 +87,98 @@ input[type=range] { width: 100%; accent-color: #f0c04e; height: 28px; }
 <script>
 (function () {
   var G = window.GoldData, $ = function (i) { return document.getElementById(i); }, rs = G.rs, nf = G.nf;
+  G.add({ en: {
+ "pay": "You pay about",
+ "recv": "The shop pays you about",
+ "sub": "{g} g of {k}K gold",
+ "enter": "Enter a weight to see the price",
+ "r_sov": "Rate per sovereign (8 g)",
+ "est": " (est.)",
+ "r_g": "Rate per gram",
+ "r_gold": "Gold at this rate",
+ "r_mk": "Making charge ({m}%)",
+ "tot_pay": "Total to pay",
+ "tot_recv": "You receive",
+ "r_world": "World-price value of this gold",
+ "above": "Above the world price by",
+ "below": "Below the world price by",
+ "warn": "Shop rates are not available right now, so this uses the world-price value. Shops usually charge more."
+}, si: {
+ "c_e": "ගණකය",
+ "c_h1": "ඔබේ රන් <span class=\"gold-text\">වටිනාකම</span> කොපමණද?",
+ "c_lead": "ආභරණ මිලදී ගන්නවාද, පරණ රන් විකුණනවාද, ජුවලර් සමඟ කතා කිරීමට පෙර අද වෙළඳසැල් මිලට මිල බලන්න.",
+ "c_iam": "ඔබේ අරමුණ",
+ "c_buy": "රන් මිලදී ගැනීම",
+ "c_sell": "රන් විකිණීම",
+ "c_karat": "කැරට්",
+ "c_w": "බර",
+ "c_u8": "පවුම (ග්‍රෑ. 8)",
+ "c_u1": "ග්‍රෑම්",
+ "c_ut": "තෝලා (ග්‍රෑ. 11.66)",
+ "c_uo": "අවුන්ස (ග්‍රෑ. 31.1)",
+ "c_uk": "කිලෝග්‍රෑම්",
+ "c_q1": "½ පවුම",
+ "c_q2": "පවුම 1",
+ "c_q3": "පවුම් 2",
+ "c_q4": "ග්‍රෑ. 5",
+ "c_q5": "ග්‍රෑ. 10",
+ "c_mk": "වැඩ කුලිය (ආභරණ පමණි)",
+ "c_mkn": "ඔබේ ජුවලර්ගෙන් අසන්න. සමහරුන් මිලට ඇතුළත් කරයි, සමහරුන් අමතරව එකතු කරයි. දැනටමත් ඇතුළත් නම් 0% තබන්න.",
+ "c_est": "ඇස්තමේන්තු පමණි. සැබෑ මිල වෙළඳසැල, භාණ්ඩය සහ වැඩ කුලිය අනුව වෙනස් වේ.",
+ "pay": "ඔබ ගෙවන්නේ ආසන්න වශයෙන්",
+ "recv": "වෙළඳසැල ඔබට ගෙවන්නේ ආසන්න වශයෙන්",
+ "sub": "{k}K රන් ග්‍රෑම් {g}ක්",
+ "enter": "මිල බැලීමට බරක් ඇතුළත් කරන්න",
+ "r_sov": "පවුමකට මිල (ග්‍රෑ. 8)",
+ "est": " (ඇස්.)",
+ "r_g": "ග්‍රෑමයකට මිල",
+ "r_gold": "මෙම මිලට රන් වටිනාකම",
+ "r_mk": "වැඩ කුලිය ({m}%)",
+ "tot_pay": "ගෙවිය යුතු මුළු මුදල",
+ "tot_recv": "ඔබට ලැබෙන මුදල",
+ "r_world": "මෙම රන්වල ලෝක මිල අගය",
+ "above": "ලෝක මිලට වඩා වැඩි මුදල",
+ "below": "ලෝක මිලට වඩා අඩු මුදල",
+ "warn": "වෙළඳසැල් මිල දැනට නොමැති බැවින් මෙහි ලෝක මිල අගය භාවිත කර ඇත. වෙළඳසැල් සාමාන්‍යයෙන් වැඩියෙන් අය කරයි."
+}, ta: {
+ "c_e": "கணிப்பான்",
+ "c_h1": "உங்கள் தங்கத்தின் <span class=\"gold-text\">மதிப்பு</span> என்ன?",
+ "c_lead": "நகை வாங்கினாலும் பழைய தங்கத்தை விற்றாலும், நகைக்கடைக்காரரிடம் பேசும் முன் இன்றைய கடை விலையில் விலையைப் பாருங்கள்.",
+ "c_iam": "நோக்கம்",
+ "c_buy": "தங்கம் வாங்குதல்",
+ "c_sell": "தங்கம் விற்றல்",
+ "c_karat": "காரட்",
+ "c_w": "எடை",
+ "c_u8": "பவுன் (8 கி)",
+ "c_u1": "கிராம்",
+ "c_ut": "தோலா (11.66 கி)",
+ "c_uo": "அவுன்ஸ் (31.1 கி)",
+ "c_uk": "கிலோகிராம்",
+ "c_q1": "½ பவுன்",
+ "c_q2": "1 பவுன்",
+ "c_q3": "2 பவுன்",
+ "c_q4": "5 கி",
+ "c_q5": "10 கி",
+ "c_mk": "செய்கூலி (நகைகளுக்கு மட்டும்)",
+ "c_mkn": "உங்கள் நகைக்கடைக்காரரிடம் கேளுங்கள். சிலர் விலையில் சேர்த்திருப்பார்கள், சிலர் கூடுதலாகச் சேர்ப்பார்கள். ஏற்கனவே சேர்க்கப்பட்டிருந்தால் 0% ஆக வையுங்கள்.",
+ "c_est": "மதிப்பீடுகள் மட்டுமே. உண்மையான விலை கடை, பொருள், செய்கூலியைப் பொறுத்தது.",
+ "pay": "நீங்கள் செலுத்துவது சுமார்",
+ "recv": "கடை உங்களுக்குத் தருவது சுமார்",
+ "sub": "{k}K தங்கம் {g} கிராம்",
+ "enter": "விலையைப் பார்க்க எடையை உள்ளிடுங்கள்",
+ "r_sov": "ஒரு பவுன் விலை (8 கி)",
+ "est": " (மதிப்.)",
+ "r_g": "ஒரு கிராம் விலை",
+ "r_gold": "இந்த விலையில் தங்கம்",
+ "r_mk": "செய்கூலி ({m}%)",
+ "tot_pay": "செலுத்த வேண்டிய மொத்தம்",
+ "tot_recv": "உங்களுக்குக் கிடைப்பது",
+ "r_world": "இந்தத் தங்கத்தின் உலக விலை மதிப்பு",
+ "above": "உலக விலையை விட அதிகம்",
+ "below": "உலக விலையை விட குறைவு",
+ "warn": "கடை விலைகள் தற்போது கிடைக்கவில்லை, எனவே உலக விலை மதிப்பு பயன்படுத்தப்பட்டுள்ளது. கடைகள் பொதுவாக அதிகம் வசூலிக்கும்."
+} });
+  var t = G.t;
   var st = { mode: 'buy', k: 22 }, D = null;
   function press(group, attr, val) { Array.prototype.forEach.call($(group).querySelectorAll('button'), function (b) { b.setAttribute('aria-pressed', String(b.getAttribute(attr) == val)); }); }
   $('mode').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; st.mode = b.getAttribute('data-m'); press('mode', 'data-m', st.mode); calc(true); });
@@ -100,21 +192,22 @@ input[type=range] { width: 100%; accent-color: #f0c04e; height: 28px; }
     var rate = d.hasRetail ? (buying ? d.sells[k] : d.buys[k]) : 0, usingWorld = !(rate > 0);
     if (usingWorld) rate = d.worldSov(k);
     var gold = sov * rate, making = buying ? gold * mk / 100 : 0, total = gold + making, world = sov * d.worldSov(k);
-    $('what').textContent = buying ? 'You pay about' : 'The shop pays you about';
+    $('what').textContent = t(buying ? 'pay' : 'recv');
     G.setNum($('total'), grams > 0 ? total : -1, rs);
-    $('sub').textContent = grams > 0 ? nf(grams, grams < 100 ? 2 : 1) + ' g of ' + k + 'K gold' : 'Enter a weight to see the price';
-    var rows = [['Rate per sovereign (8 g)', rs(rate) + (!buying && d.estBuy[k] && !usingWorld ? ' (est.)' : '')], ['Rate per gram', rs(rate / 8)], ['Gold at this rate', rs(gold)]];
-    if (buying && mk > 0) rows.push(['Making charge (' + nf(mk, 1) + '%)', rs(making)]);
+    $('sub').textContent = grams > 0 ? t('sub', { g: nf(grams, grams < 100 ? 2 : 1), k: k }) : t('enter');
+    var rows = [[t('r_sov'), rs(rate) + (!buying && d.estBuy[k] && !usingWorld ? t('est') : '')], [t('r_g'), rs(rate / 8)], [t('r_gold'), rs(gold)]];
+    if (buying && mk > 0) rows.push([t('r_mk', { m: nf(mk, 1) }), rs(making)]);
     var html = rows.map(function (r) { return '<div><span>' + r[0] + '</span><b>' + r[1] + '</b></div>'; }).join('');
-    html += '<div class="big"><span>' + (buying ? 'Total to pay' : 'You receive') + '</span><b>' + (grams > 0 ? rs(total) : '-') + '</b></div>';
-    if (!usingWorld && grams > 0) { var diff = total - world; html += '<div><span>World-price value of this gold</span><b>' + rs(world) + '</b></div><div><span>' + (buying ? 'Above' : 'Below') + ' the world price by</span><b>' + rs(Math.abs(diff)) + ' (' + nf(Math.abs(diff / world * 100), 1) + '%)</b></div>'; }
+    html += '<div class="big"><span>' + t(buying ? 'tot_pay' : 'tot_recv') + '</span><b>' + (grams > 0 ? rs(total) : '-') + '</b></div>';
+    if (!usingWorld && grams > 0) { var diff = total - world; html += '<div><span>' + t('r_world') + '</span><b>' + rs(world) + '</b></div><div><span>' + t(buying ? 'above' : 'below') + '</span><b>' + rs(Math.abs(diff)) + ' (' + nf(Math.abs(diff / world * 100), 1) + '%)</b></div>'; }
     $('lines').innerHTML = html;
-    var w = $('warn'); w.hidden = !usingWorld; w.textContent = usingWorld ? 'Shop rates are not available right now, so this uses the world-price value. Shops usually charge more.' : '';
+    var w = $('warn'); w.hidden = !usingWorld; w.textContent = usingWorld ? t('warn') : '';
     /* the gold on the right grows with the weight */
     var sc = grams > 0 ? Math.min(1.25, 0.62 + Math.log10(1 + grams / 8) * 0.55) : 0.5; $('visual').style.transform = 'scale(' + sc.toFixed(3) + ')';
     if (pop) { var v = $('visual'); v.classList.remove('pop'); void v.offsetWidth; v.classList.add('pop'); }
   }
   G.on(function (d) { D = d; calc(false); });
+  window.addEventListener('gollk-lang', function () { calc(false); });
 })();
 </script>
 </body>
