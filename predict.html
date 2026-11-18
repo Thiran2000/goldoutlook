@@ -13,7 +13,6 @@
 <style>
 .phero { padding-block: 48px 8px; }
 .phero h1 { margin: 14px 0 0; max-width: 18ch; }
-.controls { display: grid; gap: 14px; margin-top: 30px; }
 .crow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
 .crow .cl { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); min-width: 92px; }
 .seg { display: inline-flex; padding: 4px; gap: 4px; border-radius: 999px; border: 1px solid var(--line); background: rgba(0, 0, 0, .3); }
@@ -23,6 +22,32 @@
 .pill { border: 1px solid var(--line); background: var(--glass); padding: 8px 16px; }
 .pill[aria-pressed="true"] { color: #2a1804; border-color: var(--gold2); background: linear-gradient(135deg, var(--gold1), var(--gold2)); }
 section.ps { padding-block: 34px; }
+.shell { width: min(1280px, 100% - 32px); display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 30px; align-items: start; margin-top: 18px; }
+.shell .container { width: 100%; margin: 0; }
+.shell section.ps:first-child { padding-top: 6px; }
+.ctl { position: sticky; top: 86px; z-index: 30; border: 1px solid var(--line); border-radius: 22px; padding: 18px 16px; background: linear-gradient(160deg, rgba(255, 244, 214, .09), rgba(255, 244, 214, .03)), rgba(12, 6, 8, .85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); max-height: calc(100vh - 106px); overflow-y: auto; }
+.ctl-sum { display: none; }
+.cg { margin-bottom: 18px; } .cg:last-child, #opts .cg:last-child { margin-bottom: 0; }
+.cg .cl { display: block; font-size: 11.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--gold2); margin-bottom: 8px; }
+.ctl .seg { display: flex; flex-direction: column; border-radius: 16px; width: 100%; }
+.ctl .seg button { width: 100%; text-align: left; border-radius: 12px; padding: 10px 14px; }
+.stack { display: grid; gap: 6px; }
+.stack.two { grid-template-columns: 1fr 1fr; }
+.stack .pill { text-align: left; width: 100%; }
+.stack.two .pill { text-align: center; padding-inline: 8px; }
+@media (max-width: 1060px) {
+  .shell { display: block; margin-top: 0; }
+  .ctl { top: 68px; margin: 0 -16px 8px; border-radius: 0 0 20px 20px; border-width: 0 0 1px; padding: 0; max-height: none; overflow: visible; background: rgba(12, 6, 8, .92); }
+  .ctl-sum { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 18px; font: 700 14px var(--sans); color: var(--cream); background: transparent; border: 0; cursor: pointer; text-align: left; }
+  .ctl-sum b { color: var(--gold1); font-weight: 700; }
+  .ctl-sum::after { content: "\25BE"; color: var(--gold2); font-size: 16px; transition: transform .25s; }
+  .ctl-sum[aria-expanded="true"]::after { transform: rotate(180deg); }
+  .ctl-body { display: none; padding: 4px 18px 18px; max-height: calc(100vh - 150px); overflow-y: auto; border-top: 1px solid var(--line); }
+  .ctl.open .ctl-body { display: block; padding-top: 16px; }
+  .stack { grid-template-columns: repeat(3, 1fr); } .stack.two { grid-template-columns: repeat(2, 1fr); }
+  .stack .pill { text-align: center; padding-inline: 8px; }
+  .ctl .seg { flex-direction: row; } .ctl .seg button { text-align: center; }
+}
 .sechead { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; margin-bottom: 18px; }
 .sechead h2 { font-size: clamp(24px, 3.4vw, 34px); }
 .sechead p { margin: 0; color: var(--muted); font-size: 14px; max-width: 60ch; }
@@ -123,22 +148,27 @@ table.pt tr { cursor: pointer; }
     <span class="eyebrow" data-i="p_eyebrow">Price prediction</span>
     <h1 class="gold-text" data-i="p_h1">Where could gold go next?</h1>
     <p class="lead" data-i="p_lead">Likely price ranges for gold in Sri Lanka and around the world, worked out from the daily price history. Nobody can know the future, so every number here is a range with odds, not a promise.</p>
-    <div class="controls">
-      <div class="crow"><span class="cl" data-i="p_market">Market</span>
+  </div>
+</header>
+
+<div class="container shell">
+  <aside class="ctl" id="ctl" aria-label="Prediction controls">
+    <button type="button" class="ctl-sum" id="ctl-sum" aria-expanded="false" aria-controls="ctl-body"></button>
+    <div class="ctl-body" id="ctl-body">
+      <div class="cg"><span class="cl" data-i="p_market">Market</span>
         <div class="seg" id="mk" role="group" aria-label="Market">
           <button type="button" data-mk="sl" aria-pressed="true" data-i="p_mk_sl">🇱🇰 Sri Lanka</button>
           <button type="button" data-mk="world" aria-pressed="false" data-i="p_mk_w">🌍 Global</button>
         </div>
       </div>
-      <div class="crow"><span class="cl" data-i="p_hz">Look ahead</span><div class="crow" id="hz"></div></div>
-      <div class="crow" id="opts"></div>
+      <div class="cg"><span class="cl" data-i="p_hz">Look ahead</span><div class="stack" id="hz"></div></div>
+      <div id="opts"></div>
     </div>
-  </div>
-</header>
-
-<main id="main">
-  <section class="ps"><div class="container"><div class="card state" id="loading" data-i="p_loading">Loading prices…</div></div></section>
-</main>
+  </aside>
+  <main id="main">
+    <section class="ps"><div class="card state" id="loading" data-i="p_loading">Loading prices…</div></section>
+  </main>
+</div>
 
 <div id="site-footer"></div>
 <script src="config.js"></script>
@@ -340,7 +370,7 @@ table.pt tr { cursor: pointer; }
       var price = d.hasRetail ? d.sells[k] : d.worldSov(k);
       var sc = function (kk) { return (d.hasRetail ? d.sells[kk] : d.worldSov(kk)) / last / div; };
       return { S: S, D: sr.D, dates: sr.dates, f: sc(k), extra: d.hasRetail ? PREM_SD : 0, fmt: rs, ax: function (v) { return nf(v / 1000, div > 1 ? 1 : 0) + 'k'; },
-        what: t('p_what_sl', { k: k, u: t(div > 1 ? 'p_sov' : 'p_gram').toLowerCase() }), price: price, sc: sc, div: div };
+        what: t('p_what_sl', { k: k, u: t(div > 1 ? 'p_gram' : 'p_sov').toLowerCase() }), price: price, sc: sc, div: div };
     }
     var gm = o.wunit === 'g', f = gm ? 1 / KG : 1;
     return { S: sr.gold, D: sr.D, dates: sr.dates, f: f, extra: 0, fmt: function (v) { return '$' + nf(v, gm ? 2 : 0); }, ax: function (v) { return '$' + nf(v, gm ? 0 : 0); },
@@ -445,8 +475,9 @@ table.pt tr { cursor: pointer; }
     Array.prototype.forEach.call(document.querySelectorAll('#mk button'), function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-mk') === ST.mk ? 'true' : 'false'); });
     $('hz').innerHTML = HZ.map(function (x) { return chip(t('p_h' + (x === 1 ? '1d' : x)), 'h:' + x, ST.h === x); }).join('');
     $('opts').innerHTML = isSL
-      ? '<span class="cl">' + t('p_karat') + '</span>' + KARATS.map(function (k) { return chip(k + 'K', 'karat:' + k, ST.karat === k); }).join('') + '<span class="cl" style="min-width:0;margin-left:14px">' + t('p_unit') + '</span>' + chip(t('p_sov'), 'unit:sov', ST.unit === 'sov') + chip(t('p_gram'), 'unit:g', ST.unit === 'g')
-      : '<span class="cl">' + t('p_unit') + '</span>' + chip(t('p_oz'), 'wunit:oz', ST.wunit === 'oz') + chip(t('p_g24'), 'wunit:g', ST.wunit === 'g');
+      ? '<div class="cg"><span class="cl">' + t('p_karat') + '</span><div class="stack two">' + KARATS.map(function (k) { return chip(k + 'K', 'karat:' + k, ST.karat === k); }).join('') + '</div></div><div class="cg"><span class="cl">' + t('p_unit') + '</span><div class="stack">' + chip(t('p_sov'), 'unit:sov', ST.unit === 'sov') + chip(t('p_gram'), 'unit:g', ST.unit === 'g') + '</div></div>'
+      : '<div class="cg"><span class="cl">' + t('p_unit') + '</span><div class="stack">' + chip(t('p_oz'), 'wunit:oz', ST.wunit === 'oz') + chip(t('p_g24'), 'wunit:g', ST.wunit === 'g') + '</div></div>';
+    $('ctl-sum').innerHTML = (isSL ? '🇱🇰 ' + ST.karat + 'K · ' + t(ST.unit === 'g' ? 'p_gram' : 'p_sov').split(' (')[0] : '🌍 ' + t(ST.wunit === 'g' ? 'p_g24' : 'p_oz')) + ' · <b>' + t('p_h' + (h === 1 ? '1d' : h)) + '</b>';
 
     var M = market(sr, d, ST.mk, h), fc = forecast(M.S, h, M.extra, M.f, M.D), chg = fc.median / fc.last - 1, ln = lean(fc.pUp);
     /* both markets glance (always karat 22 sovereign and gold per ounce) */
@@ -537,6 +568,8 @@ table.pt tr { cursor: pointer; }
   document.addEventListener('click', function (e) {
     var el = e.target.closest ? e.target : null; if (!el) return;
     var b;
+    if (el.closest('#ctl-sum')) { var c = $('ctl'), o = !c.classList.contains('open'); c.classList.toggle('open', o); $('ctl-sum').setAttribute('aria-expanded', o); return; }
+    if (el.closest('#ctl') && el.closest('button') && $('ctl').classList.contains('open')) { $('ctl').classList.remove('open'); $('ctl-sum').setAttribute('aria-expanded', 'false'); }
     if ((b = el.closest('#mk button[data-mk]'))) { ST.mk = b.getAttribute('data-mk'); ST.target = ''; render(); return; }
     if ((b = el.closest('button[data-gc]'))) { ST.mk = b.getAttribute('data-gc'); ST.target = ''; render(); var bd = document.querySelector('.board'); if (bd && bd.scrollIntoView) bd.scrollIntoView({ behavior: G.reduce ? 'auto' : 'smooth', block: 'start' }); return; }
     if ((b = el.closest('button[data-o]'))) { var kv = b.getAttribute('data-o').split(':'); if (kv[0] === 'karat' || kv[0] === 'h') ST[kv[0]] = parseInt(kv[1], 10); else ST[kv[0]] = kv[1]; ST.target = ''; render(); return; }
