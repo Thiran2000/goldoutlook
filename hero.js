@@ -48,21 +48,40 @@
 
   /* ---- real video / photo (used automatically if the file exists) ---- */
   var holder = stage.querySelector('#hero-media');
-  function useVideo(src, poster) {
-    var v = document.createElement('video');
-    v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = true; v.preload = 'auto'; v.setAttribute('muted', ''); v.setAttribute('playsinline', '');
-    if (poster) v.poster = poster;
-    v.addEventListener('canplay', function () { holder.insertBefore(v, holder.firstChild); holder.insertAdjacentHTML('beforeend', '<div class="sweep"></div>'); holder.classList.add('on'); v.play().catch(function () {}); }, { once: true });
-    v.addEventListener('error', function () { usePhoto('images/hero.jpg'); }, { once: true });
-    v.src = src;
-  }
+  function log(m) { try { console.info('[hero] ' + m); } catch (e) {} }
   function usePhoto(src) {
     var im = new Image();
-    im.onload = function () { holder.innerHTML = ''; holder.appendChild(im); holder.insertAdjacentHTML('beforeend', '<div class="sweep"></div>'); holder.classList.add('on'); };
+    im.onload = function () { holder.innerHTML = ''; holder.appendChild(im); holder.insertAdjacentHTML('beforeend', '<div class="sweep"></div>'); holder.classList.add('on'); log('photo shown: ' + src); };
+    im.onerror = function () { log('no photo at ' + src + ' - showing animated scene'); };
     im.alt = 'Gold bars and coins'; im.src = src;
   }
+  function useVideo(files, poster) {
+    var v = document.createElement('video'), shown = false, bad = 0;
+    v.muted = true; v.defaultMuted = true; v.loop = true; v.playsInline = true; v.autoplay = true; v.preload = 'auto';
+    v.setAttribute('muted', ''); v.setAttribute('playsinline', ''); v.setAttribute('webkit-playsinline', '');
+    v.disablePictureInPicture = true;
+    v.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block';
+    files.forEach(function (f) {
+      var so = document.createElement('source'); so.src = f.src + '?v=' + (window.HERO_V || 1); so.type = f.type;
+      so.addEventListener('error', function () { bad++; log('cannot load ' + f.src + ' (missing file, wrong name/folder, or unsupported codec)'); if (bad >= files.length) fail(); });
+      v.appendChild(so);
+    });
+    function show() {
+      if (shown) return; shown = true; v.style.position = ''; v.style.opacity = '';
+      holder.innerHTML = ''; holder.appendChild(v); holder.insertAdjacentHTML('beforeend', '<div class="sweep"></div>'); holder.classList.add('on');
+      log('video playing');
+    }
+    function fail() { if (shown) return; shown = true; usePhoto('images/hero.jpg'); }
+    ['loadeddata', 'canplay', 'playing'].forEach(function (ev) { v.addEventListener(ev, function () { if (!shown) { show(); } v.play().catch(function () { log('autoplay blocked - will start on first tap'); document.addEventListener('pointerdown', function () { v.play(); }, { once: true }); }); }); });
+    v.addEventListener('error', function () { log('video error code ' + (v.error && v.error.code)); });
+    /* keep it off-DOM-visible until ready, but attached so the browser loads it */
+    v.style.position = 'absolute'; v.style.opacity = '0'; holder.appendChild(v);
+    v.load();
+    setTimeout(function () { if (!shown) { log('video did not start in 8s (file too large, or codec not supported - re-encode as H.264 mp4)'); fail(); } }, 8000);
+  }
   var saveData = navigator.connection && navigator.connection.saveData;
-  if (!reduce && !saveData) useVideo('images/hero.mp4', 'images/hero.jpg'); else usePhoto('images/hero.jpg');
+  var vf = stage.getAttribute('data-video');
+  if (!reduce && !saveData) useVideo(vf ? [{ src: vf, type: /\.webm$/i.test(vf) ? 'video/webm' : 'video/mp4' }] : [{ src: 'images/hero.mp4', type: 'video/mp4' }, { src: 'images/hero.webm', type: 'video/webm' }], 'images/hero.jpg'); else usePhoto('images/hero.jpg');
 
   /* ---- floating gold dust ---- */
   var cv = stage.querySelector('canvas.dust'), cx = cv.getContext('2d'), P = [], W = 0, H = 0, dpr = Math.min(2, window.devicePixelRatio || 1), raf;
