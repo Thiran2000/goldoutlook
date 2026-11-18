@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Karat guide: 24K, 22K, 21K, 18K | Gold Outlook LK</title>
+<meta name="description" content="What 24K, 22K, 21K and 18K gold mean, which one to choose, and what each costs in Sri Lanka today.">
+<meta name="theme-color" content="#0c0608">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Playfair+Display:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Noto+Sans+Sinhala:wght@400;600&family=Noto+Sans+Tamil:wght@400;600&display=swap">
+<link rel="stylesheet" href="site.css">
+<style>
+.pagehead { padding-block: 56px 8px; position: relative; overflow: hidden; }
+.pagehead h1 { font-size: clamp(34px, 5.4vw, 58px); margin-top: 14px; }
+.krow { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 36px; align-items: center; padding-block: 34px; }
+.krow:nth-child(even) .photo { order: 2; }
+@media (max-width: 860px) { .krow { grid-template-columns: minmax(0, 1fr); } .krow:nth-child(even) .photo { order: 0; } }
+.krow .bigk { font-family: var(--serif); font-size: clamp(64px, 11vw, 120px); font-weight: 800; line-height: .95; }
+.krow .hall { display: inline-block; margin-left: 10px; padding: 4px 12px; border: 1px solid var(--line); border-radius: 999px; font: 600 13px var(--num); color: var(--gold2); vertical-align: middle; }
+.krow p { color: var(--muted); max-width: 52ch; margin: 12px 0 0; }
+.meters { display: grid; gap: 14px; margin-top: 22px; }
+.meter { display: grid; grid-template-columns: 110px minmax(0, 1fr) 70px; align-items: center; gap: 14px; font-size: 13px; color: var(--muted); font-weight: 600; }
+.meter .tr { height: 12px; border-radius: 999px; background: rgba(0, 0, 0, .4); border: 1px solid var(--line); overflow: hidden; }
+.meter .fl { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--gold4), var(--gold2), var(--gold1)); transform-origin: left; transform: scaleX(0); transition: transform 1.5s var(--ease) .2s; }
+.in .meter .fl, .meter.in .fl { transform: scaleX(var(--w)); }
+.meter b { font-family: var(--num); color: var(--cream); font-weight: 500; text-align: right; }
+.best { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+.best span { padding: 7px 14px; border-radius: 999px; background: rgba(240, 192, 78, .1); border: 1px solid var(--line); font-size: 13px; font-weight: 600; color: var(--gold1); }
+.pricebox { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 22px; }
+.pricebox > div { padding: 14px 16px; border-radius: 16px; border: 1px solid var(--line); background: var(--glass); }
+.pricebox .k { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; font-weight: 700; color: var(--muted); }
+.pricebox .v { font-family: var(--num); font-size: 20px; color: var(--gold1); margin-top: 2px; } .pricebox small { display: block; font: 12px var(--num); color: var(--muted); }
+.swatch { position: absolute; left: 20px; top: 20px; z-index: 3; width: 54px; height: 54px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, .6); box-shadow: 0 6px 20px rgba(0, 0, 0, .5); }
+.tablewrap { overflow-x: auto; border-radius: 22px; border: 1px solid var(--line); background: var(--glass); }
+table { width: 100%; border-collapse: collapse; min-width: 640px; font-size: 15px; }
+th { text-align: left; padding: 16px 18px; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--line); }
+td { padding: 16px 18px; border-bottom: 1px solid var(--line); } tr:last-child td { border-bottom: 0; }
+td.n, th.n { text-align: right; font-family: var(--num); }
+tr.k22 td { background: rgba(240, 192, 78, .07); }
+</style>
+</head>
+<body data-live>
+<div id="site-header"></div>
+
+<header class="pagehead">
+  <div class="sparkles" data-n="14"></div>
+  <div class="container">
+    <span class="eyebrow reveal">Karat guide</span>
+    <h1 class="reveal" style="--d:.06s">24K, 22K, 21K or 18K: <span class="gold-text">which one?</span></h1>
+    <p class="lead reveal" style="--d:.12s">Karat tells you how much of the metal is pure gold. More gold means a richer colour and a higher price, but also a softer metal.</p>
+  </div>
+</header>
+
+<section style="padding-top:24px">
+  <div class="container" id="kwrap"></div>
+</section>
+
+<section style="padding-top:0">
+  <div class="container">
+    <div class="sec-head"><span class="eyebrow reveal">Side by side</span><h2 class="reveal" style="--d:.06s">Compare <span class="gold-text">at a glance</span></h2></div>
+    <div class="tablewrap reveal">
+      <table>
+        <thead><tr><th>Karat</th><th>Pure gold</th><th>Hallmark</th><th class="n">Shop sells, per gram</th><th class="n">Shop buys, per gram</th></tr></thead>
+        <tbody id="cmp"></tbody>
+      </table>
+    </div>
+    <p class="note reveal" id="note" style="margin-top:14px"></p>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="container">
+    <div class="card reveal zoom center" style="padding:44px 24px">
+      <h2>Ready to <span class="gold-text">work out the cost</span>?</h2>
+      <p class="lead" style="margin-inline:auto">Pick your karat and your weight in the calculator.</p>
+      <div class="btns" style="justify-content:center"><a class="btn gold" href="calculator.html">Open the calculator</a><a class="btn ghost" href="learn.html">Buying checklist</a></div>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="config.js"></script>
+<script src="site.js"></script>
+<script>
+(function () {
+  var G = window.GoldData, $ = function (i) { return document.getElementById(i); }, rs = G.rs, nf = G.nf;
+  var K = {
+    24: { pur: 99.9, hall: '999', art: 'bars', img: 'bars', swatch: 'linear-gradient(135deg,#ffe27a,#e8a812)', dur: 1, colour: 'Deep, rich yellow', text: 'Pure gold. It is soft and bends easily, so it is made into bars and coins rather than everyday jewellery.', best: ['Saving', 'Bars and coins', 'Investment'] },
+    22: { pur: 91.6, hall: '916', art: 'necklace', img: 'jewellery', swatch: 'linear-gradient(135deg,#ffd873,#e0a323)', dur: 3, colour: 'Warm golden yellow', text: 'The Sri Lankan favourite. 22 parts gold in 24, mixed with a little other metal so jewellery stays strong and keeps its rich colour.', best: ['Weddings', 'Necklaces and chains', 'Family gifts'] },
+    21: { pur: 87.5, hall: '875', art: 'bangle', img: 'bangle', swatch: 'linear-gradient(135deg,#ffd06a,#d49a28)', dur: 4, colour: 'Soft golden yellow', text: 'A little stronger than 22K, so it holds its shape better. A good choice for pieces you wear every day.', best: ['Bangles', 'Daily wear', 'Rings'] },
+    18: { pur: 75, hall: '750', art: 'ring', img: 'ring', swatch: 'linear-gradient(135deg,#f5cf8a,#c9954a)', dur: 5, colour: 'Lighter, slightly rosy', text: 'The strongest of the four, which makes it the usual choice for pieces set with stones and for modern designs.', best: ['Stone-set rings', 'Modern designs', 'Active wear'] }
+  };
+  var ks = [24, 22, 21, 18];
+  $('kwrap').innerHTML = ks.map(function (k) {
+    var o = K[k];
+    return '<div class="krow">' +
+      '<figure class="photo reveal ' + (k % 2 ? 'left' : 'right') + '" style="aspect-ratio:1/1"><span class="swatch" style="background:' + o.swatch + '"></span><div class="art" data-art="' + o.art + '"></div><img data-src="images/' + o.img + '.jpg" alt="' + k + 'K gold"><figcaption>' + k + 'K gold<small>' + o.colour + '</small></figcaption></figure>' +
+      '<div class="reveal" style="--d:.1s"><div><span class="bigk gold-text">' + k + 'K</span><span class="hall">' + o.hall + '</span></div><p>' + o.text + '</p>' +
+      '<div class="meters"><div class="meter"><span>Pure gold</span><div class="tr"><div class="fl" style="--w:' + (o.pur / 100) + '"></div></div><b>' + o.pur + '%</b></div><div class="meter"><span>Strength</span><div class="tr"><div class="fl" style="--w:' + (o.dur / 5) + '"></div></div><b>' + o.dur + ' / 5</b></div></div>' +
+      '<div class="best">' + o.best.map(function (b) { return '<span>' + b + '</span>'; }).join('') + '</div>' +
+      '<div class="pricebox"><div><div class="k">Shop sells, sovereign</div><div class="v" id="s' + k + '">-</div><small id="sg' + k + '"></small></div><div><div class="k">Shop buys, sovereign</div><div class="v" id="b' + k + '">-</div><small id="bg' + k + '"></small></div></div></div></div>';
+  }).join('');
+  G.enhance($('kwrap'));
+  $('cmp').innerHTML = ks.map(function (k) { return '<tr' + (k === 22 ? ' class="k22"' : '') + '><td><b>' + k + 'K</b>' + (k === 22 ? ' <span style="color:var(--gold2);font-size:12px">most popular</span>' : '') + '</td><td>' + K[k].pur + '%</td><td>' + K[k].hall + '</td><td class="n" id="cs' + k + '">-</td><td class="n" id="cb' + k + '">-</td></tr>'; }).join('');
+  G.on(function (d) {
+    ks.forEach(function (k) {
+      var s = d.hasRetail ? d.sells[k] : d.worldSov(k), b = d.hasRetail ? d.buys[k] : 0, e = d.estBuy[k] ? '~' : '';
+      G.setNum($('s' + k), s, rs); $('sg' + k).textContent = rs(s / 8) + ' / g';
+      G.setNum($('b' + k), b > 0 ? b : -1, function (v) { return e + rs(v); }); $('bg' + k).textContent = b > 0 ? e + rs(b / 8) + ' / g' : '';
+      $('cs' + k).textContent = rs(s / 8); $('cb' + k).textContent = b > 0 ? e + rs(b / 8) : '-';
+    });
+    $('note').textContent = d.hasRetail ? 'Rates from ' + d.retail.name + ', updated ' + G.ageText(d.retail.at) + ' ago.' + (d.estBuy[24] ? ' ~ means estimated: only the 22K buying price is posted.' : '') : 'Shop rates are not available right now. The prices shown are world-price values.';
+  });
+})();
+</script>
+</body>
+</html>
