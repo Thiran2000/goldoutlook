@@ -34,24 +34,17 @@
   --up: #4cc19a; --down: #e07a68; --warn: #e2b04a; color-scheme: dark;
 }
 * { box-sizing: border-box; }
+body { margin: 0; }
 [hidden] { display: none !important; }
 html { scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .dot { animation: none !important; } }
 body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 16px; line-height: 1.6; }
 .wrap { max-width: 940px; margin: 0 auto; padding-block: 0 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; gap: 20px; }
-.bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 20px; padding-block: 14px; border-bottom: 1px solid var(--line); }
-.brand { font-weight: 600; font-size: 18px; letter-spacing: -0.01em; }
-.nav { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px; }
-.nav a { color: var(--muted); text-decoration: none; padding: 4px 0; }
-.nav a:hover { color: var(--fg); text-decoration: underline; }
-.langs { display: flex; gap: 6px; }
-.langs button { min-width: 44px; }
-.langs button[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-softer); font-weight: 600; }
 h1 { font-size: 15px; font-weight: 500; color: var(--muted); margin: 0; }
 h2 { font-size: 20px; font-weight: 600; margin: 0 0 4px; letter-spacing: -0.01em; text-wrap: balance; }
 h3 { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 0 0 10px; }
 .lead { color: var(--muted); font-size: 14px; margin: 0 0 14px; max-width: 70ch; }
-section { scroll-margin-top: 12px; }
+section { scroll-margin-top: 84px; }
 .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 18px; min-width: 0; }
 .hero { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 20px; align-items: start; }
 @media (max-width: 680px) { .hero { grid-template-columns: minmax(0, 1fr); } }
@@ -199,9 +192,6 @@ details p { margin: 8px 0 0; color: var(--muted); max-width: 70ch; }
 html { background: #0c0608; }
 body { background: #0c0608; position: relative; }
 body::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(900px 600px at 85% -5%, rgba(240, 192, 78, .16), transparent 60%), radial-gradient(800px 700px at -10% 30%, rgba(122, 28, 52, .45), transparent 60%), radial-gradient(900px 700px at 100% 85%, rgba(70, 28, 96, .35), transparent 60%), linear-gradient(180deg, #1a0a10 0%, #0c0608 55%, #12070d 100%); }
-.brand { font-family: "Playfair Display", Georgia, serif; font-size: 22px; background: linear-gradient(100deg, #fff0b8, #f0c04e 50%, #c18a22); -webkit-background-clip: text; background-clip: text; color: transparent !important; }
-.bar { background: rgba(12, 6, 8, .78); padding-inline: 4px; }
-@media (min-width: 900px) { .bar { position: sticky; top: 0; z-index: 30; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); } }
 h1 { color: #f0c04e; font-weight: 600; letter-spacing: .02em; }
 section h2, .pcard h2 { font-family: "Playfair Display", Georgia, serif; font-weight: 700; }
 .panel, .pcard, .gap, details, .kcard { background: linear-gradient(160deg, rgba(255, 244, 214, .08), rgba(255, 244, 214, .025)); border-color: var(--line); border-radius: 18px; transition: transform .35s cubic-bezier(.2, .7, .2, 1), box-shadow .35s, border-color .3s; }
@@ -212,8 +202,6 @@ section h2, .pcard h2 { font-family: "Playfair Display", Georgia, serif; font-we
 .big { background: linear-gradient(100deg, #fff0b8, #f0c04e 55%, #e8b84a); -webkit-background-clip: text; background-clip: text; color: transparent; }
 button, .joinlink { transition: transform .2s, border-color .2s, background .2s; }
 button:hover:not(:disabled) { transform: translateY(-2px); }
-.langs button[aria-pressed="true"] { border-color: #f0c04e; background: linear-gradient(135deg, #fff0b8, #f0c04e); color: #2a1804; }
-.nav a:hover { color: #f0c04e; }
 .dot.live { box-shadow: 0 0 0 0 rgba(56, 217, 164, .6); animation: ping 1.8s infinite; }
 @keyframes ping { 70% { box-shadow: 0 0 0 10px rgba(56, 217, 164, 0); } 100% { box-shadow: 0 0 0 0 rgba(56, 217, 164, 0); } }
 @keyframes rise { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
@@ -222,19 +210,10 @@ main > section, .wrap > section { animation: rise .9s cubic-bezier(.2, .7, .2, 1
 .kcard.k22 { border-color: rgba(240, 192, 78, .7); }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 </style>
+<link rel="stylesheet" href="header.css">
 
+<div id="site-header"></div>
 <div class="wrap">
-  <div class="bar">
-    <a class="brand" href="index.html" style="text-decoration:none;color:inherit">Gold Outlook LK</a>
-    <nav class="nav" aria-label="Sections">
-      <a href="index.html" data-i="nav_home"></a><a href="#price" data-i="nav_price"></a><a href="#lookup" data-i="nav_lookup"></a><a href="#forecast" data-i="nav_forecast"></a><a href="#shops" data-i="nav_shops"></a><a href="#buy" data-i="nav_buy"></a><a href="#alerts" data-i="nav_alerts"></a><a href="#learn" data-i="nav_learn"></a><a href="calculator.html" data-i="nav_calc"></a><a href="karats.html" data-i="nav_karat"></a><a href="learn.html" data-i="nav_lpage"></a>
-    </nav>
-    <div class="langs" role="group" aria-label="Language">
-      <button type="button" data-lang="en" aria-pressed="true">EN</button>
-      <button type="button" data-lang="si" aria-pressed="false">සිං</button>
-      <button type="button" data-lang="ta" aria-pressed="false">தமி</button>
-    </div>
-  </div>
 
   <div id="site-note" class="banner" role="status" hidden></div>
   <div id="alert-banner" class="banner" role="status" hidden></div>
@@ -388,6 +367,7 @@ main > section, .wrap > section { animation: rise .9s cubic-bezier(.2, .7, .2, 1
 </div>
 
 <script src="config.js"></script>
+<script src="site.js"></script>
 <script>
 /* ---------- model ---------- */
 var KG = 31.1035, LAMBDA = 0.94;
@@ -910,7 +890,7 @@ foot: "இது நிதி ஆலோசனை அல்ல. விலைக�
   ['q', 'karat', 'cur'].forEach(function (id) { $(id).addEventListener('input', renderLookup); });
   $('shop').addEventListener('input', renderShop);
   $('chips').addEventListener('click', function (e) { var b = e.target.closest ? e.target.closest('button[data-q]') : null; if (b) { $('q').value = b.getAttribute('data-q'); renderLookup(); } });
-  document.querySelector('.langs').addEventListener('click', function (e) { var b = e.target.closest ? e.target.closest('button[data-lang]') : null; if (!b) return; lang = b.getAttribute('data-lang'); try { localStorage.setItem('gollk-lang', lang); } catch (x) {} applyText(); renderAll(); });
+  window.addEventListener('gollk-lang', function (e) { lang = e.detail.lang; applyText(); renderAll(); });
   $('al-add').addEventListener('click', function () { var v = parseFloat($('al-val').value); if (!(v > 0) || alerts.length >= 10) return; alerts.push({ dir: $('al-dir').value, val: v }); saveAlerts(); $('al-val').value = ''; renderAlerts(); });
   $('al-list').addEventListener('click', function (e) { var b = e.target.closest ? e.target.closest('button[data-rm]') : null; if (!b) return; alerts.splice(parseInt(b.getAttribute('data-rm'), 10), 1); saveAlerts(); renderAlerts(); });
 

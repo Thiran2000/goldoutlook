@@ -6,23 +6,56 @@
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
 
   /* ---------- header and footer ---------- */
-  var PAGES = [['index.html', 'Home'], ['prices.html', 'Live prices'], ['calculator.html', 'Calculator'], ['karats.html', 'Karat guide'], ['learn.html', 'Learn']];
+  var PAGES = [['index.html', 'home'], ['prices.html', 'prices'], ['calculator.html', 'calc'], ['karats.html', 'karat'], ['learn.html', 'learn']];
+  var T = {
+    en: { home: 'Home', prices: 'Live prices', calc: 'Calculator', karat: 'Karat guide', learn: 'Learn', tag: 'Gold prices for Sri Lanka, in plain language', pages: 'Pages', shops: 'Shops', shopnow: 'Shop prices today', post: 'Jewellers: post your price',
+      fine: 'Prices are for information only and are not financial advice. Shop prices come from jewellers’ own rate pages and change through the day, so always confirm the price, the purity and the making charges with your jeweller before you buy or sell.' },
+    si: { home: 'මුල් පිටුව', prices: 'සජීවී මිල', calc: 'ගණකය', karat: 'කැරට් මාර්ගෝපදේශය', learn: 'දැනගන්න', tag: 'ශ්‍රී ලංකාවේ රන් මිල, සරල භාෂාවෙන්', pages: 'පිටු', shops: 'වෙළඳසැල්', shopnow: 'අද වෙළඳසැල් මිල', post: 'ජුවලර්ස්: ඔබේ මිල පළ කරන්න',
+      fine: 'මිල ගණන් තොරතුරු සඳහා පමණි, මූල්‍ය උපදෙස් නොවේ. වෙළඳසැල් මිල ජුවලර්වරුන්ගේ මිල පිටුවලින් ලබාගන්නා අතර දවස පුරා වෙනස් වේ. මිලදී ගැනීමට හෝ විකිණීමට පෙර මිල, සංශුද්ධතාව සහ මැදීමේ ගාස්තු ඔබේ ජුවලර්ගෙන් තහවුරු කරගන්න.' },
+    ta: { home: 'முகப்பு', prices: 'நேரடி விலை', calc: 'கணிப்பான்', karat: 'காரட் வழிகாட்டி', learn: 'அறிய', tag: 'இலங்கைக்கான தங்க விலை, எளிய மொழியில்', pages: 'பக்கங்கள்', shops: 'கடைகள்', shopnow: 'இன்றைய கடை விலைகள்', post: 'நகைக்கடைக்காரர்கள்: உங்கள் விலையைப் பதிவிடுங்கள்',
+      fine: 'விலைகள் தகவலுக்காக மட்டுமே, நிதி ஆலோசனை அல்ல. கடை விலைகள் நகைக்கடைகளின் சொந்த விலைப் பக்கங்களிலிருந்து எடுக்கப்படுகின்றன, நாள் முழுவதும் மாறும். வாங்கும் அல்லது விற்கும் முன் விலை, தூய்மை, செய்கூலி ஆகியவற்றை உங்கள் நகைக்கடையில் உறுதிப்படுத்துங்கள்.' }
+  };
+  var LANGS = [['en', 'EN'], ['si', 'සිං'], ['ta', 'தமி']];
+  var lang = 'en';
+  try { var sv = localStorage.getItem('gollk-lang'); if (sv && T[sv]) lang = sv; else { var nl = (navigator.language || '').slice(0, 2); if (T[nl]) lang = nl; } } catch (e) {}
   var here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
-  var h = $('#site-header');
-  if (h) {
-    h.outerHTML = '<header class="site-header"><div class="container"><a class="logo" href="index.html"><i>Au</i>Gold Outlook LK</a>' +
-      '<button class="burger" type="button" aria-label="Menu" aria-expanded="false">☰</button>' +
-      '<nav class="menu" aria-label="Main">' + PAGES.map(function (p) { return '<a href="' + p[0] + '"' + (p[0] === here ? ' class="on" aria-current="page"' : '') + '>' + p[1] + '</a>'; }).join('') + '</nav></div></header>';
+  function headerHTML() {
+    return '<header class="site-header"><div class="container"><a class="logo" href="index.html"><i>Au</i>Gold Outlook LK</a>' +
+      '<nav class="menu" aria-label="Main">' + PAGES.map(function (p) { return '<a href="' + p[0] + '"' + (p[0] === here ? ' class="on" aria-current="page"' : '') + '>' + T[lang][p[1]] + '</a>'; }).join('') + '</nav>' +
+      '<div class="langs" role="group" aria-label="Language">' + LANGS.map(function (l) { return '<button type="button" data-lang="' + l[0] + '" aria-pressed="' + (l[0] === lang) + '">' + l[1] + '</button>'; }).join('') + '</div>' +
+      '<button class="burger" type="button" aria-label="Menu" aria-expanded="false">☰</button></div></header>';
+  }
+  function footerHTML() {
+    var x = T[lang];
+    return '<footer class="site-footer"><div class="container"><div class="cols"><div><div class="logo" style="margin-bottom:10px"><i>Au</i>Gold Outlook LK</div><div>' + x.tag + '</div></div>' +
+      '<div><b style="color:var(--cream)">' + x.pages + '</b><br>' + PAGES.map(function (p) { return '<a href="' + p[0] + '">' + x[p[1]] + '</a>'; }).join('<br>') + '</div>' +
+      '<div><b style="color:var(--cream)">' + x.shops + '</b><br><a href="prices.html#shops">' + x.shopnow + '</a><br><a href="shop.html">' + x.post + '</a></div></div>' +
+      '<p class="fine">' + x.fine + '</p></div></footer>';
+  }
+  var h = $('#site-header'), f = $('#site-footer');
+  if (h) h.outerHTML = headerHTML();
+  if (f) f.outerHTML = footerHTML();
+  function wireHeader() {
     var bg = $('.burger'), mn = $('.menu');
-    bg.addEventListener('click', function () { var o = mn.classList.toggle('open'); bg.setAttribute('aria-expanded', o); bg.textContent = o ? '✕' : '☰'; });
+    if (bg && mn) bg.addEventListener('click', function () { var o = mn.classList.toggle('open'); bg.setAttribute('aria-expanded', o); bg.textContent = o ? '✕' : '☰'; });
+    var lg = $('.site-header .langs');
+    if (lg) lg.addEventListener('click', function (e) {
+      var b = e.target.closest ? e.target.closest('button[data-lang]') : null; if (!b) return;
+      setLang(b.getAttribute('data-lang'));
+    });
   }
-  var f = $('#site-footer');
-  if (f) {
-    f.outerHTML = '<footer class="site-footer"><div class="container"><div class="cols"><div><div class="logo" style="margin-bottom:10px"><i>Au</i>Gold Outlook LK</div><div>Gold prices for Sri Lanka, in plain language.</div></div>' +
-      '<div><b style="color:var(--cream)">Pages</b><br>' + PAGES.map(function (p) { return '<a href="' + p[0] + '">' + p[1] + '</a>'; }).join('<br>') + '</div>' +
-      '<div><b style="color:var(--cream)">Shops</b><br><a href="prices.html#shops">Shop prices today</a><br><a href="shop.html">Jewellers: post your price</a></div></div>' +
-      '<p class="fine">Prices are for information only and are not financial advice. Shop prices come from jewellers’ own rate pages and change through the day, so always confirm the price, the purity and the making charges with your jeweller before you buy or sell.</p></div></footer>';
+  /* Changing language: save it, redraw the bar and footer, and tell the page (window event "gollk-lang") so it can redraw its own text. */
+  function setLang(l) {
+    if (!T[l] || l === lang) return;
+    lang = l; try { localStorage.setItem('gollk-lang', l); } catch (e) {}
+    document.documentElement.lang = l;
+    var hd = $('.site-header'), ft = $('.site-footer');
+    if (hd) { var open = $('.menu', hd).classList.contains('open'); hd.outerHTML = headerHTML(); wireHeader(); if (open) { $('.menu').classList.add('open'); $('.burger').setAttribute('aria-expanded', true); $('.burger').textContent = '✕'; } }
+    if (ft) ft.outerHTML = footerHTML();
+    window.dispatchEvent(new CustomEvent('gollk-lang', { detail: { lang: l } }));
   }
+  document.documentElement.lang = lang;
+  wireHeader();
 
   /* ---------- gold artwork ---------- */
   var uid = 0;
